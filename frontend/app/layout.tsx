@@ -1,13 +1,13 @@
-import type { Metadata } from "next";
+import { generateRootMetadata, generateViewportConfig } from "@/lib/seo";
+import { LocalBusinessSchema, HeadScripts } from "@/components/seo";
+import SkipLink from "@/components/a11y/SkipLink";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { CartProvider } from "@/context/CartContext";
 
-export const metadata: Metadata = {
-  title: "NaturalBowls | Comida Saludable y Deliciosa",
-  description: "Poke bowls, smoothie bowls, bebidas naturales y café de especialidad. Comida fresca, saludable y personalizable.",
-};
+export const metadata = generateRootMetadata();
+export const viewport = generateViewportConfig();
 
 export default function RootLayout({
   children,
@@ -15,12 +15,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es">
+    <html lang="es" suppressHydrationWarning>
+      <head>
+        <HeadScripts />
+        <LocalBusinessSchema />
+      </head>
       <body className="antialiased">
+        <SkipLink />
         <CartProvider>
           <div className="min-h-screen flex flex-col">
             <Header />
-            <main className="flex-1">{children}</main>
+            <main id="main-content" className="flex-1" role="main">
+              {children}
+            </main>
             <Footer />
           </div>
         </CartProvider>

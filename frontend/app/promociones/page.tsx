@@ -1,7 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Gift, Percent, Clock, CreditCard } from 'lucide-react';
-import { promotions } from '@/data/products';
 
 export default function PromocionesPage() {
   return (

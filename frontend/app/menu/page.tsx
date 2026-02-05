@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useMemo, useEffect, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useMemo, Suspense } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { products, categories } from '@/data/products';
 import ProductGrid from '@/components/products/ProductGrid';
@@ -11,17 +11,11 @@ const PRODUCTS_PER_PAGE = 10;
 
 function MenuContent() {
   const searchParams = useSearchParams();
-  const initialCategory = searchParams.get('category') || 'all';
-  const [selectedCategory, setSelectedCategory] = useState(initialCategory);
-  const [currentPage, setCurrentPage] = useState(1);
+  const router = useRouter();
 
-  useEffect(() => {
-    const category = searchParams.get('category');
-    if (category) {
-      setSelectedCategory(category);
-      setCurrentPage(1);
-    }
-  }, [searchParams]);
+  const selectedCategory = searchParams.get('category') || 'all';
+  const currentPageParam = Number(searchParams.get('page') || '1');
+  const currentPage = Number.isNaN(currentPageParam) ? 1 : Math.max(1, currentPageParam);
 
   const filteredProducts = useMemo(() => {
     if (selectedCategory === 'all') {
@@ -30,20 +24,29 @@ function MenuContent() {
     return products.filter((p) => p.category === selectedCategory);
   }, [selectedCategory]);
 
-  const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
+  const totalPages = Math.max(1, Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE));
+  const safePage = Math.min(currentPage, totalPages);
 
   const paginatedProducts = useMemo(() => {
-    const startIndex = (currentPage - 1) * PRODUCTS_PER_PAGE;
+    const startIndex = (safePage - 1) * PRODUCTS_PER_PAGE;
     return filteredProducts.slice(startIndex, startIndex + PRODUCTS_PER_PAGE);
-  }, [filteredProducts, currentPage]);
+  }, [filteredProducts, safePage]);
 
   const handleCategoryChange = (category: string) => {
-    setSelectedCategory(category);
-    setCurrentPage(1);
+    const params = new URLSearchParams(searchParams.toString());
+    if (category === 'all') {
+      params.delete('category');
+    } else {
+      params.set('category', category);
+    }
+    params.delete('page');
+    router.push(`/menu?${params.toString()}`);
   };
 
   const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+    const params = new URLSearchParams(searchParams.toString());
+    params.set('page', String(page));
+    router.push(`/menu?${params.toString()}`);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -90,8 +93,8 @@ function MenuContent() {
       {totalPages > 1 && (
         <div className="flex items-center justify-center gap-2 mt-12">
           <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
+            onClick={() => handlePageChange(safePage - 1)}
+            disabled={safePage === 1}
             className={cn(
               'p-2 rounded-full transition-colors',
               currentPage === 1
@@ -108,7 +111,7 @@ function MenuContent() {
               onClick={() => handlePageChange(page)}
               className={cn(
                 'w-10 h-10 rounded-full font-medium transition-colors',
-                currentPage === page
+                safePage === page
                   ? 'bg-[#5D4E37] text-white'
                   : 'text-[#5D4E37] hover:bg-[#F5F3EF]'
               )}
@@ -118,8 +121,8 @@ function MenuContent() {
           ))}
 
           <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
+            onClick={() => handlePageChange(safePage + 1)}
+            disabled={safePage === totalPages}
             className={cn(
               'p-2 rounded-full transition-colors',
               currentPage === totalPages

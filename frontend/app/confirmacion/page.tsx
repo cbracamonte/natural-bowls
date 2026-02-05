@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { CheckCircle, Package, Clock, MapPin } from 'lucide-react';
 import { Order } from '@/types';
@@ -8,14 +8,11 @@ import { formatPrice } from '@/lib/utils';
 import Button from '@/components/ui/Button';
 
 export default function ConfirmationPage() {
-  const [order, setOrder] = useState<Order | null>(null);
-
-  useEffect(() => {
+  const [order] = useState<Order | null>(() => {
+    if (typeof window === 'undefined') return null;
     const storedOrder = sessionStorage.getItem('lastOrder');
-    if (storedOrder) {
-      setOrder(JSON.parse(storedOrder));
-    }
-  }, []);
+    return storedOrder ? JSON.parse(storedOrder) : null;
+  });
 
   if (!order) {
     return (

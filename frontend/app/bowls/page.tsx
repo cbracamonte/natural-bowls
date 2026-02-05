@@ -22,11 +22,14 @@ export default function BowlsPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-[#6B8E4E] to-[#9CB973] py-20">
+      <section
+        className="relative bg-gradient-to-r from-[#6B8E4E] to-[#9CB973] py-20"
+        aria-labelledby="bowls-hero-title"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="text-white">
-              <h1 className="text-4xl md:text-5xl font-bold mb-4">
+              <h1 id="bowls-hero-title" className="text-4xl md:text-5xl font-bold mb-4">
                 Nuestros Bowls
               </h1>
               <p className="text-xl text-white/90 mb-8">
@@ -36,6 +39,7 @@ export default function BowlsPage() {
               <Link
                 href="/menu"
                 className="inline-flex items-center px-8 py-3.5 bg-[#5D4E37] text-white rounded-full font-medium hover:bg-[#4A3E2C] transition-colors"
+                aria-label="Ordenar en el menú"
               >
                 Ordenar ahora
               </Link>
@@ -67,13 +71,13 @@ export default function BowlsPage() {
       </section>
 
       {/* Smoothie Bowls Section */}
-      <section className="py-16 bg-monstera-cream">
+      <section className="py-16 bg-monstera-cream" aria-labelledby="smoothie-bowls-title">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <span className="inline-block px-4 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium mb-4">
               Smoothie Bowls
             </span>
-            <h2 className="text-3xl md:text-4xl font-bold text-[#5D4E37] mb-4">
+            <h2 id="smoothie-bowls-title" className="text-3xl md:text-4xl font-bold text-[#5D4E37] mb-4">
               Bowls de frutas con toppings
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
@@ -83,18 +87,18 @@ export default function BowlsPage() {
           </div>
 
           {/* Toppings info */}
-          <div className="bg-purple-50 rounded-2xl p-6 mb-12">
-            <h3 className="font-semibold text-[#5D4E37] mb-3">Elige tus 5 toppings:</h3>
-            <div className="flex flex-wrap gap-2">
-              {smoothieToppings.map((topping, index) => (
-                <span
-                  key={index}
+          <div className="bg-purple-50 rounded-2xl p-6 mb-12" aria-labelledby="smoothie-toppings-title">
+            <h3 id="smoothie-toppings-title" className="font-semibold text-[#5D4E37] mb-3">Elige tus 5 toppings:</h3>
+            <ul className="flex flex-wrap gap-2" role="list">
+              {smoothieToppings.map((topping) => (
+                <li
+                  key={topping}
                   className="px-3 py-1 bg-white rounded-full text-sm text-gray-600 border"
                 >
                   {topping}
-                </span>
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -106,13 +110,13 @@ export default function BowlsPage() {
       </section>
 
       {/* Poke Bowls Section */}
-      <section className="py-16 gradient-section">
+      <section className="py-16 gradient-section" aria-labelledby="poke-bowls-title">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <span className="inline-block px-4 py-1 bg-lime-100 text-lime-700 rounded-full text-sm font-medium mb-4">
               Poke Bowls
             </span>
-            <h2 className="text-3xl md:text-4xl font-bold text-[#5D4E37] mb-4">
+            <h2 id="poke-bowls-title" className="text-3xl md:text-4xl font-bold text-[#5D4E37] mb-4">
               Arma tu Poke Bowl
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
@@ -123,74 +127,74 @@ export default function BowlsPage() {
 
           {/* Poke Options */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            <div className="bg-white rounded-2xl p-6 shadow-sm">
+            <div className="bg-white rounded-2xl p-6 shadow-sm" aria-labelledby="poke-base-title">
               <div className="w-10 h-10 bg-lime-100 rounded-xl flex items-center justify-center mb-4">
                 <span className="text-lime-700 font-bold">1</span>
               </div>
-              <h3 className="font-semibold text-[#5D4E37] mb-3">Base (Elegir 1)</h3>
-              <div className="flex flex-wrap gap-2">
-                {pokeOptions.bases.map((item, index) => (
-                  <span key={index} className="px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-600">
+              <h3 id="poke-base-title" className="font-semibold text-[#5D4E37] mb-3">Base (Elegir 1)</h3>
+              <ul className="flex flex-wrap gap-2" role="list">
+                {pokeOptions.bases.map((item) => (
+                  <li key={item} className="px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-600">
                     {item}
-                  </span>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
 
-            <div className="bg-white rounded-2xl p-6 shadow-sm">
+            <div className="bg-white rounded-2xl p-6 shadow-sm" aria-labelledby="poke-protein-title">
               <div className="w-10 h-10 bg-lime-100 rounded-xl flex items-center justify-center mb-4">
                 <span className="text-lime-700 font-bold">2</span>
               </div>
-              <h3 className="font-semibold text-[#5D4E37] mb-3">Proteína (Elegir 1)</h3>
-              <div className="flex flex-wrap gap-2">
-                {pokeOptions.proteinas.map((item, index) => (
-                  <span key={index} className="px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-600">
+              <h3 id="poke-protein-title" className="font-semibold text-[#5D4E37] mb-3">Proteína (Elegir 1)</h3>
+              <ul className="flex flex-wrap gap-2" role="list">
+                {pokeOptions.proteinas.map((item) => (
+                  <li key={item} className="px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-600">
                     {item}
-                  </span>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
 
-            <div className="bg-white rounded-2xl p-6 shadow-sm">
+            <div className="bg-white rounded-2xl p-6 shadow-sm" aria-labelledby="poke-toppings-title">
               <div className="w-10 h-10 bg-lime-100 rounded-xl flex items-center justify-center mb-4">
                 <span className="text-lime-700 font-bold">3</span>
               </div>
-              <h3 className="font-semibold text-[#5D4E37] mb-3">Toppings (Elegir 5)</h3>
-              <div className="flex flex-wrap gap-2 max-h-32 overflow-y-auto">
-                {pokeOptions.toppings.map((item, index) => (
-                  <span key={index} className="px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-600">
+              <h3 id="poke-toppings-title" className="font-semibold text-[#5D4E37] mb-3">Toppings (Elegir 5)</h3>
+              <ul className="flex flex-wrap gap-2 max-h-32 overflow-y-auto" role="list">
+                {pokeOptions.toppings.map((item) => (
+                  <li key={item} className="px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-600">
                     {item}
-                  </span>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
 
-            <div className="bg-white rounded-2xl p-6 shadow-sm">
+            <div className="bg-white rounded-2xl p-6 shadow-sm" aria-labelledby="poke-agregados-title">
               <div className="w-10 h-10 bg-lime-100 rounded-xl flex items-center justify-center mb-4">
                 <span className="text-lime-700 font-bold">4</span>
               </div>
-              <h3 className="font-semibold text-[#5D4E37] mb-3">Agregados (Elegir 4)</h3>
-              <div className="flex flex-wrap gap-2">
-                {pokeOptions.agregados.map((item, index) => (
-                  <span key={index} className="px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-600">
+              <h3 id="poke-agregados-title" className="font-semibold text-[#5D4E37] mb-3">Agregados (Elegir 4)</h3>
+              <ul className="flex flex-wrap gap-2" role="list">
+                {pokeOptions.agregados.map((item) => (
+                  <li key={item} className="px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-600">
                     {item}
-                  </span>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
 
-            <div className="bg-white rounded-2xl p-6 shadow-sm md:col-span-2">
+            <div className="bg-white rounded-2xl p-6 shadow-sm md:col-span-2" aria-labelledby="poke-salsas-title">
               <div className="w-10 h-10 bg-lime-100 rounded-xl flex items-center justify-center mb-4">
                 <span className="text-lime-700 font-bold">5</span>
               </div>
-              <h3 className="font-semibold text-[#5D4E37] mb-3">Salsas (Elegir 2-3)</h3>
-              <div className="flex flex-wrap gap-2">
-                {pokeOptions.salsas.map((item, index) => (
-                  <span key={index} className="px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-600">
+              <h3 id="poke-salsas-title" className="font-semibold text-[#5D4E37] mb-3">Salsas (Elegir 2-3)</h3>
+              <ul className="flex flex-wrap gap-2" role="list">
+                {pokeOptions.salsas.map((item) => (
+                  <li key={item} className="px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-600">
                     {item}
-                  </span>
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
           </div>
 
@@ -203,9 +207,9 @@ export default function BowlsPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-[#5D4E37]">
+      <section className="py-16 bg-[#5D4E37]" aria-labelledby="cta-title">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">
+          <h2 id="cta-title" className="text-3xl font-bold text-white mb-4">
             ¿Listo para probar?
           </h2>
           <p className="text-white/80 mb-8">
@@ -215,6 +219,7 @@ export default function BowlsPage() {
             <Link
               href="/menu"
               className="inline-flex items-center justify-center px-8 py-3.5 bg-[#9CB973] text-[#5D4E37] rounded-full font-medium hover:bg-[#C5D9A4] transition-colors"
+              aria-label="Ver todo el menú"
             >
               Ver todo el menú
             </Link>
@@ -223,6 +228,7 @@ export default function BowlsPage() {
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center px-8 py-3.5 border-2 border-white text-white rounded-full font-medium hover:bg-white hover:text-[#5D4E37] transition-colors"
+              aria-label="Pedir por WhatsApp"
             >
               Pedir por WhatsApp
             </a>
