@@ -1,0 +1,143 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+
+  /* Natural Bowls Brand Colors */
+  --brand-brown: #5D4E37;
+  --brand-brown-dark: #4A3E2C;
+  --brand-green: #6B8E4E;
+  --brand-green-dark: #5A7A40;
+  --brand-lime: #9CB973;
+  --brand-lime-light: #C5D9A4;
+  --brand-cream: #F5F3EF;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  /* Brand Colors */
+  --color-brand-brown: var(--brand-brown);
+  --color-brand-green: var(--brand-green);
+  --color-brand-lime: var(--brand-lime);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+/* Smooth scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--brand-green);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--brand-green-dark);
+}
+
+/* Monstera leaf background pattern - Light version */
+.bg-monstera {
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(245,249,240,0.9) 50%, rgba(255,255,255,0.95) 100%),
+    url('/images/monstera-bg.svg');
+  background-size: cover, 800px 800px;
+  background-position: center, center;
+  background-repeat: no-repeat, repeat;
+}
+
+.bg-monstera > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Monstera with gradient overlay - Hero sections */
+.bg-monstera-gradient {
+  position: relative;
+  background:
+    linear-gradient(135deg,
+      rgba(245, 243, 239, 0.92) 0%,
+      rgba(255, 255, 255, 0.88) 25%,
+      rgba(232, 245, 224, 0.9) 50%,
+      rgba(255, 255, 255, 0.88) 75%,
+      rgba(197, 217, 164, 0.15) 100%
+    ),
+    url('/images/monstera-bg.svg');
+  background-size: cover, 900px 900px;
+  background-position: center, center;
+  background-repeat: no-repeat, repeat;
+}
+
+.bg-monstera-gradient > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Monstera cream - warm version */
+.bg-monstera-cream {
+  position: relative;
+  background:
+    linear-gradient(160deg,
+      rgba(245, 243, 239, 0.95) 0%,
+      rgba(255, 255, 255, 0.9) 40%,
+      rgba(245, 243, 239, 0.95) 100%
+    ),
+    url('/images/monstera-bg.svg');
+  background-size: cover, 700px 700px;
+  background-position: center, center;
+  background-repeat: no-repeat, repeat;
+}
+
+.bg-monstera-cream > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Monstera green tint - for accent sections */
+.bg-monstera-green {
+  position: relative;
+  background:
+    linear-gradient(135deg,
+      rgba(156, 185, 115, 0.15) 0%,
+      rgba(255, 255, 255, 0.95) 30%,
+      rgba(232, 245, 224, 0.4) 70%,
+      rgba(156, 185, 115, 0.2) 100%
+    ),
+    url('/images/monstera-bg.svg');
+  background-size: cover, 800px 800px;
+  background-position: center, center;
+  background-repeat: no-repeat, repeat;
+}
+
+/* Gradient backgrounds */
+.gradient-hero {
+  background: linear-gradient(135deg, #e8f5e0 0%, #ffffff 50%, #fef3e8 100%);
+}
+
+.gradient-lime {
+  background: linear-gradient(135deg, #C5D9A4 0%, #9CB973 100%);
+}
+
+.gradient-section {
+  background: linear-gradient(180deg, #f5f9f0 0%, #ffffff 100%);
+}

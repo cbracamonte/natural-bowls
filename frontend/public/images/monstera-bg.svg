@@ -1,0 +1,141 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 800">
+  <defs>
+    <style>
+      .leaf { fill: #6B8E4E; opacity: 0.08; }
+      .leaf-dark { fill: #5D4E37; opacity: 0.05; }
+    </style>
+  </defs>
+
+  <!-- Large Monstera Leaf 1 - Top Left -->
+  <g transform="translate(20, 20) rotate(-15)">
+    <path class="leaf" d="M120,300
+      Q60,200 120,100
+      Q140,60 180,80
+      Q220,40 260,80
+      Q300,60 320,100
+      Q360,80 380,120
+      Q420,100 420,160
+      Q460,180 440,240
+      Q480,280 440,320
+      Q460,360 420,380
+      Q440,420 380,420
+      Q360,460 300,440
+      Q260,480 220,440
+      Q180,460 160,420
+      Q100,420 100,360
+      Q60,340 80,300
+      Q40,260 80,240
+      Q60,200 120,200 Z"/>
+    <!-- Leaf holes (fenestrations) -->
+    <ellipse cx="200" cy="180" rx="30" ry="50" fill="white" opacity="0.08"/>
+    <ellipse cx="280" cy="200" rx="24" ry="40" fill="white" opacity="0.08"/>
+    <ellipse cx="340" cy="260" rx="20" ry="36" fill="white" opacity="0.08"/>
+    <ellipse cx="320" cy="340" rx="24" ry="40" fill="white" opacity="0.08"/>
+    <ellipse cx="240" cy="360" rx="30" ry="44" fill="white" opacity="0.08"/>
+    <ellipse cx="160" cy="320" rx="24" ry="36" fill="white" opacity="0.08"/>
+    <!-- Stem -->
+    <path d="M240,440 Q230,520 260,600" stroke="#5D4E37" stroke-width="6" fill="none" opacity="0.06"/>
+  </g>
+
+  <!-- Medium Monstera Leaf 2 - Right side -->
+  <g transform="translate(500, 150) rotate(25) scale(0.7)">
+    <path class="leaf" d="M120,300
+      Q60,200 120,100
+      Q140,60 180,80
+      Q220,40 260,80
+      Q300,60 320,100
+      Q360,80 380,120
+      Q420,100 420,160
+      Q460,180 440,240
+      Q480,280 440,320
+      Q460,360 420,380
+      Q440,420 380,420
+      Q360,460 300,440
+      Q260,480 220,440
+      Q180,460 160,420
+      Q100,420 100,360
+      Q60,340 80,300
+      Q40,260 80,240
+      Q60,200 120,200 Z"/>
+    <ellipse cx="200" cy="180" rx="30" ry="50" fill="white" opacity="0.08"/>
+    <ellipse cx="280" cy="200" rx="24" ry="40" fill="white" opacity="0.08"/>
+    <ellipse cx="340" cy="260" rx="20" ry="36" fill="white" opacity="0.08"/>
+    <ellipse cx="320" cy="340" rx="24" ry="40" fill="white" opacity="0.08"/>
+    <ellipse cx="240" cy="360" rx="30" ry="44" fill="white" opacity="0.08"/>
+    <path d="M240,440 Q230,520 260,600" stroke="#5D4E37" stroke-width="6" fill="none" opacity="0.06"/>
+  </g>
+
+  <!-- Small Monstera Leaf 3 - Bottom center -->
+  <g transform="translate(300, 500) rotate(-30) scale(0.5)">
+    <path class="leaf-dark" d="M120,300
+      Q60,200 120,100
+      Q140,60 180,80
+      Q220,40 260,80
+      Q300,60 320,100
+      Q360,80 380,120
+      Q420,100 420,160
+      Q460,180 440,240
+      Q480,280 440,320
+      Q460,360 420,380
+      Q440,420 380,420
+      Q360,460 300,440
+      Q260,480 220,440
+      Q180,460 160,420
+      Q100,420 100,360
+      Q60,340 80,300
+      Q40,260 80,240
+      Q60,200 120,200 Z"/>
+    <ellipse cx="200" cy="180" rx="30" ry="50" fill="white" opacity="0.05"/>
+    <ellipse cx="280" cy="200" rx="24" ry="40" fill="white" opacity="0.05"/>
+    <ellipse cx="320" cy="340" rx="24" ry="40" fill="white" opacity="0.05"/>
+    <ellipse cx="240" cy="360" rx="30" ry="44" fill="white" opacity="0.05"/>
+  </g>
+
+  <!-- Extra small leaf 4 - Top right corner -->
+  <g transform="translate(650, 50) rotate(60) scale(0.35)">
+    <path class="leaf" d="M120,300
+      Q60,200 120,100
+      Q140,60 180,80
+      Q220,40 260,80
+      Q300,60 320,100
+      Q360,80 380,120
+      Q420,100 420,160
+      Q460,180 440,240
+      Q480,280 440,320
+      Q460,360 420,380
+      Q440,420 380,420
+      Q360,460 300,440
+      Q260,480 220,440
+      Q180,460 160,420
+      Q100,420 100,360
+      Q60,340 80,300
+      Q40,260 80,240
+      Q60,200 120,200 Z"/>
+    <ellipse cx="200" cy="180" rx="30" ry="50" fill="white" opacity="0.08"/>
+    <ellipse cx="280" cy="200" rx="24" ry="40" fill="white" opacity="0.08"/>
+  </g>
+
+  <!-- Small accent leaf 5 - Bottom left -->
+  <g transform="translate(50, 600) rotate(45) scale(0.4)">
+    <path class="leaf-dark" d="M120,300
+      Q60,200 120,100
+      Q140,60 180,80
+      Q220,40 260,80
+      Q300,60 320,100
+      Q360,80 380,120
+      Q420,100 420,160
+      Q460,180 440,240
+      Q480,280 440,320
+      Q460,360 420,380
+      Q440,420 380,420
+      Q360,460 300,440
+      Q260,480 220,440
+      Q180,460 160,420
+      Q100,420 100,360
+      Q60,340 80,300
+      Q40,260 80,240
+      Q60,200 120,200 Z"/>
+    <ellipse cx="200" cy="180" rx="30" ry="50" fill="white" opacity="0.05"/>
+    <ellipse cx="320" cy="340" rx="24" ry="40" fill="white" opacity="0.05"/>
+  </g>
+</svg>
