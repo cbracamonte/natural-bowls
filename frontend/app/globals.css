@@ -10,7 +10,7 @@
 
 @font-face {
   font-family: "Levenim TM";
-  src: url("/fonts/LevenimTM-Medium.ttf") format("truetype");
+  src: url("/fonts/LevenimTM-Regular.ttf") format("truetype");
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -36,14 +36,9 @@
   --brand-lime: #9CB973;
   --brand-lime-light: #C5D9A4;
   --brand-cream: #F5F3EF;
-}
-
-@theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: "Levenim TM";
-
-  /* Brand Colors */
   --color-brand-brown: var(--brand-brown);
   --color-brand-green: var(--brand-green);
   --color-brand-lime: var(--brand-lime);

@@ -1,248 +1,130 @@
 # Natural Bowls
 
-## 🥗 Sobre Natural Bowls
+Guía ejecutiva para clientes y desarrolladores: visión de negocio, estándares técnicos, flujo de trabajo y puesta en marcha.
 
-Natural Bowls es una plataforma digital especializada en la venta de bowls saludables y nutritivos. Nuestro modelo de negocio se centra en ofrecer opciones de comida fresca, orgánica y personalizable a través de una experiencia de compra en línea intuitiva y eficiente.
+## 🥗 Negocio y propuesta de valor
+- Bowls saludables, orgánicos y personalizables.
+- Experiencia digital rápida y transparente (ingredientes y nutrición visibles).
+- Delivery ágil y comunicación clara en todo el journey.
 
-### Propuesta de Valor
+## 🧭 Flujo de trabajo (branches)
+- `main` (protegida): solo merges vía PR aprobados.
+- `dev`: rama base de desarrollo.
+- Feature flow: `git checkout dev` → `git pull` → `git checkout -b feature/mi-feature` → PR a `dev` → luego PR de `dev` a `main`.
 
-- **Comida Saludable**: Bowls elaborados con ingredientes frescos y orgánicos
-- **Personalización**: Los clientes pueden customizar sus bowls según sus preferencias dietéticas
-- **Entrega Rápida**: Opciones de delivery para mayor comodidad
-- **Transparencia**: Información detallada de ingredientes y valores nutricionales
+### 🔒 Protección de `main` en GitHub
+1) Settings → Branches → Add branch protection rule.
+2) Branch name pattern: `main`.
+3) Requerir PR con al menos 1 aprobación y checks verdes (lint y build).
+4) Bloquear pushes directos y exigir que la branch esté actualizada antes de merge.
 
----
+## 📋 Requisitos previos
+- Node.js ≥ 18 (LTS recomendado)
+- npm / yarn / pnpm
+- Git
 
-## 📋 Requisitos Previos
-
-Antes de comenzar, asegúrate de tener instalado:
-
-- **Node.js** (versión 18 o superior) - [Descargar](https://nodejs.org/)
-- **npm** (incluido con Node.js) o **yarn**/pnpm
-- **Git** - [Descargar](https://git-scm.com/)
-
-Verifica las versiones instaladas:
-
+Verifica versiones:
 ```bash
 node --version
 npm --version
 ```
 
----
-
-## 🚀 Instalación y Setup
-
-### 1. Clonar el Repositorio
-
+## 🚀 Instalación rápida
 ```bash
-git clone https://github.com/tuusuario/natural-bowls.git
+git clone https://github.com/cbracamonte/natural-bowls.git
 cd natural-bowls
-```
 
-### 2. Instalar Dependencias
-
-El proyecto está dividido en dos carpetas principales: `frontend` y `backend`.
-
-**Para el Frontend:**
-
-```bash
+# Frontend
 cd frontend
 npm install
-```
 
-Esto instalará todas las dependencias necesarias:
-- Next.js 16.1.6
-- React 19.2.3
-- Tailwind CSS 4
-- Lucide React (iconografía)
-- TypeScript
-
-**Para el Backend:**
-
-```bash
+# Backend (placeholder)
 cd ../backend
 npm install
 ```
 
-### 3. Configuración de Variables de Entorno
-
-En la carpeta `frontend`, crea un archivo `.env.local` si es necesario:
-
+Variables de entorno (frontend, `.env.local`):
 ```bash
-cd frontend
-touch .env.local
+NEXT_PUBLIC_BASE_URL=https://naturalbowls.com
+NEXT_PUBLIC_GOOGLE_VERIFICATION=   # opcional (Search Console)
 ```
 
-Agrega las variables de entorno requeridas (estas se proporcionarán en la documentación del equipo).
-
----
-
-## 🏃 Ejecución del Proyecto
-
-### Ejecutar el Frontend en Modo Desarrollo
-
+## 🏃 Scripts (frontend)
 ```bash
-cd frontend
-npm run dev
+npm run dev     # desarrollo
+npm run lint    # lint
+npm run build   # build producción
+npm start       # servir build
 ```
+Dev server: http://localhost:3000
 
-El servidor de desarrollo estará disponible en: **http://localhost:3000**
-
-### Ejecutar el Frontend en Producción
-
-```bash
-cd frontend
-npm run build
-npm start
-```
-
-### Linting
-
-Para verificar la calidad del código:
-
-```bash
-npm run lint
-```
-
----
-
-## 📁 Arquitectura del Frontend
-
-La estructura del frontend sigue una arquitectura modular y escalable:
-
+## 📁 Arquitectura (frontend)
 ```
 frontend/
-├── app/                      # Rutas y layout principal de Next.js
-│   ├── layout.tsx            # Layout global
-│   ├── page.tsx              # Página principal (home)
-│   ├── globals.css           # Estilos globales
-│   ├── bowls/                # Página de catálogo de bowls
-│   ├── carrito/              # Página del carrito de compras
-│   ├── checkout/             # Página de checkout
-│   ├── confirmacion/         # Página de confirmación de pedido
-│   ├── menu/                 # Página del menú
-│   ├── producto/[id]/        # Página de detalle de producto (dinámica)
-│   └── promociones/          # Página de promociones
+├── app/                      # App Router
+│   ├── layout.tsx            # Layout global (SEO, a11y, cookie banner)
+│   ├── page.tsx              # Home
+│   ├── bowls/                # Catálogo bowls
+│   ├── carrito/              # Carrito
+│   ├── checkout/             # Checkout
+│   ├── confirmacion/         # Confirmación
+│   ├── menu/                 # Menú (filtros + paginación)
+│   ├── producto/[id]/        # Detalle dinámico
+│   └── promociones/          # Promos
 │
-├── components/               # Componentes reutilizables
-│   ├── cart/                 # Componentes del carrito
-│   │   ├── CartItem.tsx      # Ítem individual del carrito
-│   │   └── CartSummary.tsx   # Resumen del carrito
-│   ├── home/                 # Componentes de la página principal
-│   │   ├── Categories.tsx    # Sección de categorías
-│   │   ├── Featured.tsx      # Productos destacados
-│   │   ├── Hero.tsx          # Banner principal
-│   │   ├── HowItWorks.tsx    # Cómo funciona el servicio
-│   │   ├── Newsletter.tsx    # Suscripción a newsletter
-│   │   └── Values.tsx        # Valores de la empresa
-│   ├── layout/               # Componentes de layout
-│   │   ├── Footer.tsx        # Pie de página
-│   │   └── Header.tsx        # Encabezado/Navegación
-│   ├── products/             # Componentes de productos
-│   │   ├── ProductCard.tsx   # Tarjeta de producto
-│   │   └── ProductGrid.tsx   # Grid de productos
-│   └── ui/                   # Componentes UI genéricos
-│       ├── Badge.tsx         # Badge/Etiqueta
-│       ├── Button.tsx        # Botón
-│       └── Input.tsx         # Campo de entrada
+├── components/
+│   ├── a11y/                 # Accesibilidad (SkipLink, etc.)
+│   ├── layout/               # Header, Footer, CookieBanner
+│   ├── home/, cart/, products/, ui/
 │
-├── context/                  # Context API de React
-│   └── CartContext.tsx       # Contexto para el carrito de compras
-│
-├── data/                     # Datos estáticos
-│   └── products.ts           # Catálogo de productos
-│
-├── types/                    # Definiciones de tipos TypeScript
-│   └── index.ts              # Tipos compartidos
-│
-├── lib/                      # Utilidades y helpers
-│   └── utils.ts              # Funciones utilitarias
-│
-├── public/                   # Archivos estáticos
-│   ├── fonts/                # Tipografías personalizadas
-│   └── images/               # Imágenes del proyecto
-│
-├── package.json              # Dependencias del proyecto
-├── tsconfig.json             # Configuración de TypeScript
-├── next.config.ts            # Configuración de Next.js
-└── tailwind.config.js        # Configuración de Tailwind CSS
+├── lib/
+│   ├── seo/                  # Metadata, viewport, constantes SEO
+│   └── utils.ts              # Helpers
+├── context/                  # Cart Context
+├── data/                     # products.ts
+├── types/                    # Tipos compartidos
+└── public/                   # fonts, images, manifest, robots, sitemap
 ```
 
-### Patrones Arquitectónicos
+### Estándares clave
+- App Router (Next 13+), SSR/SSG según ruta.
+- SEO centralizado: metadata en `lib/seo` + componentes en `components/seo`.
+- Accesibilidad: skip link, roles/aria, focus-visible, inputs con `aria-invalid`/`aria-describedby`.
+- UX Compliance: cookie banner con consentimiento explícito.
+- Estilos: Tailwind CSS v4; utilidades y layouts consistentes.
 
-#### 1. **App Router (Next.js 13+)**
-- Usando el App Router para una mejor organización de rutas
-- Estructura basada en carpetas que corresponden a rutas
+## 🛠 Stack
+| Área | Tech | Notas |
+| --- | --- | --- |
+| Framework | Next.js 16.1.6 | App Router, SSR/SSG |
+| UI | React 19.2.3 | Componentes |
+| Lenguaje | TypeScript ^5 | Tipado estricto |
+| Estilos | Tailwind CSS ^4 | Utility-first |
+| Iconos | Lucide React ^0.563.0 | Iconografía |
+| Calidad | ESLint ^9 | Linting |
 
-#### 2. **Component-Based Architecture**
-- Componentes reutilizables en la carpeta `components/`
-- Separación clara entre componentes de página y componentes UI
+## 🍪 SEO y cumplimiento
+- Cookie banner (opt-in) persistido en localStorage.
+- Robots.txt, sitemap.xml, manifest.json listos.
+- Open Graph / Twitter Cards configurados.
 
-#### 3. **Context API**
-- Gestión del estado global con `CartContext`
-- Permite pasar datos del carrito entre componentes sin prop drilling
-
-#### 4. **Type Safety**
-- TypeScript configurado para type-checking completo
-- Tipos centralizados en `types/index.ts`
-
-#### 5. **Styling**
-- Tailwind CSS v4 para estilos utilitarios
-- PostCSS para procesamiento de CSS
-- Estilos globales en `globals.css`
-
----
-
-## 🛠 Stack Tecnológico
-
-### Frontend
-| Tecnología | Versión | Propósito |
-|-----------|---------|----------|
-| Next.js | 16.1.6 | Framework React/SSR |
-| React | 19.2.3 | Librería UI |
-| TypeScript | ^5 | Tipado estático |
-| Tailwind CSS | ^4 | Utilidades de estilos |
-| Lucide React | ^0.563.0 | Iconos |
-
-### Herramientas y Configuración
-| Herramienta | Versión | Propósito |
-|-----------|---------|----------|
-| ESLint | ^9 | Linting de código |
-| PostCSS | @tailwindcss/postcss | Procesamiento de CSS |
-
----
-
-## 📝 Flujo de Uso
-
-1. **Home**: El usuario llega a la página principal con categorías y productos destacados
-2. **Catálogo**: Explora los diferentes bowls disponibles
-3. **Detalle**: Ver información completa de un bowl específico
-4. **Carrito**: Agregar productos al carrito
-5. **Checkout**: Revisa el carrito y procede al pago
-6. **Confirmación**: Recibe confirmación del pedido
-
----
+## 📝 Flujo de usuario
+1. Home con destacados y categorías.
+2. Catálogo/Bowls con filtros y paginación.
+3. Detalle de producto.
+4. Carrito → Checkout → Confirmación.
 
 ## 🤝 Contribuir
+1. Rama desde `dev`: `git checkout dev && git pull && git checkout -b feature/mi-feature`.
+2. Ejecuta `npm run lint` y `npm run build` antes de subir.
+3. `git push origin feature/mi-feature` y PR hacia `dev`.
+4. Merge a `main` solo vía PR.
 
-Para contribuir al proyecto:
-
-1. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-2. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-3. Push a la rama (`git push origin feature/AmazingFeature`)
-4. Abre un Pull Request
-
----
-
-## 📞 Contacto y Soporte
-
-Para preguntas o reportar bugs, por favor abre un issue en el repositorio o contacta al equipo de desarrollo.
-
----
+## 📞 Contacto
+Soporte o bugs: abre un issue o escribe a info@naturalbowls.com.
 
 ## 📄 Licencia
-
-Este proyecto está bajo licencia [ESPECIFICAR LICENCIA]. Ver archivo `LICENSE` para más detalles.
+Proyecto bajo licencia MIT. Ver [LICENSE](LICENSE) para detalles.
 
 ---
 
