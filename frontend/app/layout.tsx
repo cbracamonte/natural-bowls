@@ -1,6 +1,7 @@
 import { generateRootMetadata, generateViewportConfig } from "@/lib/seo";
 import { LocalBusinessSchema, HeadScripts } from "@/components/seo";
 import SkipLink from "@/components/a11y/SkipLink";
+import CookieBanner from "@/components/layout/CookieBanner";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
@@ -29,6 +30,7 @@ export default function RootLayout({
               {children}
             </main>
             <Footer />
+            <CookieBanner />
           </div>
         </CartProvider>
       </body>
