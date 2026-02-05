@@ -8,67 +8,8 @@
   "orientation": "portrait-primary",
   "theme_color": "#10b981",
   "background_color": "#ffffff",
-  "icons": [
-    {
-      "src": "/favicon-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/favicon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/favicon-192x192-maskable.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
-    }
-  ],
+  "icons": [],
   "categories": ["food", "shopping"],
-  "screenshots": [
-    {
-      "src": "/screenshots/mobile-1.png",
-      "sizes": "540x720",
-      "type": "image/png",
-      "form_factor": "narrow"
-    },
-    {
-      "src": "/screenshots/desktop-1.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide"
-    }
-  ],
-  "shortcuts": [
-    {
-      "name": "Ver Menú",
-      "short_name": "Menú",
-      "description": "Explora nuestro menú completo",
-      "url": "/menu",
-      "icons": [
-        {
-          "src": "/shortcuts/menu.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
-    },
-    {
-      "name": "Mi Carrito",
-      "short_name": "Carrito",
-      "description": "Ver mi carrito de compras",
-      "url": "/carrito",
-      "icons": [
-        {
-          "src": "/shortcuts/cart.png",
-          "sizes": "192x192",
-          "type": "image/png"
-        }
-      ]
-    }
-  ]
+  "screenshots": [],
+  "shortcuts": []
 }
