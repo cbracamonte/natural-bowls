@@ -14,7 +14,7 @@ export function generateRootMetadata(): Metadata {
     description: SITE_CONFIG.description,
 
     // Keywords y metaetiquetas básicas
-    keywords: SEO_KEYWORDS,
+    keywords: [...SEO_KEYWORDS],
     applicationName: SITE_CONFIG.name,
     category: "food & restaurants",
     creator: SITE_CONFIG.name,
@@ -95,12 +95,8 @@ export function generateRootMetadata(): Metadata {
       ],
     },
 
-    // Manifest & Otros
+    // Manifest
     manifest: "/manifest.json",
-    contacts: {
-      email: SITE_CONFIG.email,
-      phone: SITE_CONFIG.phone,
-    },
   };
 }
 
@@ -128,7 +124,7 @@ export function generatePageMetadata(
   return {
     title: pageTitle,
     description: pageData.description,
-    keywords: pageData.keywords ? [...SEO_KEYWORDS, ...pageData.keywords] : SEO_KEYWORDS,
+    keywords: pageData.keywords ? [...SEO_KEYWORDS, ...pageData.keywords] : [...SEO_KEYWORDS],
     openGraph: {
       title: pageTitle,
       description: pageData.description,
@@ -180,7 +176,6 @@ export function generateProductMetadata(product: {
           alt: product.title,
         },
       ],
-      type: "product",
       url: `${SITE_CONFIG.url}/producto/${product.id}`,
     },
   };
