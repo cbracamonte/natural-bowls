@@ -1,6 +1,5 @@
 import { generateRootMetadata, generateViewportConfig } from "@/lib/seo";
 import { LocalBusinessSchema, HeadScripts } from "@/components/seo";
-import SkipLink from "@/components/a11y/SkipLink";
 import CookieBanner from "@/components/layout/CookieBanner";
 import "./globals.css";
 import Header from "@/components/layout/Header";
@@ -22,7 +21,6 @@ export default function RootLayout({
         <LocalBusinessSchema />
       </head>
       <body className="antialiased">
-        <SkipLink />
         <CartProvider>
           <div className="min-h-screen flex flex-col">
             <Header />
