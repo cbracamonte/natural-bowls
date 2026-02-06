@@ -83,20 +83,15 @@ export function generateRootMetadata(): Metadata {
       site: SITE_CONFIG.twitterHandle,
     },
 
-    // Icons (habilitar cuando tengamos favicon/logo final)
-    // icons: {
-    //   icon: [
-    //     { url: "/favicon.ico", sizes: "any" },
-    //     { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-    //     { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-    //   ],
-    //   apple: [
-    //     { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
-    //   ],
-    // },
+    // Icons
+    icons: {
+      icon: [
+        { url: "/images/naturalbowls.ico", sizes: "any" },
+      ],
+    },
 
-    // Manifest (reactivar junto con los iconos)
-    // manifest: "/manifest.json",
+    // Manifest
+    manifest: "/manifest.json",
   };
 }
 
