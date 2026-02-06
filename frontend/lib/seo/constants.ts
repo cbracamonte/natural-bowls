@@ -13,6 +13,7 @@ export const SITE_CONFIG = {
   twitterHandle: "@naturalbowls",
   email: "info@naturalbowls.com",
   phone: "+51 912 341 818",
+  address: "Av. América Sur 3875, Trujillo - Perú",
   locale: "es_ES",
 } as const;
 
@@ -38,11 +39,11 @@ export const SOCIAL_LINKS = {
 
 export const BUSINESS_INFO = {
   type: "LocalBusiness",
-  streetAddress: "123 Health Street",
-  addressLocality: "Your City",
-  addressRegion: "Your State",
-  postalCode: "12345",
-  addressCountry: "US",
+  streetAddress: "Av. América Sur 3875",
+  addressLocality: "Trujillo",
+  addressRegion: "La Libertad",
+  postalCode: "13000",
+  addressCountry: "PE",
   priceRange: "$$",
   servesCuisine: "Health Food",
 } as const;

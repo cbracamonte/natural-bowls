@@ -47,7 +47,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           {/* Add to cart button - Enhanced */}
           <button
             onClick={handleAddToCart}
-            className="absolute bottom-4 right-4 w-12 h-12 bg-[#5D4E37] text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-[#6B8E4E] hover:scale-110 shadow-lg active:scale-95"
+            className="absolute bottom-4 right-4 w-12 h-12 bg-[#5D4E37] text-white rounded-full flex items-center justify-center opacity-60 md:opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-[#6B8E4E] hover:scale-110 hover:opacity-100 shadow-lg active:scale-95"
             title="Agregar al carrito"
           >
             <Plus className="w-6 h-6" />
@@ -69,10 +69,10 @@ export default function ProductCard({ product }: ProductCardProps) {
           {/* Meta Info */}
           <div className="flex items-center justify-between mb-4 pb-4 border-t border-gray-100 pt-4">
             {/* Rating */}
-            <div className="flex items-center gap-1">
+            {/* <div className="flex items-center gap-1">
               <Star className="w-4 h-4 fill-[#6B8E4E] text-[#6B8E4E]" />
               <span className="text-xs font-semibold text-gray-700">4.8</span>
-            </div>
+            </div> */}
 
             {/* Calories if available */}
             {product.calories && (
