@@ -224,7 +224,7 @@ export default function BowlsPage() {
               Ver todo el menú
             </Link>
             <a
-              href="https://wa.me/51936519955"
+              href="https://wa.me/51912341818"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center px-8 py-3.5 border-2 border-white text-white rounded-full font-medium hover:bg-white hover:text-[#5D4E37] transition-colors"

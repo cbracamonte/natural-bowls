@@ -12,7 +12,7 @@ export const SITE_CONFIG = {
   twitterImage: "/twitter-image.jpg",
   twitterHandle: "@naturalbowls",
   email: "info@naturalbowls.com",
-  phone: "+1-555-123-4567",
+  phone: "+51 912 341 818",
   locale: "es_ES",
 } as const;
 

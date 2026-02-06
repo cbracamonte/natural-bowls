@@ -1,167 +1,61 @@
-'use client';
-
-import { useMemo, Suspense } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Suspense } from 'react';
+import MenuContent from '@/components/menu/MenuContent';
+import MenuLoading from '@/components/menu/MenuLoading';
 import { products, categories } from '@/data/products';
-import ProductGrid from '@/components/products/ProductGrid';
-import { cn } from '@/lib/utils';
-
-const PRODUCTS_PER_PAGE = 10;
-
-function MenuContent() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-
-  const selectedCategory = searchParams.get('category') || 'all';
-  const currentPageParam = Number(searchParams.get('page') || '1');
-  const currentPage = Number.isNaN(currentPageParam) ? 1 : Math.max(1, currentPageParam);
-
-  const filteredProducts = useMemo(() => {
-    if (selectedCategory === 'all') {
-      return products;
-    }
-    return products.filter((p) => p.category === selectedCategory);
-  }, [selectedCategory]);
-
-  const totalPages = Math.max(1, Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE));
-  const safePage = Math.min(currentPage, totalPages);
-
-  const paginatedProducts = useMemo(() => {
-    const startIndex = (safePage - 1) * PRODUCTS_PER_PAGE;
-    return filteredProducts.slice(startIndex, startIndex + PRODUCTS_PER_PAGE);
-  }, [filteredProducts, safePage]);
-
-  const handleCategoryChange = (category: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (category === 'all') {
-      params.delete('category');
-    } else {
-      params.set('category', category);
-    }
-    params.delete('page');
-    router.push(`/menu?${params.toString()}`);
-  };
-
-  const handlePageChange = (page: number) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set('page', String(page));
-    router.push(`/menu?${params.toString()}`);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  return (
-    <>
-      {/* Filters */}
-      <div className="flex flex-wrap gap-2 mb-8 justify-center">
-        <button
-          onClick={() => handleCategoryChange('all')}
-          className={cn(
-            'px-4 py-2 rounded-full font-medium transition-colors',
-            selectedCategory === 'all'
-              ? 'bg-[#5D4E37] text-white'
-              : 'bg-white text-gray-600 hover:bg-[#F5F3EF]'
-          )}
-        >
-          Todos
-        </button>
-        {categories.map((category) => (
-          <button
-            key={category.id}
-            onClick={() => handleCategoryChange(category.id)}
-            className={cn(
-              'px-4 py-2 rounded-full font-medium transition-colors',
-              selectedCategory === category.id
-                ? 'bg-[#5D4E37] text-white'
-                : 'bg-white text-gray-600 hover:bg-[#F5F3EF]'
-            )}
-          >
-            {category.name}
-          </button>
-        ))}
-      </div>
-
-      {/* Results count */}
-      <p className="text-gray-500 mb-6">
-        Mostrando {paginatedProducts.length} de {filteredProducts.length} producto{filteredProducts.length !== 1 ? 's' : ''}
-      </p>
-
-      {/* Products Grid */}
-      <ProductGrid products={paginatedProducts} />
-
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-2 mt-12">
-          <button
-            onClick={() => handlePageChange(safePage - 1)}
-            disabled={safePage === 1}
-            className={cn(
-              'p-2 rounded-full transition-colors',
-              currentPage === 1
-                ? 'text-gray-300 cursor-not-allowed'
-                : 'text-[#5D4E37] hover:bg-[#5D4E37] hover:text-white'
-            )}
-          >
-            <ChevronLeft className="w-5 h-5" />
-          </button>
-
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-            <button
-              key={page}
-              onClick={() => handlePageChange(page)}
-              className={cn(
-                'w-10 h-10 rounded-full font-medium transition-colors',
-                safePage === page
-                  ? 'bg-[#5D4E37] text-white'
-                  : 'text-[#5D4E37] hover:bg-[#F5F3EF]'
-              )}
-            >
-              {page}
-            </button>
-          ))}
-
-          <button
-            onClick={() => handlePageChange(safePage + 1)}
-            disabled={safePage === totalPages}
-            className={cn(
-              'p-2 rounded-full transition-colors',
-              currentPage === totalPages
-                ? 'text-gray-300 cursor-not-allowed'
-                : 'text-[#5D4E37] hover:bg-[#5D4E37] hover:text-white'
-            )}
-          >
-            <ChevronRight className="w-5 h-5" />
-          </button>
-        </div>
-      )}
-    </>
-  );
-}
-
-function MenuLoading() {
-  return (
-    <div className="flex justify-center py-12">
-      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#6B8E4E]"></div>
-    </div>
-  );
-}
 
 export default function MenuPage() {
   return (
-    <div className="min-h-screen bg-monstera-cream">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-[#5D4E37] to-[#7A6B52] py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
-            Nuestro Menú
-          </h1>
-          <p className="text-white/80">
-            Descubre todos nuestros bowls, bebidas y más
-          </p>
+    <div className="min-h-screen bg-white">
+      {/* Hero Section */}
+      <div className="bg-linear-to-br from-[#5D4E37] via-[#6B8E4E] to-[#7A6B52] py-16 md:py-20 relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-8">
+            <span className="inline-block text-[#F5F3EF] text-sm uppercase tracking-widest font-semibold mb-3">
+              Catálogo Completo
+            </span>
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
+              Explora Nuestro Menú
+            </h1>
+            <p className="text-lg text-white/90 max-w-2xl mx-auto">
+              Cada bowl es una experiencia única. Filtra por categoría, ordena
+              según tus preferencias y descubre tu combinación favorita entre
+              cientos de opciones.
+            </p>
+          </div>
+
+          {/* Quick Stats */}
+          <div className="grid grid-cols-3 gap-4 md:gap-6 mt-12">
+            <div className="bg-white/10 backdrop-blur rounded-2xl px-4 py-3 md:px-6 md:py-4 text-center border border-white/20">
+              <p className="text-white/80 text-xs md:text-sm uppercase tracking-wide">
+                Productos
+              </p>
+              <p className="text-2xl md:text-3xl font-bold text-white">
+                {products.length}+
+              </p>
+            </div>
+            <div className="bg-white/10 backdrop-blur rounded-2xl px-4 py-3 md:px-6 md:py-4 text-center border border-white/20">
+              <p className="text-white/80 text-xs md:text-sm uppercase tracking-wide">
+                Categorías
+              </p>
+              <p className="text-2xl md:text-3xl font-bold text-white">
+                {categories.length}
+              </p>
+            </div>
+            <div className="bg-white/10 backdrop-blur rounded-2xl px-4 py-3 md:px-6 md:py-4 text-center border border-white/20">
+              <p className="text-white/80 text-xs md:text-sm uppercase tracking-wide">
+                Frescos
+              </p>
+              <p className="text-2xl md:text-3xl font-bold text-white">100%</p>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Main Content */}
+      <div
+        id="menu-content"
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16"
+      >
         <Suspense fallback={<MenuLoading />}>
           <MenuContent />
         </Suspense>
