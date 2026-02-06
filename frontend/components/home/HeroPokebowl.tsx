@@ -1,25 +1,43 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
+import { useState } from 'react';
 
 export default function HeroPokebowl() {
+  const [videoLoaded, setVideoLoaded] = useState(false);
+
   return (
     <section className="relative w-full h-screen min-h-screen overflow-hidden" role="region" aria-label="Pokebowl - Hero section">
-      {/* Video Background */}
+      {/* Mobile: Image Background */}
+      <Image
+        src="/images/poke-bowl.jpg"
+        alt="Pokebowl background"
+        fill
+        className="absolute inset-0 w-full h-full object-cover md:hidden"
+        priority
+      />
+
+      {/* Desktop: Video Background */}
       <video
         autoPlay
         muted
         loop
         playsInline
-        className="absolute inset-0 w-full h-full object-cover"
+        preload="metadata"
+        poster="/images/poke-bowl.jpg"
+        onCanPlayThrough={() => setVideoLoaded(true)}
+        className={`absolute inset-0 w-full h-full object-cover hidden md:block transition-opacity duration-500 ${
+          videoLoaded ? 'opacity-100' : 'opacity-0'
+        }`}
         aria-hidden="true"
       >
         <source src="/videos/pokebowl.mp4" type="video/mp4" />
       </video>
 
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-linear-to-b from-black/50 via-black/30 to-black/60" />
+      {/* Overlay - Mobile darker, Desktop lighter */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/70 md:from-black/50 md:via-black/30 md:to-black/60" />
 
       {/* Content */}
       <div className="relative h-full flex items-center justify-center px-4 sm:px-6 lg:px-8">
@@ -70,14 +88,6 @@ export default function HeroPokebowl() {
               <p className="text-sm text-white/70">Calificación</p>
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-        <div className="text-white/60 text-sm">Desliza hacia abajo</div>
-        <div className="w-6 h-10 border-2 border-white/40 rounded-full flex items-center justify-center mt-2">
-          <div className="w-1 h-2 bg-white/60 rounded-full animate-pulse" />
         </div>
       </div>
     </section>
