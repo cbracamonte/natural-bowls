@@ -11,11 +11,18 @@ export default function Footer() {
           <div className="col-span-1 md:col-span-2">
             <Link href="/" className="flex items-center mb-4" aria-label="Volver al inicio">
               <Image
-                src="/images/logo.png"
+                src="/images/nb-isotipo-white.svg"
                 alt="Natural Bowls"
-                width={80}
-                height={80}
-                className="w-20 h-20"
+                width={64}
+                height={64}
+                className="w-16 h-16 md:hidden"
+              />
+              <Image
+                src="/images/nb-logotipo-white.svg"
+                alt="Natural Bowls"
+                width={180}
+                height={64}
+                className="hidden md:block h-16 w-auto object-contain"
               />
             </Link>
             <p className="text-white/70 mb-4 max-w-md">

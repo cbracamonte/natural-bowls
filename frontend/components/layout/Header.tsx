@@ -24,11 +24,19 @@ export default function Header() {
           {/* Logo */}
           <Link href="/" className="flex items-center py-2" aria-label="Ir al inicio">
             <Image
-              src="/images/logo.png"
+              src="/images/nb-isotipo.svg"
               alt="Natural Bowls"
-              width={145}
-              height={160}
-              className="h-14 md:h-16 w-auto object-contain"
+              width={56}
+              height={56}
+              className="h-12 w-12 md:hidden"
+              priority
+            />
+            <Image
+              src="/images/nb-logotipo.svg"
+              alt="Natural Bowls"
+              width={180}
+              height={64}
+              className="hidden md:block h-14 md:h-16 w-auto object-contain"
               priority
             />
           </Link>

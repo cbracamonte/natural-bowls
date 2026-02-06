@@ -30,7 +30,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           aria-describedby={errorId}
           required={required}
           className={cn(
-            'w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6B8E4E] focus:border-transparent transition-colors',
+            'w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6B8E4E] focus:border-transparent transition-colors',
             error && 'border-red-500 focus:ring-red-500',
             className
           )}

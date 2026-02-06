@@ -26,7 +26,7 @@ export default function CartItem({ item }: CartItemProps) {
       {/* Image */}
       <Link
         href={`/producto/${product.id}`}
-        className="w-20 h-20 bg-emerald-100 rounded-xl flex items-center justify-center flex-shrink-0"
+        className="w-20 h-20 bg-emerald-100 rounded-2xl flex items-center justify-center flex-shrink-0"
       >
         <span className="text-4xl">{categoryEmojis[product.category]}</span>
       </Link>
