@@ -3,10 +3,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
-import { useState } from 'react';
 
 export default function HeroPokebowl() {
-  const [videoLoaded, setVideoLoaded] = useState(false);
 
   return (
     <section className="relative w-full h-screen min-h-screen overflow-hidden" role="region" aria-label="Pokebowl - Hero section">
@@ -25,12 +23,9 @@ export default function HeroPokebowl() {
         muted
         loop
         playsInline
-        preload="metadata"
+        preload="auto"
         poster="/images/poke-bowl.jpg"
-        onCanPlayThrough={() => setVideoLoaded(true)}
-        className={`absolute inset-0 w-full h-full object-cover hidden md:block transition-opacity duration-500 ${
-          videoLoaded ? 'opacity-100' : 'opacity-0'
-        }`}
+        className="absolute inset-0 w-full h-full object-cover hidden md:block"
         aria-hidden="true"
       >
         <source src="/videos/pokebowl.mp4" type="video/mp4" />
@@ -44,17 +39,17 @@ export default function HeroPokebowl() {
         <div className="text-center max-w-2xl mx-auto">
           <div className="mb-6 inline-block">
             <span className="px-4 py-2 bg-white/10 backdrop-blur-md rounded-full text-white text-sm font-medium border border-white/20">
-              Proteína & Frescura
+              Nutrición Premium
             </span>
           </div>
 
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight drop-shadow-lg">
             Pokebowls<br />
-            <span className="text-[#9CB973]">Japonés & Fresco</span>
+            <span className="text-[#9CB973]">Frescos Cada Día</span>
           </h1>
 
           <p className="text-lg md:text-xl text-white/90 mb-8 max-w-xl mx-auto drop-shadow-md">
-            Pescado premium, vegetales frescos y aromas de Japón. Cada cucharada es una experiencia.
+            Pescado premium seleccionado a diario con vegetales frescos de la región. Nutrición balanceada que realmente te satisface.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -62,7 +57,7 @@ export default function HeroPokebowl() {
               href="/bowls?category=pokebowl"
               className="inline-flex items-center justify-center px-8 py-4 bg-[#6B8E4E] hover:bg-[#5A7A40] text-white rounded-full font-bold text-lg transition-all duration-300 transform hover:scale-105 shadow-xl"
             >
-              Ver Pokebowls
+              Descubre Nuestros Pokebowls
               <ArrowRight className="w-5 h-5 ml-2" />
             </Link>
             <Link
@@ -77,15 +72,15 @@ export default function HeroPokebowl() {
           <div className="mt-16 grid grid-cols-3 gap-4 sm:gap-8 max-w-md mx-auto">
             <div>
               <p className="text-2xl sm:text-3xl font-bold text-[#9CB973]">100%</p>
-              <p className="text-sm text-white/70">Pescado Fresco</p>
+              <p className="text-sm text-white/70">Fresco Diario</p>
             </div>
             <div>
-              <p className="text-2xl sm:text-3xl font-bold text-[#9CB973]">12+</p>
-              <p className="text-sm text-white/70">Opciones</p>
+              <p className="text-2xl sm:text-3xl font-bold text-[#9CB973]">20+</p>
+              <p className="text-sm text-white/70">Combinaciones</p>
             </div>
             <div>
-              <p className="text-2xl sm:text-3xl font-bold text-[#9CB973]">5⭐</p>
-              <p className="text-sm text-white/70">Calificación</p>
+              <p className="text-2xl sm:text-3xl font-bold text-[#9CB973]">4.9★</p>
+              <p className="text-sm text-white/70">Recomendado</p>
             </div>
           </div>
         </div>

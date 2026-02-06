@@ -3,10 +3,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
-import { useState } from 'react';
 
 export default function HeroSmoothiebowl() {
-  const [videoLoaded, setVideoLoaded] = useState(false);
 
   return (
     <section className="relative w-full h-screen min-h-screen overflow-hidden" role="region" aria-label="Smoothiebowl - Hero section">
@@ -25,12 +23,9 @@ export default function HeroSmoothiebowl() {
         muted
         loop
         playsInline
-        preload="metadata"
+        preload="auto"
         poster="/images/smoothie-bowl.jpg"
-        onCanPlayThrough={() => setVideoLoaded(true)}
-        className={`absolute inset-0 w-full h-full object-cover hidden md:block transition-opacity duration-500 ${
-          videoLoaded ? 'opacity-100' : 'opacity-0'
-        }`}
+        className="absolute inset-0 w-full h-full object-cover hidden md:block"
         aria-hidden="true"
       >
         <source src="/videos/smothiebowl.mp4" type="video/mp4" />
@@ -44,17 +39,17 @@ export default function HeroSmoothiebowl() {
         <div className="text-center max-w-2xl mx-auto">
           <div className="mb-6 inline-block">
             <span className="px-4 py-2 bg-white/10 backdrop-blur-md rounded-full text-white text-sm font-medium border border-white/20">
-              Frutas & Energía
+              Energía Natural
             </span>
           </div>
 
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight drop-shadow-lg">
             Smoothie Bowls<br />
-            <span className="text-[#C5D9A4]">Coloridos & Saludables</span>
+            <span className="text-[#C5D9A4]">Tu Desayuno Perfecto</span>
           </h1>
 
           <p className="text-lg md:text-xl text-white/90 mb-8 max-w-xl mx-auto drop-shadow-md">
-            Frutas tropicales, yogur cremoso y granola crujiente. Tu desayuno perfecto espera.
+            Frutas tropicales de la mejor calidad, yogur natural y toppings crujientes que transforman tu mañana en una experiencia deliciosa.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -62,7 +57,7 @@ export default function HeroSmoothiebowl() {
               href="/bowls?category=smoothiebowl"
               className="inline-flex items-center justify-center px-8 py-4 bg-[#C5D9A4] hover:bg-[#9CB973] text-[#4A3E2C] rounded-full font-bold text-lg transition-all duration-300 transform hover:scale-105 shadow-xl"
             >
-              Ver Smoothie Bowls
+              Ordena Tu Bowl
               <ArrowRight className="w-5 h-5 ml-2" />
             </Link>
             <Link
@@ -76,16 +71,16 @@ export default function HeroSmoothiebowl() {
           {/* Stats */}
           <div className="mt-16 grid grid-cols-3 gap-4 sm:gap-8 max-w-md mx-auto">
             <div>
-              <p className="text-2xl sm:text-3xl font-bold text-[#C5D9A4]">8+</p>
-              <p className="text-sm text-white/70">Tipos Base</p>
+              <p className="text-2xl sm:text-3xl font-bold text-[#C5D9A4]">10+</p>
+              <p className="text-sm text-white/70">Bases Naturales</p>
             </div>
             <div>
-              <p className="text-2xl sm:text-3xl font-bold text-[#C5D9A4]">15+</p>
-              <p className="text-sm text-white/70">Toppings</p>
+              <p className="text-2xl sm:text-3xl font-bold text-[#C5D9A4]">20+</p>
+              <p className="text-sm text-white/70">Ingredientes</p>
             </div>
             <div>
               <p className="text-2xl sm:text-3xl font-bold text-[#C5D9A4]">100%</p>
-              <p className="text-sm text-white/70">Natural</p>
+              <p className="text-sm text-white/70">Orgánico</p>
             </div>
           </div>
         </div>

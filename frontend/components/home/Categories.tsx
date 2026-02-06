@@ -29,10 +29,10 @@ export default function Categories() {
     <section className="py-20 bg-monstera-cream">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-3xl md:text-4xl font-bold text-[#5D4E37] text-center mb-4">
-          Descubre nuestro menú
+          Explora Cada Categoría
         </h2>
         <p className="text-gray-600 text-center mb-12 max-w-2xl mx-auto">
-          Desde bowls nutritivos hasta wraps y sándwiches, tenemos algo para cada momento del día.
+          Desde bowls proteicos de océano hasta frutas tropicales. Cada categoría es una experiencia diferente.
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

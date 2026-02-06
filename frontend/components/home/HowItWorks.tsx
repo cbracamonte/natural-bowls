@@ -4,26 +4,26 @@ const steps = [
   {
     number: '01',
     icon: Utensils,
-    title: 'Elige tu bowl',
-    description: 'Explora nuestro menú y selecciona tus favoritos.',
+    title: 'Elige con Libertad',
+    description: 'Personaliza cada bowl exactamente como deseas. 20+ ingredientes a tu servicio.',
   },
   {
     number: '02',
     icon: Leaf,
-    title: 'Ingredientes frescos',
-    description: 'Preparamos todo con productos naturales del día.',
+    title: 'Frescura Garantizada',
+    description: 'Ingredientes premium seleccionados hoy. Nada procesado, solo naturaleza.',
   },
   {
     number: '03',
     icon: Truck,
-    title: 'Delivery o recojo',
-    description: 'Recibe tu pedido o recógelo en tienda.',
+    title: 'Entrega Rápida',
+    description: 'Delivery en 30 min o recógelo en tienda. Elegancia sin esperas.',
   },
   {
     number: '04',
     icon: Heart,
-    title: 'Disfruta',
-    description: 'Comida saludable lista para disfrutar.',
+    title: 'Disfruta Responsable',
+    description: 'Comida que alimenta cuerpo y conciencia. Nutrición consciente en cada bocado.',
   },
 ];
 

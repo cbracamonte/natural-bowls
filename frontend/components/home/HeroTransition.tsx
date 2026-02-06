@@ -30,8 +30,7 @@ export default function HeroTransition() {
 
         {/* Description */}
         <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
-          Desde el mar hasta tu mesa. Cada bowl es una celebración de ingredientes frescos, 
-          sabores auténticos y el compromiso con tu bienestar.
+          Sabor auténtico con ingredientes que realmente importan. Cada bowl cuenta la historia de productores locales comprometidos con tu salud.
         </p>
 
         {/* Divider */}
@@ -43,7 +42,7 @@ export default function HeroTransition() {
 
         {/* Subheading */}
         <p className="text-lg text-[#6B8E4E] font-semibold">
-          ¿Y si te sorprendemos con algo más?
+          Explora una nueva categoría de sabor
         </p>
       </div>
     </section>

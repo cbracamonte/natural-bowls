@@ -27,10 +27,10 @@ export default function Values() {
     <section className="py-20 bg-monstera-green">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-3xl md:text-4xl font-bold text-[#5D4E37] text-center mb-4">
-          ¿Qué más te ofrecemos?
+          Tu Bienestar, Nuestro Compromiso
         </h2>
         <p className="text-gray-600 text-center mb-12 max-w-2xl mx-auto">
-          Más que un restaurante, somos tu opción saludable para cada momento.
+          Tres formas de vivir más saludable, sin sacrificar el placer de comer bien.
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
