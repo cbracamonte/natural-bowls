@@ -1,11 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft, CreditCard, Banknote } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
-import { formatPrice, generateOrderId } from '@/lib/utils';
+import { formatPrice } from '@/lib/utils';
+import { SITE_CONFIG } from '@/lib/seo/constants';
 import { cn } from '@/lib/utils';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
@@ -14,8 +14,7 @@ const SHIPPING_COST = 49;
 const FREE_SHIPPING_THRESHOLD = 300;
 
 export default function CheckoutPage() {
-  const router = useRouter();
-  const { items, total, clearCart } = useCart();
+  const { items, total } = useCart();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'cash'>('card');
   const [formData, setFormData] = useState({
@@ -42,8 +41,8 @@ export default function CheckoutPage() {
     }
     if (!formData.phone.trim()) {
       newErrors.phone = 'El teléfono es requerido';
-    } else if (!/^\d{10}$/.test(formData.phone.replace(/\D/g, ''))) {
-      newErrors.phone = 'Teléfono inválido (10 dígitos)';
+    } else if (!/^\d{9}$/.test(formData.phone.replace(/\D/g, ''))) {
+      newErrors.phone = 'Teléfono inválido (9 dígitos)';
     }
     if (!formData.address.trim()) newErrors.address = 'La dirección es requerida';
     if (!formData.city.trim()) newErrors.city = 'La ciudad es requerida';
@@ -59,25 +58,45 @@ export default function CheckoutPage() {
 
     setIsSubmitting(true);
 
-    // Simulate order processing
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-
-    const orderId = generateOrderId();
-
-    // Store order in sessionStorage for confirmation page
-    sessionStorage.setItem(
-      'lastOrder',
-      JSON.stringify({
-        id: orderId,
-        items,
-        total: finalTotal,
-        customer: { ...formData, paymentMethod },
-        createdAt: new Date().toISOString(),
+    const whatsappNumber = SITE_CONFIG.phone.replace(/\D/g, '');
+    const paymentLabel = paymentMethod === 'card' ? 'Tarjeta' : 'Efectivo';
+    const itemsText = items
+      .map((item, index) => {
+        const lineTotal = item.product.price * item.quantity;
+        return (
+          `${index + 1}. ${item.product.name} x${item.quantity}\n` +
+          `   ${item.product.description}\n` +
+          `   ${formatPrice(item.product.price)} c/u - ${formatPrice(lineTotal)}`
+        );
       })
-    );
+      .join('\n');
 
-    clearCart();
-    router.push('/confirmacion');
+    const notesText = formData.notes.trim()
+      ? `\nNotas: ${formData.notes.trim()}`
+      : '';
+
+    const message = [
+      'Nuevo pedido - Natural Bowls',
+      `Nombre: ${formData.name}`,
+      `Telefono: ${formData.phone}`,
+      `Email: ${formData.email}`,
+      `Direccion: ${formData.address}, ${formData.city}`,
+      `Metodo de pago: ${paymentLabel}`,
+      '',
+      'Productos:',
+      itemsText,
+      '',
+      `Subtotal: ${formatPrice(total)}`,
+      `Envio: ${shipping === 0 ? 'Gratis' : formatPrice(shipping)}`,
+      `Total: ${formatPrice(finalTotal)}`,
+      '',
+      'Primer pedido: solicitar descuento especial.',
+      notesText,
+    ].join('\n');
+
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+    setIsSubmitting(false);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -129,14 +148,19 @@ export default function CheckoutPage() {
                   Información de Contacto
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Input
-                    label="Nombre completo"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    error={errors.name}
-                    placeholder="Tu nombre"
-                  />
+                  <div>
+                    <Input
+                      label="Nombre completo"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      error={errors.name}
+                      placeholder="Tu nombre"
+                    />
+                    <p className="mt-1 text-xs text-gray-500">
+                      Primer pedido web: descuento especial.
+                    </p>
+                  </div>
                   <Input
                     label="Email"
                     name="email"
@@ -147,13 +171,13 @@ export default function CheckoutPage() {
                     placeholder="tu@email.com"
                   />
                   <Input
-                    label="Teléfono"
+                    label="Telefono"
                     name="phone"
                     type="tel"
                     value={formData.phone}
                     onChange={handleInputChange}
                     error={errors.phone}
-                    placeholder="55 1234 5678"
+                    placeholder="912 341 818"
                     className="md:col-span-2"
                   />
                 </div>
@@ -299,7 +323,7 @@ export default function CheckoutPage() {
                   size="lg"
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? 'Procesando...' : 'Confirmar Pedido'}
+                  {isSubmitting ? 'Abriendo WhatsApp...' : 'Enviar pedido por WhatsApp'}
                 </Button>
               </div>
             </div>
