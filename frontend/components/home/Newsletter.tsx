@@ -30,16 +30,15 @@ export default function Newsletter() {
               Newsletter
             </span>
             <h2 className="mt-4 text-3xl md:text-4xl lg:text-5xl font-semibold leading-tight">
-              Suscríbete y obtén <span className="text-[#C5D9A4]">10% de descuento</span>
+              Acceso Exclusivo a Ofertas<br /><span className="text-[#C5D9A4]">Solo para Suscriptores</span>
             </h2>
             <p className="mt-4 text-white/80 text-base md:text-lg max-w-xl">
-              Recibe promociones exclusivas, nuevos productos y descuentos especiales
-              directamente en tu correo.
+              Recibe 10% en tu próximo pedido + promociones semanales que no verás en redes sociales. Únete a nuestra comunidad consciente.
             </p>
 
             {submitted ? (
               <div className="mt-6 rounded-2xl border border-white/15 bg-white/10 px-6 py-4 text-white">
-                ¡Gracias por suscribirte! Revisa tu correo para tu código de descuento.
+                  ¡Bienvenido a la comunidad! Tu descuento está en camino.
               </div>
             ) : (
               <form
@@ -60,7 +59,7 @@ export default function Newsletter() {
                   type="submit"
                   className="rounded-2xl bg-[#9CB973] px-8 py-4 text-[#3E3426] font-semibold shadow-[0_12px_30px_rgba(0,0,0,0.2)] transition-transform duration-200 hover:-translate-y-0.5 hover:bg-[#C5D9A4]"
                 >
-                  Suscribirse
+                  Obtén Mi Descuento
                 </button>
               </form>
             )}
