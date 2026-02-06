@@ -39,7 +39,7 @@ export default function HowItWorks() {
           {steps.map((step, index) => (
             <div key={index} className="text-center">
               <div className="relative inline-block mb-6">
-                <div className="w-20 h-20 rounded-2xl border-2 border-[#C5D9A4] flex items-center justify-center bg-white">
+                <div className="w-20 h-20 rounded-3xl border-2 border-[#C5D9A4] flex items-center justify-center bg-white shadow-md">
                   <span className="text-2xl font-bold text-[#5D4E37]">{step.number}</span>
                 </div>
               </div>

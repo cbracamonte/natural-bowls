@@ -20,11 +20,19 @@ export default function Hero() {
             {/* Logo prominente */}
             <div className="flex justify-center lg:justify-start mb-8">
               <Image
-                src="/images/logo.png"
+                src="/images/nb-isotipo.svg"
                 alt="Natural Bowls - Smoothies & Café"
-                width={180}
-                height={180}
-                className="w-40 h-40 md:w-48 md:h-48 drop-shadow-lg"
+                width={160}
+                height={160}
+                className="w-32 h-32 sm:w-36 sm:h-36 md:hidden drop-shadow-lg"
+                priority
+              />
+              <Image
+                src="/images/nb-logotipo.svg"
+                alt="Natural Bowls - Smoothies & Café"
+                width={240}
+                height={120}
+                className="hidden md:block h-28 md:h-32 w-auto drop-shadow-lg"
                 priority
               />
             </div>
