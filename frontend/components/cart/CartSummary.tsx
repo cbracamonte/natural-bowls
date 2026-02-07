@@ -5,14 +5,10 @@ import { useCart } from '@/context/CartContext';
 import { formatPrice } from '@/lib/utils';
 import Button from '@/components/ui/Button';
 
-const SHIPPING_COST = 49;
-const FREE_SHIPPING_THRESHOLD = 300;
-
 export default function CartSummary() {
   const { total, itemCount } = useCart();
 
-  const shipping = total >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
-  const finalTotal = total + shipping;
+  const finalTotal = total;
 
   return (
     <div className="bg-gray-50 rounded-2xl p-6">
@@ -25,21 +21,6 @@ export default function CartSummary() {
           <span>Subtotal ({itemCount} productos)</span>
           <span>{formatPrice(total)}</span>
         </div>
-        <div className="flex justify-between text-gray-600">
-          <span>Envío</span>
-          <span>
-            {shipping === 0 ? (
-              <span className="text-[#6B8E4E]-600 font-medium">Gratis</span>
-            ) : (
-              formatPrice(shipping)
-            )}
-          </span>
-        </div>
-        {shipping > 0 && (
-          <p className="text-xs text-gray-500">
-            ¡Envío gratis en pedidos mayores a {formatPrice(FREE_SHIPPING_THRESHOLD)}!
-          </p>
-        )}
       </div>
 
       <div className="border-t my-4" />

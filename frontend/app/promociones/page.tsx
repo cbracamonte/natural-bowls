@@ -6,7 +6,7 @@ export default function PromocionesPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-r from-[#5D4E37] to-[#7A6B52] py-20">
+      <section className="relative bg-gradient-to-r from-[#5D4E37] to-[#7A6B52] py-20 scroll-mt-48">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <span className="inline-flex items-center gap-2 px-4 py-1 bg-[#9CB973] text-[#5D4E37] rounded-full text-sm font-medium mb-4">
             <Gift className="w-4 h-4" />

@@ -2,24 +2,20 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { ArrowLeft, CreditCard, Banknote } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
 import { formatPrice } from '@/lib/utils';
 import { SITE_CONFIG } from '@/lib/seo/constants';
-import { cn } from '@/lib/utils';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 
-const SHIPPING_COST = 49;
-const FREE_SHIPPING_THRESHOLD = 300;
+
 
 export default function CheckoutPage() {
   const { items, total } = useCart();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<'card' | 'cash'>('card');
   const [formData, setFormData] = useState({
     name: '',
-    email: '',
     phone: '',
     address: '',
     city: '',
@@ -27,18 +23,12 @@ export default function CheckoutPage() {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const shipping = total >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
-  const finalTotal = total + shipping;
+  const finalTotal = total;
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
 
     if (!formData.name.trim()) newErrors.name = 'El nombre es requerido';
-    if (!formData.email.trim()) {
-      newErrors.email = 'El email es requerido';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Email inválido';
-    }
     if (!formData.phone.trim()) {
       newErrors.phone = 'El teléfono es requerido';
     } else if (!/^\d{9}$/.test(formData.phone.replace(/\D/g, ''))) {
@@ -59,7 +49,6 @@ export default function CheckoutPage() {
     setIsSubmitting(true);
 
     const whatsappNumber = SITE_CONFIG.phone.replace(/\D/g, '');
-    const paymentLabel = paymentMethod === 'card' ? 'Tarjeta' : 'Efectivo';
     const itemsText = items
       .map((item, index) => {
         const lineTotal = item.product.price * item.quantity;
@@ -79,15 +68,11 @@ export default function CheckoutPage() {
       'Nuevo pedido - Natural Bowls',
       `Nombre: ${formData.name}`,
       `Telefono: ${formData.phone}`,
-      `Email: ${formData.email}`,
       `Direccion: ${formData.address}, ${formData.city}`,
-      `Metodo de pago: ${paymentLabel}`,
       '',
       'Productos:',
       itemsText,
       '',
-      `Subtotal: ${formatPrice(total)}`,
-      `Envio: ${shipping === 0 ? 'Gratis' : formatPrice(shipping)}`,
       `Total: ${formatPrice(finalTotal)}`,
       '',
       'Primer pedido: solicitar descuento especial.',
@@ -123,7 +108,7 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen bg-monstera-cream">
+    <div className="min-h-screen bg-monstera-cream scroll-mt-48">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Back button */}
         <Link
@@ -161,15 +146,7 @@ export default function CheckoutPage() {
                       Primer pedido web: descuento especial.
                     </p>
                   </div>
-                  <Input
-                    label="Email"
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    error={errors.email}
-                    placeholder="tu@email.com"
-                  />
+
                   <Input
                     label="Telefono"
                     name="phone"
@@ -221,56 +198,7 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
-              {/* Payment Method */}
-              <div className="bg-white rounded-2xl p-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                  Método de Pago
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <button
-                    type="button"
-                    onClick={() => setPaymentMethod('card')}
-                    className={cn(
-                      'flex items-center gap-4 p-4 border-2 rounded-xl transition-colors',
-                      paymentMethod === 'card'
-                        ? 'border-[#6B8E4E]-600 bg-[#6B8E4E]-50'
-                        : 'border-gray-200 hover:border-gray-300'
-                    )}
-                  >
-                    <CreditCard
-                      className={cn(
-                        'w-6 h-6',
-                        paymentMethod === 'card' ? 'text-[#6B8E4E]-600' : 'text-gray-400'
-                      )}
-                    />
-                    <div className="text-left">
-                      <p className="font-medium text-gray-900">Tarjeta</p>
-                      <p className="text-sm text-gray-500">Débito o crédito</p>
-                    </div>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setPaymentMethod('cash')}
-                    className={cn(
-                      'flex items-center gap-4 p-4 border-2 rounded-xl transition-colors',
-                      paymentMethod === 'cash'
-                        ? 'border-[#6B8E4E]-600 bg-[#6B8E4E]-50'
-                        : 'border-gray-200 hover:border-gray-300'
-                    )}
-                  >
-                    <Banknote
-                      className={cn(
-                        'w-6 h-6',
-                        paymentMethod === 'cash' ? 'text-[#6B8E4E]-600' : 'text-gray-400'
-                      )}
-                    />
-                    <div className="text-left">
-                      <p className="font-medium text-gray-900">Efectivo</p>
-                      <p className="text-sm text-gray-500">Pago al recibir</p>
-                    </div>
-                  </button>
-                </div>
-              </div>
+
             </div>
 
             {/* Order Summary */}
@@ -291,23 +219,6 @@ export default function CheckoutPage() {
                       </span>
                     </div>
                   ))}
-                </div>
-
-                <div className="border-t pt-4 space-y-2">
-                  <div className="flex justify-between text-sm text-gray-600">
-                    <span>Subtotal</span>
-                    <span>{formatPrice(total)}</span>
-                  </div>
-                  <div className="flex justify-between text-sm text-gray-600">
-                    <span>Envío</span>
-                    <span>
-                      {shipping === 0 ? (
-                        <span className="text-[#6B8E4E]-600">Gratis</span>
-                      ) : (
-                        formatPrice(shipping)
-                      )}
-                    </span>
-                  </div>
                 </div>
 
                 <div className="border-t mt-4 pt-4">

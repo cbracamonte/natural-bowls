@@ -24,7 +24,7 @@ const offerings = [
 
 export default function Values() {
   return (
-    <section className="py-20 bg-monstera-green">
+    <section id="valores" className="py-20 bg-monstera-green scroll-mt-48">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-3xl md:text-4xl font-bold text-[#5D4E37] text-center mb-4">
           Tu Bienestar, Nuestro Compromiso

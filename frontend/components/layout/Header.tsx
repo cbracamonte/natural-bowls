@@ -17,6 +17,7 @@ export default function Header() {
     { name: 'Menú', href: '/menu' },
     { name: 'Bowls', href: '/bowls' },
     { name: 'Promociones', href: '/promociones' },
+    { name: 'Ubicación', href: '/#ubicacion' },
   ];
 
   // Handle swipe to close menu
@@ -49,9 +50,9 @@ export default function Header() {
     <header className="bg-white sticky top-0 z-40 shadow-sm" role="banner">
       {/* Desktop Navigation */}
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" aria-label="Navegación principal">
-        <div className="flex justify-between items-center h-24 md:h-28">
+        <div className="flex justify-center items-center h-24 md:h-28 relative">
           {/* Left Navigation */}
-          <ul className="hidden lg:flex items-center space-x-6" role="list">
+          <ul className="hidden lg:flex items-center space-x-6 absolute left-0" role="list">
             {navigation.map((item) => (
               <li key={item.name}>
                 <Link
@@ -65,7 +66,7 @@ export default function Header() {
           </ul>
 
           {/* Center Logo */}
-          <Link href="/" className="flex-shrink-0 mx-4 lg:mx-8" aria-label="Ir al inicio">
+          <Link href="/" className="shrink-0" aria-label="Ir al inicio">
             {/* Mobile Logo */}
             <Image
               src="/images/nb-isotipo.svg"
@@ -87,7 +88,7 @@ export default function Header() {
           </Link>
 
           {/* Right Section */}
-          <div className="flex items-center space-x-2 md:space-x-4">
+          <div className="flex items-center space-x-2 md:space-x-4 absolute right-0">
             {/* Cart Button */}
             <Link
               href="/carrito"
