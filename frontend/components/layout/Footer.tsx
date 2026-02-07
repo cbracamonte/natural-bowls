@@ -93,24 +93,36 @@ export default function Footer() {
             <h3 className="text-lg font-semibold mb-4">Contacto</h3>
             <address className="not-italic space-y-3 text-white/70">
               <div className="flex items-start space-x-3">
-                <MapPin className="w-5 h-5 text-[#9CB973] flex-shrink-0 mt-0.5" aria-hidden />
+                <MapPin className="w-5 h-5 text-[#9CB973] shrink-0 mt-0.5" aria-hidden />
                 <span>Trujillo, Perú</span>
               </div>
               <div className="flex items-center space-x-3">
-                <Phone className="w-5 h-5 text-[#9CB973] flex-shrink-0" aria-hidden />
+                <Phone className="w-5 h-5 text-[#9CB973] shrink-0" aria-hidden />
                 <a href="tel:+51912341818" className="hover:text-[#9CB973]">912 341 818</a>
               </div>
               <div className="flex items-center space-x-3">
-                <Clock className="w-5 h-5 text-[#9CB973] flex-shrink-0" aria-hidden />
+                <Clock className="w-5 h-5 text-[#9CB973] shrink-0" aria-hidden />
                 <span aria-label="Horario de atención">Lun-Dom: 8am - 9pm</span>
               </div>
             </address>
           </div>
         </div>
 
-        <div className="border-t border-white/20 mt-8 pt-8 flex flex-col md:flex-row justify-between items-center text-white/60 text-sm">
-          <p>&copy; {new Date().getFullYear()} Natural Bowls. Todos los derechos reservados.</p>
-          <p className="mt-2 md:mt-0" aria-label="Usuario de Instagram">@naturalbowls.cafe</p>
+        <div className="border-t border-white/20 mt-8 pt-8 flex flex-col md:flex-row items-center justify-between text-white/60 text-sm gap-4">
+          <p>&copy; {new Date().getFullYear()} Todos los derechos reservados.</p>
+          <p className="flex-1 text-center">@naturalbowls.cafe</p>
+          <p>
+            <span className="text-[#9CB973] font-medium">Powered By </span>
+            <a
+              href="https://wa.me/51914797228?text=Hola%20Braxions%2C%20me%20interesa%20obtener%20informaci%C3%B3n%20sobre%20sus%20servicios%20de%20creaci%C3%B3n%20de%20sitios%20web.%20%C2%BFPueden%20compartirme%20m%C3%A1s%20detalles%20y%20costos%3F"
+              target="_blank"
+              rel="noopener noreferrer external"
+              className="text-[#9CB973] hover:text-white transition-colors font-medium"
+              aria-label="Braxions - Contactar por WhatsApp"
+            >
+              Braxions
+            </a>
+          </p>
         </div>
       </div>
     </footer>

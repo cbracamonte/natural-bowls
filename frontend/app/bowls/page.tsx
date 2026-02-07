@@ -23,7 +23,7 @@ export default function BowlsPage() {
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
       <section
-        className="relative bg-gradient-to-r from-[#6B8E4E] to-[#9CB973] py-20"
+        className="relative bg-gradient-to-r from-[#6B8E4E] to-[#9CB973] py-20 scroll-mt-48"
         aria-labelledby="bowls-hero-title"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

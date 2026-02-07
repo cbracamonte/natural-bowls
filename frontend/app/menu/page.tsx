@@ -7,7 +7,7 @@ export default function MenuPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <div className="bg-linear-to-br from-[#5D4E37] via-[#6B8E4E] to-[#7A6B52] py-16 md:py-20 relative">
+      <div className="bg-linear-to-br from-[#5D4E37] via-[#6B8E4E] to-[#7A6B52] py-16 md:py-20 relative scroll-mt-48">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
             <span className="inline-block text-[#F5F3EF] text-sm uppercase tracking-widest font-semibold mb-3">

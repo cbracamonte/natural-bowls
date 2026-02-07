@@ -1,3 +1,5 @@
+'use client';
+
 import { Utensils, Leaf, Truck, Heart } from 'lucide-react';
 
 const steps = [
@@ -29,7 +31,7 @@ const steps = [
 
 export default function HowItWorks() {
   return (
-    <section className="py-20 bg-monstera">
+    <section id="como-funciona" className="py-20 bg-monstera scroll-mt-48">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-3xl md:text-4xl font-bold text-[#5D4E37] text-center mb-16">
           ¿Cómo funciona Natural Bowls?
