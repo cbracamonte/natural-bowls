@@ -6,7 +6,7 @@ export const SITE_CONFIG = {
   title: "Natural Bowls | Comida Saludable y Deliciosa",
   description:
     "Descubre Natural Bowls: poke bowls, smoothie bowls, bebidas naturales y café gourmet. Comida fresca, orgánica y personalizable entregada a domicilio.",
-  url: process.env.NEXT_PUBLIC_BASE_URL || "https://naturalbowls.com",
+  url: process.env.NEXT_PUBLIC_SITE_URL || "https://naturalbowls.com",
   ogImage: "/og-image.jpg",
   ogImageSquare: "/og-image-square.jpg",
   twitterImage: "/twitter-image.jpg",

@@ -6,7 +6,7 @@ const apiKey = process.env.RESEND_API_KEY;
 
 if (!apiKey) {
   console.error(
-    '❌ CRÍTICO: RESEND_API_KEY no está configurada en .env.local'
+    '❌ CRÍTICO: RESEND_API_KEY no está configurada. Asegúrate de agregar la variable de entorno en Vercel o .env.local'
   );
 }
 
@@ -19,11 +19,11 @@ export async function POST(request: NextRequest) {
   try {
     // Validar que la API key esté presente
     if (!apiKey) {
-      console.error('❌ API Key no configurada al momento de la solicitud');
+      console.error('❌ API Key no configurada. Configúrala en Vercel Environment Variables');
       return NextResponse.json(
         {
           error:
-            'Error de configuración del servidor. Falta RESEND_API_KEY en .env.local',
+            'Error de configuración del servidor. Falta RESEND_API_KEY en las variables de entorno',
         },
         { status: 500 }
       );
