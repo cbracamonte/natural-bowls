@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
@@ -9,11 +9,27 @@ import { SITE_CONFIG } from '@/lib/seo/constants';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 
-
+interface BowlOrder {
+  type: 'pokebowl' | 'smoothiebowl';
+  tamaño?: string;
+  base?: string;
+  proteina?: string;
+  toppings?: string[];
+  agregados?: string[];
+  salsas?: string[];
+  nutrition?: {
+    kcal: number;
+    proteina: number;
+    carbos: number;
+    fibra: number;
+  };
+  message?: string;
+}
 
 export default function CheckoutPage() {
   const { items, total } = useCart();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [bowlOrder, setBowlOrder] = useState<BowlOrder | null>(null);
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -23,7 +39,19 @@ export default function CheckoutPage() {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const finalTotal = total;
+  useEffect(() => {
+    // Leer datos del bowl del localStorage
+    const savedBowlOrder = localStorage.getItem('bowlOrder');
+    if (savedBowlOrder) {
+      try {
+        setBowlOrder(JSON.parse(savedBowlOrder));
+      } catch (error) {
+        console.error('Error parsing bowl order:', error);
+      }
+    }
+  }, []);
+
+  const finalTotal = bowlOrder ? 0 : total;
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -49,35 +77,54 @@ export default function CheckoutPage() {
     setIsSubmitting(true);
 
     const whatsappNumber = SITE_CONFIG.phone.replace(/\D/g, '');
-    const itemsText = items
-      .map((item, index) => {
-        const lineTotal = item.product.price * item.quantity;
-        return (
-          `${index + 1}. ${item.product.name} x${item.quantity}\n` +
-          `   ${item.product.description}\n` +
-          `   ${formatPrice(item.product.price)} c/u - ${formatPrice(lineTotal)}`
-        );
-      })
-      .join('\n');
+    
+    let message = '';
+    
+    if (bowlOrder) {
+      // Mensaje para bowl order
+      message = [
+        '🍽️ *NUEVO PEDIDO - BOWL PERSONALIZADO*',
+        '',
+        `👤 Nombre: ${formData.name}`,
+        `📱 Teléfono: ${formData.phone}`,
+        `📍 Dirección: ${formData.address}, ${formData.city}`,
+        '',
+        bowlOrder.message,
+        '',
+        formData.notes.trim() ? `📝 Notas: ${formData.notes.trim()}` : '',
+      ].filter(Boolean).join('\n');
+    } else {
+      // Mensaje para carrito normal
+      const itemsText = items
+        .map((item, index) => {
+          const lineTotal = item.product.price * item.quantity;
+          return (
+            `${index + 1}. ${item.product.name} x${item.quantity}\n` +
+            `   ${item.product.description}\n` +
+            `   ${formatPrice(item.product.price)} c/u - ${formatPrice(lineTotal)}`
+          );
+        })
+        .join('\n');
 
-    const notesText = formData.notes.trim()
-      ? `\nNotas: ${formData.notes.trim()}`
-      : '';
+      const notesText = formData.notes.trim()
+        ? `\nNotas: ${formData.notes.trim()}`
+        : '';
 
-    const message = [
-      'Nuevo pedido - Natural Bowls',
-      `Nombre: ${formData.name}`,
-      `Telefono: ${formData.phone}`,
-      `Direccion: ${formData.address}, ${formData.city}`,
-      '',
-      'Productos:',
-      itemsText,
-      '',
-      `Total: ${formatPrice(finalTotal)}`,
-      '',
-      'Primer pedido: solicitar descuento especial.',
-      notesText,
-    ].join('\n');
+      message = [
+        'Nuevo pedido - Natural Bowls',
+        `Nombre: ${formData.name}`,
+        `Telefono: ${formData.phone}`,
+        `Direccion: ${formData.address}, ${formData.city}`,
+        '',
+        'Productos:',
+        itemsText,
+        '',
+        `Total: ${formatPrice(finalTotal)}`,
+        '',
+        'Primer pedido: solicitar descuento especial.',
+        notesText,
+      ].join('\n');
+    }
 
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
@@ -92,7 +139,7 @@ export default function CheckoutPage() {
     }
   };
 
-  if (items.length === 0) {
+  if (items.length === 0 && !bowlOrder) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
         <div className="text-center">
@@ -208,25 +255,102 @@ export default function CheckoutPage() {
                   Resumen del Pedido
                 </h2>
 
-                <div className="space-y-3 mb-4">
-                  {items.map((item) => (
-                    <div key={item.product.id} className="flex justify-between text-sm">
-                      <span className="text-gray-600">
-                        {item.product.name} x{item.quantity}
-                      </span>
-                      <span className="font-medium">
-                        {formatPrice(item.product.price * item.quantity)}
-                      </span>
-                    </div>
-                  ))}
-                </div>
+                {bowlOrder ? (
+                  <div className="space-y-4">
+                    {/* Bowl Information */}
+                    <div className="space-y-3">
+                      <div className="pb-3 border-b">
+                        <p className="text-sm font-semibold text-[#5D4E37]">
+                          {bowlOrder.type === 'pokebowl' ? '🍱 Poke Bowl' : '🥣 Smoothie Bowl'}
+                        </p>
+                      </div>
 
-                <div className="border-t mt-4 pt-4">
-                  <div className="flex justify-between font-semibold text-lg">
-                    <span>Total</span>
-                    <span className="text-[#6B8E4E]-600">{formatPrice(finalTotal)}</span>
+                      {bowlOrder.tamaño && (
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-600">Tamaño:</span>
+                          <span className="font-medium capitalize">{bowlOrder.tamaño}</span>
+                        </div>
+                      )}
+
+                      {bowlOrder.base && (
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-600">Base:</span>
+                          <span className="font-medium">{bowlOrder.base}</span>
+                        </div>
+                      )}
+
+                      {bowlOrder.proteina && (
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-600">Proteína:</span>
+                          <span className="font-medium">{bowlOrder.proteina}</span>
+                        </div>
+                      )}
+
+                      {bowlOrder.toppings && bowlOrder.toppings.length > 0 && (
+                        <div className="text-sm">
+                          <span className="text-gray-600">Toppings:</span>
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {bowlOrder.toppings.map((topping) => (
+                              <span key={topping} className="bg-[#9CB973]/10 text-[#5D4E37] px-2 py-0.5 rounded text-xs">
+                                {topping}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {bowlOrder.agregados && bowlOrder.agregados.length > 0 && (
+                        <div className="text-sm">
+                          <span className="text-gray-600">Agregados:</span>
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {bowlOrder.agregados.map((agregado) => (
+                              <span key={agregado} className="bg-[#9CB973]/10 text-[#5D4E37] px-2 py-0.5 rounded text-xs">
+                                {agregado}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {bowlOrder.salsas && bowlOrder.salsas.length > 0 && (
+                        <div className="text-sm">
+                          <span className="text-gray-600">Salsas:</span>
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {bowlOrder.salsas.map((salsa) => (
+                              <span key={salsa} className="bg-[#9CB973]/10 text-[#5D4E37] px-2 py-0.5 rounded text-xs">
+                                {salsa}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <div className="space-y-3 mb-4">
+                    {items.map((item) => (
+                      <div key={item.product.id} className="flex justify-between text-sm">
+                        <span className="text-gray-600">
+                          {item.product.name} x{item.quantity}
+                        </span>
+                        <span className="font-medium">
+                          {formatPrice(item.product.price * item.quantity)}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {!bowlOrder && (
+                  <div className="border-t mt-4 pt-4">
+                    <div className="flex justify-between font-semibold text-lg">
+                      <span>Total</span>
+                      <span className="text-[#6B8E4E]-600">{formatPrice(finalTotal)}</span>
+                    </div>
+                  </div>
+                )}
 
                 <Button
                   type="submit"

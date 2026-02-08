@@ -5,11 +5,11 @@ export const products: Product[] = [
   {
     id: 'chocopower',
     name: 'Chocopower',
-    description: 'Base de plátano congelado, mantequilla de maní, leche de almendras y cacao.',
+    description: 'Base de plátano, mantequilla de maní, leche de almendras y cacao.',
     price: 21.00,
     image: '/images/smoothie-bowl.jpg',
     category: 'smoothie-bowl',
-    ingredients: ['Plátano congelado', 'Mantequilla de maní', 'Leche de almendras', 'Cacao'],
+    ingredients: ['Plátano', 'Mantequilla de maní', 'Leche de almendras', 'Cacao'],
     featured: true,
   },
   {
@@ -24,11 +24,11 @@ export const products: Product[] = [
   {
     id: 'berrybowl',
     name: 'Berry Bowl',
-    description: 'Base de plátano congelado, fresa, arándano y leche de almendras.',
+    description: 'Base de plátano, fresa, arándano y leche de almendras.',
     price: 23.00,
     image: '/images/smoothie-bowl.jpg',
     category: 'smoothie-bowl',
-    ingredients: ['Plátano congelado', 'Fresa', 'Arándano', 'Leche de almendras'],
+    ingredients: ['Plátano', 'Fresa', 'Arándano', 'Leche de almendras'],
     featured: true,
   },
   {
