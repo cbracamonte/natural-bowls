@@ -17,6 +17,13 @@ export const SITE_CONFIG = {
   locale: "es_ES",
 } as const;
 
+export const BUSINESS_HOURS = {
+  opening: "8:30 AM - 9:00 PM",
+  reservation: "9:00 AM - 8:00 PM",
+  days: "Lunes a Sábado",
+  closed: "Domingo",
+} as const;
+
 export const SEO_KEYWORDS = [
   "poke bowls",
   "smoothie bowls",

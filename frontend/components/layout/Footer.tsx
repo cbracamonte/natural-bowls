@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Instagram, Facebook, MapPin, Phone, Clock } from 'lucide-react';
+import { BUSINESS_HOURS } from '@/lib/seo/constants';
 
 export default function Footer() {
   return (
@@ -100,9 +101,14 @@ export default function Footer() {
                 <Phone className="w-5 h-5 text-[#9CB973] shrink-0" aria-hidden />
                 <a href="tel:+51912341818" className="hover:text-[#9CB973]">912 341 818</a>
               </div>
-              <div className="flex items-center space-x-3">
-                <Clock className="w-5 h-5 text-[#9CB973] shrink-0" aria-hidden />
-                <span aria-label="Horario de atención">Lun-Dom: 8am - 9pm</span>
+              <div className="flex flex-col space-y-1">
+                <div className="flex items-center space-x-3">
+                  <Clock className="w-5 h-5 text-[#9CB973] shrink-0" aria-hidden />
+                  <span aria-label="Horario de atención">Lun-Sáb: {BUSINESS_HOURS.opening}</span>
+                </div>
+                <div className="pl-8 text-sm text-red-300/80">
+                  {BUSINESS_HOURS.closed}: Cerrado
+                </div>
               </div>
             </address>
           </div>

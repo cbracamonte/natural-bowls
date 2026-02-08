@@ -8,16 +8,7 @@ export default function HeroPokebowl() {
 
   return (
     <section className="relative w-full h-screen min-h-screen overflow-hidden" role="region" aria-label="Pokebowl - Hero section">
-      {/* Mobile: Image Background */}
-      <Image
-        src="/images/poke-bowl.jpg"
-        alt="Pokebowl background"
-        fill
-        className="absolute inset-0 w-full h-full object-cover md:hidden"
-        priority
-      />
-
-      {/* Desktop: Video Background */}
+      {/* Video Background - Visible on all devices */}
       <video
         autoPlay
         muted
@@ -25,7 +16,7 @@ export default function HeroPokebowl() {
         playsInline
         preload="auto"
         poster="/images/poke-bowl.jpg"
-        className="absolute inset-0 w-full h-full object-cover hidden md:block"
+        className="absolute inset-0 w-full h-full object-cover"
         aria-hidden="true"
       >
         <source src="/videos/pokebowl.mp4" type="video/mp4" />
