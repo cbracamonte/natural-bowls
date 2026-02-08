@@ -111,17 +111,6 @@ export default function Newsletter() {
             </div>
           </div>
         </div>
-
-        {/* Mobile CTA */}
-        <div className="lg:hidden mt-12 text-center">
-          <Image
-            src="/images/smoothie-bowl.jpg"
-            alt="Disfruta de Natural Bowls"
-            width={300}
-            height={300}
-            className="mx-auto rounded-3xl shadow-xl object-cover w-full max-w-sm"
-          />
-        </div>
       </div>
     </section>
   );

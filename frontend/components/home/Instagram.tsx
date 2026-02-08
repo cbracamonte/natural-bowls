@@ -97,30 +97,6 @@ export default function Instagram() {
                   </a>
                 </blockquote>
               </div>
-              {/* Botón para comentar */}
-              <div className="p-4 bg-gray-50 border-t border-gray-200">
-                <a
-                  href={post.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-[#6B8E4E] hover:text-[#5D7A42] font-semibold transition-colors"
-                >
-                  💬 Ver comentarios en Instagram
-                  <svg
-                    className="w-4 h-4"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </a>
-              </div>
             </div>
           ))}
         </div>
