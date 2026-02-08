@@ -77,14 +77,14 @@ html {
 .bg-monstera {
   position: relative;
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(245,249,240,0.9) 50%, rgba(255,255,255,0.95) 100%),
-    url('/images/monstera-bg.svg');
-  background-size: cover, 800px 800px;
+    linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(245, 249, 240, 0.9) 50%, rgba(255, 255, 255, 0.95) 100%),
+    url('/images/monstera-bg.png');
+  background-size: cover, 1600px 1600px;
   background-position: center, center;
   background-repeat: no-repeat, repeat;
 }
 
-.bg-monstera > * {
+.bg-monstera>* {
   position: relative;
   z-index: 1;
 }
@@ -98,15 +98,14 @@ html {
       rgba(255, 255, 255, 0.88) 25%,
       rgba(232, 245, 224, 0.9) 50%,
       rgba(255, 255, 255, 0.88) 75%,
-      rgba(197, 217, 164, 0.15) 100%
-    ),
+      rgba(197, 217, 164, 0.15) 100%),
     url('/images/monstera-bg.svg');
   background-size: cover, 900px 900px;
   background-position: center, center;
   background-repeat: no-repeat, repeat;
 }
 
-.bg-monstera-gradient > * {
+.bg-monstera-gradient>* {
   position: relative;
   z-index: 1;
 }
@@ -118,15 +117,14 @@ html {
     linear-gradient(160deg,
       rgba(245, 243, 239, 0.95) 0%,
       rgba(255, 255, 255, 0.9) 40%,
-      rgba(245, 243, 239, 0.95) 100%
-    ),
+      rgba(245, 243, 239, 0.95) 100%),
     url('/images/monstera-bg.svg');
   background-size: cover, 700px 700px;
   background-position: center, center;
   background-repeat: no-repeat, repeat;
 }
 
-.bg-monstera-cream > * {
+.bg-monstera-cream>* {
   position: relative;
   z-index: 1;
 }
@@ -139,8 +137,7 @@ html {
       rgba(156, 185, 115, 0.15) 0%,
       rgba(255, 255, 255, 0.95) 30%,
       rgba(232, 245, 224, 0.4) 70%,
-      rgba(156, 185, 115, 0.2) 100%
-    ),
+      rgba(156, 185, 115, 0.2) 100%),
     url('/images/monstera-bg.svg');
   background-size: cover, 800px 800px;
   background-position: center, center;
