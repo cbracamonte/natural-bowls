@@ -16,13 +16,21 @@ export default function Header() {
   const menuRef = useRef<HTMLDivElement>(null);
   const { itemCount } = useCart();
 
-  const navigation = [
+  /* Split navigation for desktop */
+  const leftNavigation = [
     { name: 'Inicio', href: '/' },
     { name: 'Menú', href: '/menu' },
     { name: 'Bowls', href: '/bowls' },
+  ];
+
+  const rightNavigation = [
+    { name: 'Catering', href: '/catering' },
     { name: 'Promociones', href: '/promociones' },
     { name: 'Ubicación', href: '/#ubicacion' },
   ];
+
+  // Combined for mobile
+  const allNavigation = [...leftNavigation, ...rightNavigation];
 
   // Handle swipe to close menu
   useEffect(() => {
@@ -58,7 +66,7 @@ export default function Header() {
           <div className="flex justify-center items-center h-24 md:h-28 relative">
             {/* Left Navigation */}
             <ul className="hidden lg:flex items-center space-x-6 absolute left-0" role="list">
-              {navigation.map((item) => (
+              {leftNavigation.map((item) => (
                 <li key={item.name}>
                   <Link
                     href={item.href}
@@ -102,6 +110,20 @@ export default function Header() {
 
             {/* Right Section */}
             <div className="flex items-center space-x-2 md:space-x-4 absolute right-0">
+              {/* Right Navigation Links (Desktop) */}
+              <ul className="hidden lg:flex items-center space-x-6 mr-4" role="list">
+                {rightNavigation.map((item) => (
+                  <li key={item.name}>
+                    <Link
+                      href={item.href}
+                      className="text-[#5D4E37] hover:text-[#6B8E4E] font-semibold text-sm transition-colors"
+                    >
+                      {item.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+
               {/* Cart Button */}
               <Link
                 href="/carrito"
@@ -178,7 +200,7 @@ export default function Header() {
               {/* Navigation Items */}
               <nav className="p-6 space-y-1">
                 <ul role="list" className="space-y-1">
-                  {navigation.map((item) => (
+                  {allNavigation.map((item) => (
                     <li key={item.name}>
                       <Link
                         href={item.href}
