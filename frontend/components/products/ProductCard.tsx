@@ -14,6 +14,16 @@ interface ProductCardProps {
 export default function ProductCard({ product }: ProductCardProps) {
   const { addItem } = useCart();
 
+  // Detectar si es un producto personalizable (poke o smoothie-bowl)
+  const isCustomizableProduct = product.category === 'poke' || product.category === 'smoothie-bowl';
+
+  // Determinar el URL según si es personalizable
+  const productUrl = isCustomizableProduct 
+    ? product.category === 'poke' 
+      ? '/bowls#poke-bowls'
+      : '/bowls#smoothie-bowls'
+    : `/producto/${product.id}`;
+
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -21,7 +31,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   };
 
   return (
-    <Link href={`/producto/${product.id}`} className="group">
+    <Link href={productUrl} className="group">
       <div className="bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 h-full flex flex-col border border-gray-100">
         {/* Image Container */}
         <div className="relative aspect-square overflow-hidden bg-gray-50">
@@ -45,13 +55,22 @@ export default function ProductCard({ product }: ProductCardProps) {
           </div>
 
           {/* Add to cart button - Enhanced */}
-          <button
-            onClick={handleAddToCart}
-            className="absolute bottom-4 right-4 w-12 h-12 bg-[#5D4E37] text-white rounded-full flex items-center justify-center opacity-60 md:opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-[#6B8E4E] hover:scale-110 hover:opacity-100 shadow-lg active:scale-95"
-            title="Agregar al carrito"
-          >
-            <Plus className="w-6 h-6" />
-          </button>
+          {!isCustomizableProduct && (
+            <button
+              onClick={handleAddToCart}
+              className="absolute bottom-4 right-4 w-12 h-12 bg-[#5D4E37] text-white rounded-full flex items-center justify-center opacity-60 md:opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-[#6B8E4E] hover:scale-110 hover:opacity-100 shadow-lg active:scale-95"
+              title="Agregar al carrito"
+            >
+              <Plus className="w-6 h-6" />
+            </button>
+          )}
+          
+          {/* Personalizar badge para productos customizables */}
+          {isCustomizableProduct && (
+            <div className="absolute bottom-4 right-4 bg-[#9CB973] text-white rounded-full flex items-center justify-center px-3 py-2 opacity-60 md:opacity-0 group-hover:opacity-100 transition-all duration-300 shadow-lg text-xs font-bold">
+              Personalizar
+            </div>
+          )}
         </div>
 
         {/* Content */}
@@ -88,7 +107,7 @@ export default function ProductCard({ product }: ProductCardProps) {
               {formatPrice(product.price)}
             </span>
             <span className="text-xs uppercase tracking-wider text-gray-500 font-medium">
-              Ver
+              {isCustomizableProduct ? 'Personalizar' : 'Ver'}
             </span>
           </div>
         </div>

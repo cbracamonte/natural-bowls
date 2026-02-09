@@ -32,7 +32,8 @@ export default function Location() {
   ];
 
   return (
-    <section id="ubicacion" className="py-16 md:py-28 bg-white scroll-mt-48">
+    <section className="relative py-16 md:py-28 bg-white scroll-mt-48">
+      <div id="ubicacion" className="absolute -top-32 left-0 w-full h-1 invisible"></div>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-16">
