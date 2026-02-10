@@ -18,8 +18,6 @@ export default function BowlsPage() {
     proteinas: [
       "Pollo crispy",
       "Pollo a la plancha",
-      "Langostinos al panko (+5.50)",
-      "Salmón (+7.00)",
       "Tofu",
       "Tofu crispy",
       "Hamburguesa de lentejas",

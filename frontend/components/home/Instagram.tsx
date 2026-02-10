@@ -10,17 +10,17 @@ interface InstagramPost {
 // URLs de posts reales del perfil naturalbowls.cafe
 // Actualiza estas URLs con los posts más recientes
 const recentPosts: InstagramPost[] = [
-  {
-    url: "https://www.instagram.com/p/DT27FR5jV5K/",
+  // {
+  //   url: "https://www.instagram.com/p/DT27FR5jV5K/",
+  //   id: "1",
+  // },
+  // {
+  //   url: "https://www.instagram.com/p/DS8bD4yidfO/",
+  //   id: "2",
+  // },
+   {
+   url: "https://www.instagram.com/p/DS8bD4yidfO/",
     id: "1",
-  },
-  {
-    url: "https://www.instagram.com/p/DS8bD4yidfO/",
-    id: "2",
-  },
-  {
-    url: "https://www.instagram.com/p/DQwhc_FDUZo/",
-    id: "3",
   },
   {
     url: "https://www.instagram.com/p/DRAC-uqDSo_/",

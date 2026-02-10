@@ -33,12 +33,12 @@ export default function HeroPokebowl() {
           </div>
 
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight drop-shadow-lg">
-            Pokebowls<br />
-            <span className="text-[#9CB973]">Frescos Cada Día</span>
+            Ensaladas y <br />
+            <span className="text-[#9CB973]">Bowls</span>
           </h1>
 
-          <p className="text-lg md:text-xl text-white/90 mb-8 max-w-xl mx-auto drop-shadow-md">
-            Pescado premium seleccionado a diario con vegetales frescos de la región. Nutrición balanceada que realmente te satisface.
+          <p className="text-lg md:text-xl text-white/90 mb-8 max-w-xl mx-asuto drop-shadow-md">
+            Arma tu bowl con insumos frescos según tu preferencia. Elige entre nuestras opciones o crea tu propia combinación. ¡Saludable, delicioso y a tu medida!s
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -46,7 +46,7 @@ export default function HeroPokebowl() {
               href="/bowls?category=pokebowl"
               className="inline-flex items-center justify-center px-8 py-4 bg-[#6B8E4E] hover:bg-[#5A7A40] text-white rounded-full font-bold text-lg transition-all duration-300 transform hover:scale-105 shadow-xl"
             >
-              Descubre Nuestros Pokebowls
+              Arma tu Bowl
               <ArrowRight className="w-5 h-5 ml-2" />
             </Link>
             <Link
@@ -61,7 +61,7 @@ export default function HeroPokebowl() {
           <div className="mt-16 grid grid-cols-3 gap-4 sm:gap-8 max-w-md mx-auto">
             <div>
               <p className="text-2xl sm:text-3xl font-bold text-[#9CB973]">100%</p>
-              <p className="text-sm text-white/70">Fresco Diario</p>
+              <p className="text-sm text-white/70">Frescoñon</p>
             </div>
             <div>
               <p className="text-2xl sm:text-3xl font-bold text-[#9CB973]">20+</p>

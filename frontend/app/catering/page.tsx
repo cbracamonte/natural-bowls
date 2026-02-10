@@ -98,7 +98,7 @@ export default function CateringPage() {
                 />
               </div>
               <div className="p-6">
-                <h3 className="text-xl font-bold text-[#5D4E37] mb-2">Desayunos & Coffee Breaks</h3>
+                <h3 className="text-xl font-bold text-[#5D4E37] mb-2">Activaciones</h3>
                 <p className="text-gray-600">Smoothie bowls, tostadas de aguacate, jugos prensados en frío y café de especialidad.</p>
               </div>
             </div>

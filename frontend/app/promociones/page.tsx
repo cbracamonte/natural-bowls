@@ -86,14 +86,14 @@ export default function PromocionesPage() {
               Promociones Activas
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Ofertas por tiempo limitado. ¡No te las pierdas!
+              Accede a estas promociones mostrando este código en tienda. ¡No te las pierdas! (NBLover generar codigo con boton)
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Combo Almuerzo */}
             <div className="bg-white rounded-3xl overflow-hidden shadow-lg">
-              <div className="relative aspect-[4/3]">
+              <div className="relative aspect-4/3">
                 <Image
                   src="/images/wrap-crispy.jpg"
                   alt="Combo Almuerzo"

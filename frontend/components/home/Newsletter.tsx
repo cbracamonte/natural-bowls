@@ -57,7 +57,7 @@ export default function Newsletter() {
               Ofertas Exclusivas<span className="block text-[#6B8E4E]">Para Suscriptores</span>
             </h2>
             <p className="mt-5 text-gray-700 text-base md:text-lg max-w-lg leading-relaxed">
-              Suscríbete y recibe <span className="font-semibold text-[#6B8E4E]">ofertas semanales exclusivas</span>, nuevos lanzamientos y promociones que no verás en redes sociales. Únete a nuestra comunidad consciente.
+              Suscríbete y recibe <span className="font-semibold text-[#6B8E4E]">ofertas semanales exclusivas</span>, nuevos lanzamientos y promociones. Únete a nuestra comunidad NBLover
             </p>
 
             {submitted ? (
