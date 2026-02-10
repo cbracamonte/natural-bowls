@@ -21,6 +21,9 @@ interface NutritionInfo {
   fibra: number;
 }
 
+// Proteina Agregado
+// 100 gr (6 soles mas ) y 200 gr(12 solesDesde bowls proteicos de océano) mas de proteina
+
 const nutritionData: { [key: string]: { [item: string]: NutritionInfo } } = {
   bases: {
     "Arroz blanco": { kcal: 195, proteina: 4, carbos: 43, fibra: 0.6 },
@@ -31,13 +34,6 @@ const nutritionData: { [key: string]: { [item: string]: NutritionInfo } } = {
   proteinas: {
     "Pollo crispy": { kcal: 200, proteina: 26, carbos: 8, fibra: 0 },
     "Pollo a la plancha": { kcal: 165, proteina: 31, carbos: 0, fibra: 0 },
-    "Langostinos al panko (+5.50)": {
-      kcal: 145,
-      proteina: 21,
-      carbos: 8,
-      fibra: 0,
-    },
-    "Salmón (+7.00)": { kcal: 206, proteina: 20, carbos: 0, fibra: 0 },
     Tofu: { kcal: 76, proteina: 8, carbos: 2, fibra: 1 },
     "Tofu crispy": { kcal: 120, proteina: 13, carbos: 5, fibra: 2 },
     "Hamburguesa de lentejas": { kcal: 95, proteina: 7, carbos: 10, fibra: 2 },

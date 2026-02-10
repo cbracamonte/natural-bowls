@@ -4,6 +4,12 @@ import Link from 'next/link';
 import { getFeaturedProducts } from '@/data/products';
 import ProductCard from '@/components/products/ProductCard';
 
+// Favoritos de trujillo max 4
+// 1. Poke Bowls
+// 2. Waffles Fit
+// 3. MangoBowl
+// 4. Wrap crispy
+
 export default function Featured() {
   const featuredProducts = getFeaturedProducts();
 

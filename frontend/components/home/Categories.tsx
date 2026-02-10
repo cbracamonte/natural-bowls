@@ -5,16 +5,16 @@ import Image from 'next/image';
 
 const menuCategories = [
   {
-    name: 'Smoothie Bowls',
-    image: '/images/smoothie-bowl.jpg',
-    href: '/menu?category=smoothie-bowl',
-    description: 'Açaí, pitaya y más',
+    name: 'Waffles',
+    image: '/images/waffles.jpg',
+    href: '/menu?category=waffles',
+    description: 'Tradicionales y fit',
   },
   {
-    name: 'Poke Bowls',
-    image: '/images/poke-bowl.jpg',
-    href: '/menu?category=poke',
-    description: 'Arma tu bowl',
+    name: 'Pancakes',
+    image: '/images/pancakes.jpg',
+    href: '/menu?category=pancakes',
+    description: 'Clásicos o de avena',
   },
   {
     name: 'Wraps & Sándwiches',
@@ -32,7 +32,7 @@ export default function Categories() {
           Explora Cada Categoría
         </h2>
         <p className="text-gray-600 text-center mb-12 max-w-2xl mx-auto">
-          Desde bowls proteicos de océano hasta frutas tropicales. Cada categoría es una experiencia diferente.
+          Encuentra desde bowls de desayuno, pancakes, ensaladas, brunches y cenas. Cada categoría es una experiencia diferente.
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

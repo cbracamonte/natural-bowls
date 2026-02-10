@@ -78,7 +78,7 @@ html {
   position: relative;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(245, 249, 240, 0.9) 50%, rgba(255, 255, 255, 0.95) 100%),
-    url('/images/monstera-bg.png');
+    url('/images/monstera-bg.svg');
   background-size: cover, 1600px 1600px;
   background-position: center, center;
   background-repeat: no-repeat, repeat;

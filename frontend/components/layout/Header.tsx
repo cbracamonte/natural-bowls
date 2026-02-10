@@ -20,7 +20,7 @@ export default function Header() {
   const leftNavigation = [
     { name: 'Inicio', href: '/' },
     { name: 'Menú', href: '/menu' },
-    { name: 'Bowls', href: '/bowls' },
+    { name: 'Pide tu Bowl', href: '/bowls' },
   ];
 
   const rightNavigation = [
