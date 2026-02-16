@@ -15,30 +15,51 @@ export default function CartItem({ item }: CartItemProps) {
   const { updateQuantity, removeItem } = useCart();
   const { productId, quantity, name, price, image } = item;
 
+  // Detectar si es un poke-bowl o smoothie-bowl personalizados
+  const isCustomBowl = name.toLowerCase().includes('poke') || name.toLowerCase().includes('smoothie');
+
   return (
     <div className="flex gap-4 py-4 border-b">
       {/* Image */}
-      <Link
-        href={`/producto/${productId}`}
-        className="w-20 h-20 bg-emerald-100 rounded-2xl flex items-center justify-center shrink-0"
-      >
-        <Image
-          src={image || ""}
-          alt={name}
-          width={80}
-          height={80}
-          className="w-full h-full object-cover rounded-2xl"
-        />
-      </Link>
+      {isCustomBowl ? (
+        <div className="w-20 h-20 bg-emerald-100 rounded-2xl flex items-center justify-center shrink-0">
+          <Image
+            src={image || ""}
+            alt={name}
+            width={80}
+            height={80}
+            className="w-full h-full object-cover rounded-2xl"
+          />
+        </div>
+      ) : (
+        <Link
+          href={`/producto/${productId}`}
+          className="w-20 h-20 bg-emerald-100 rounded-2xl flex items-center justify-center shrink-0"
+        >
+          <Image
+            src={image || ""}
+            alt={name}
+            width={80}
+            height={80}
+            className="w-full h-full object-cover rounded-2xl"
+          />
+        </Link>
+      )}
 
       {/* Details */}
       <div className="flex-1 min-w-0">
-        <Link
-          href={`/producto/${productId}`}
-          className="font-medium text-gray-900 hover:text-emerald-600 transition-colors block truncate"
-        >
-          {name}
-        </Link>
+        {isCustomBowl ? (
+          <span className="font-medium text-gray-900 block truncate">
+            {name}
+          </span>
+        ) : (
+          <Link
+            href={`/producto/${productId}`}
+            className="font-medium text-gray-900 hover:text-emerald-600 transition-colors block truncate"
+          >
+            {name}
+          </Link>
+        )}
         <p className="text-sm text-gray-500 truncate">Bowl personalizado</p>
         <p className="font-semibold text-emerald-600 mt-1">
           {formatPrice(price)}
