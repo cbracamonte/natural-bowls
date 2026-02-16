@@ -34,7 +34,9 @@ export default function CheckoutPage() {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [pendingMessage, setPendingMessage] = useState("");
   const [bowlOrder] = useState<BowlOrder | null>(() => {
-    // Inicializar con datos del bowl de localStorage
+    if (typeof window === "undefined") {
+      return null;
+    }
     const savedBowlOrder = localStorage.getItem("bowlOrder");
     if (savedBowlOrder) {
       try {
@@ -46,19 +48,22 @@ export default function CheckoutPage() {
     }
     return null;
   });
-  const [formData, setFormData] = useState({
-    name: "",
-    phone: (() => {
-      // Si existe código descuento generado, auto-llenar con el teléfono del modal
-      if (typeof window !== "undefined") {
-        const savedPhone = localStorage.getItem("firstOrderPhone");
-        return savedPhone || "";
-      }
-      return "";
-    })(),
-    address: "",
-    city: "",
-    notes: "",
+  const [formData, setFormData] = useState(() => {
+    const initialFormData = {
+      name: "",
+      phone: "",
+      address: "",
+      city: "",
+      notes: "",
+    };
+    if (typeof window === "undefined") {
+      return initialFormData;
+    }
+    const savedPhone = localStorage.getItem("firstOrderPhone");
+    if (savedPhone) {
+      return { ...initialFormData, phone: savedPhone };
+    }
+    return initialFormData;
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [discountCode, setDiscountCode] = useState("");
