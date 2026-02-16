@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import Link from 'next/link';
 
 export default function CateringPage() {
   const whatsappLink = "https://wa.me/51912341818?text=Hola%20Natural%20Bowls%2C%20quisiera%20m%C3%A1s%20informaci%C3%B3n%20sobre%20su%20servicio%20de%20catering%20para%20un%20evento.";
@@ -10,13 +9,13 @@ export default function CateringPage() {
       <section className="relative h-[60vh] flex items-center justify-center text-center overflow-hidden">
         <div className="absolute inset-0 z-0">
           <Image
-            src="/images/monstera-bg.svg"
+            src="/icons/monstera-bg.svg"
             alt="Fondo natural"
             fill
             className="object-cover opacity-20"
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-white/60"></div>
+          <div className="absolute inset-0 bg-linear-to-b from-white/10 to-white/60"></div>
         </div>
         <div className="relative z-10 max-w-4xl mx-auto px-4">
           <span className="inline-block py-1 px-3 rounded-full bg-[#E8F5E9] text-[#4CAF50] text-sm font-semibold tracking-wide mb-4">
@@ -46,7 +45,7 @@ export default function CateringPage() {
             <h2 className="text-3xl md:text-4xl font-bold text-[#5D4E37]">
               Una experiencia saludable para tus invitados
             </h2>
-            <p className="text-gray-600 text-lg leading-relaxed">
+            <p className="text-gray-600 text-lg">
               Olvídate de lo convencional. Ofrecemos una propuesta gastronómica fresca, colorida y nutritiva que encantará a todos. Nuestros bowls, wraps y opciones saludables son preparados con ingredientes de la más alta calidad, seleccionados diariamente para garantizar el mejor sabor.
             </p>
             <ul className="space-y-4 pt-4">
@@ -63,7 +62,7 @@ export default function CateringPage() {
               ))}
             </ul>
           </div>
-          <div className="relative h-[500px] rounded-3xl overflow-hidden shadow-2xl">
+          <div className="relative h-125 rounded-3xl overflow-hidden shadow-2xl">
             <Image
               src="/images/poke-bowl.jpg"
               alt="Catering Natural Bowls"
@@ -142,7 +141,7 @@ export default function CateringPage() {
       <section className="py-24 bg-[#5D4E37] relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
            <Image
-            src="/images/monstera-pattern.svg"
+            src="/icons/monstera-pattern.svg"
             alt="Pattern"
             fill
             className="object-cover"

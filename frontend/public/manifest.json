@@ -10,7 +10,7 @@
   "background_color": "#ffffff",
   "icons": [
     {
-      "src": "/images/naturalbowls.ico",
+      "src": "/icons/naturalbowls.ico",
       "sizes": "any",
       "type": "image/x-icon"
     }

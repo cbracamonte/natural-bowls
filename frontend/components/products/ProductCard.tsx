@@ -2,10 +2,10 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { Plus, Star } from 'lucide-react';
-import { Product } from '@/types';
+import { Plus } from 'lucide-react';
+import { Product } from '@/lib/schemas';
 import { useCart } from '@/context/CartContext';
-import { formatPrice } from '@/lib/utils';
+import { formatPrice } from '@/lib/utils/utils';
 
 interface ProductCardProps {
   product: Product;
@@ -15,13 +15,13 @@ export default function ProductCard({ product }: ProductCardProps) {
   const { addItem } = useCart();
 
   // Detectar si es un producto personalizable (poke o smoothie-bowl)
-  const isCustomizableProduct = product.category === 'poke' || product.category === 'smoothie-bowl';
+  const isCustomizableProduct = product.categoryId === 'poke-bowl' || product.categoryId === 'smoothie-bowl';
 
   // Determinar el URL según si es personalizable
-  const productUrl = isCustomizableProduct 
-    ? product.category === 'poke' 
-      ? '/bowls#poke-bowls'
-      : '/bowls#smoothie-bowls'
+  const productUrl = isCustomizableProduct
+    ? product.categoryId === 'poke-bowl'
+      ? `/bowls?pokeSize=${product.id === 'poke-regular' ? 'regular' : 'grande'}#poke-bowls`
+      : `/bowls?smoothie=${product.id}#smoothie-bowls`
     : `/producto/${product.id}`;
 
   const handleAddToCart = (e: React.MouseEvent) => {

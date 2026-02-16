@@ -1,8 +1,8 @@
 'use client';
 
 import Image from 'next/image';
-import { Product } from '@/types';
-import { formatPrice } from '@/lib/utils';
+import { Product } from '@/lib/schemas';
+import { formatPrice } from '@/lib/utils/utils';
 
 interface ProductListViewProps {
   products: Product[];

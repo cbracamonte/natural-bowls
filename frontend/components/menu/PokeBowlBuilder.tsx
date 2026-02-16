@@ -3,222 +3,60 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
+import { PokeBowlService, SelectedBowlItems } from "@/lib/services";
+import { POKEBOWLS_CATEGORY_LABELS } from "@/data/poke-bowl-nutrition-data";
+import { PokeBowlBuilderProps } from "@/lib/schemas";
 
-interface PokeBowlBuilderProps {
-  pokeOptions: {
-    bases: string[];
-    proteinas: string[];
-    toppings: string[];
-    agregados: string[];
-    salsas: string[];
-  };
-}
-
-interface NutritionInfo {
-  kcal: number;
-  proteina: number;
-  carbos: number;
-  fibra: number;
-}
-
-// Proteina Agregado
-// 100 gr (6 soles mas ) y 200 gr(12 solesDesde bowls proteicos de océano) mas de proteina
-
-const nutritionData: { [key: string]: { [item: string]: NutritionInfo } } = {
-  bases: {
-    "Arroz blanco": { kcal: 195, proteina: 4, carbos: 43, fibra: 0.6 },
-    "Arroz integral": { kcal: 173, proteina: 4, carbos: 36, fibra: 3.5 },
-    "Mix verdes": { kcal: 15, proteina: 1, carbos: 3, fibra: 1.5 },
-    "Mix quinoa": { kcal: 196, proteina: 7, carbos: 35, fibra: 6 },
-  },
-  proteinas: {
-    "Pollo crispy": { kcal: 200, proteina: 26, carbos: 8, fibra: 0 },
-    "Pollo a la plancha": { kcal: 165, proteina: 31, carbos: 0, fibra: 0 },
-    Tofu: { kcal: 76, proteina: 8, carbos: 2, fibra: 1 },
-    "Tofu crispy": { kcal: 120, proteina: 13, carbos: 5, fibra: 2 },
-    "Hamburguesa de lentejas": { kcal: 95, proteina: 7, carbos: 10, fibra: 2 },
-  },
-  toppings: {
-    "Col morada": { kcal: 13, proteina: 1, carbos: 3, fibra: 0.7 },
-    Pepinillo: { kcal: 3, proteina: 0, carbos: 1, fibra: 0.2 },
-    Mango: { kcal: 27, proteina: 0.4, carbos: 7, fibra: 0.9 },
-    Piña: { kcal: 14, proteina: 0.1, carbos: 4, fibra: 0.5 },
-    "Huevo de codorniz": { kcal: 32, proteina: 2.6, carbos: 0.4, fibra: 0 },
-    "Queso fresco": { kcal: 45, proteina: 3.5, carbos: 0, fibra: 0 },
-    Camote: { kcal: 27, proteina: 0.5, carbos: 6, fibra: 1 },
-    Tomate: { kcal: 9, proteina: 0.4, carbos: 2, fibra: 0.4 },
-    Brócoli: { kcal: 11, proteina: 1.4, carbos: 2, fibra: 0.4 },
-    "Rabanito encurtido": { kcal: 5, proteina: 0.2, carbos: 1, fibra: 0.2 },
-    "Frejol chino": { kcal: 18, proteina: 1.3, carbos: 3, fibra: 1 },
-    Vainitas: { kcal: 9, proteina: 1, carbos: 2, fibra: 0.4 },
-    Espinaca: { kcal: 7, proteina: 1, carbos: 1, fibra: 0.5 },
-    Lechuga: { kcal: 5, proteina: 0.5, carbos: 1, fibra: 0.4 },
-    Zanahoria: { kcal: 12, proteina: 0.3, carbos: 3, fibra: 0.7 },
-    Choclo: { kcal: 27, proteina: 1, carbos: 6, fibra: 1.2 },
-    Palta: { kcal: 60, proteina: 0.8, carbos: 3, fibra: 2 },
-    "Papa sancochada": { kcal: 36, proteina: 0.7, carbos: 8, fibra: 0.7 },
-  },
-  agregados: {
-    "Tiras de wantán": { kcal: 68, proteina: 0, carbos: 9, fibra: 0 },
-    "Ajonjolí mix": { kcal: 64, proteina: 2, carbos: 3, fibra: 1.5 },
-    "Cebolla china": { kcal: 8, proteina: 0.4, carbos: 2, fibra: 0.3 },
-    "Camotes crocantes": { kcal: 54, proteina: 0.5, carbos: 7, fibra: 1 },
-    Canchita: { kcal: 60, proteina: 2, carbos: 8, fibra: 0.8 },
-    Nachos: { kcal: 70, proteina: 1, carbos: 8, fibra: 0 },
-    Chifle: { kcal: 58, proteina: 1, carbos: 8, fibra: 0.5 },
-    "Crispy algas": { kcal: 32, proteina: 1, carbos: 4, fibra: 1.2 },
-  },
-  salsas: {
-    "Vinagreta de la casa": { kcal: 56, proteina: 0, carbos: 2, fibra: 0 },
-    Acevichada: { kcal: 18, proteina: 0, carbos: 4, fibra: 0.3 },
-    "Vinagreta blanca": { kcal: 68, proteina: 0, carbos: 1, fibra: 0 },
-    Teriyaki: { kcal: 30, proteina: 1, carbos: 7, fibra: 0 },
-    "Salsa Olivo": { kcal: 42, proteina: 0, carbos: 3, fibra: 0.5 },
-    "Ají especial": { kcal: 15, proteina: 0, carbos: 3, fibra: 0.5 },
-    "Ají huacatay": { kcal: 12, proteina: 0, carbos: 2, fibra: 0.4 },
-    Mayopalta: { kcal: 75, proteina: 0, carbos: 2, fibra: 0.3 },
-    "Vinagreta light": { kcal: 24, proteina: 0, carbos: 3, fibra: 0 },
-    "Honey mustard": { kcal: 52, proteina: 0, carbos: 8, fibra: 0 },
-  },
-};
 
 export default function PokeBowlBuilder({ pokeOptions }: PokeBowlBuilderProps) {
   const router = useRouter();
   const { addItem } = useCart();
-  const [selectedItems, setSelectedItems] = useState<{
-    [key: string]: string[];
-  }>({});
-  const [expandedCategories, setExpandedCategories] = useState<{
-    [key: string]: boolean;
-  }>({
+
+  const [selectedItems, setSelectedItems] = useState<SelectedBowlItems>({});
+  const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({
     bases: true,
     proteinas: false,
+    extraProteinas: false,
     toppings: false,
     agregados: false,
     salsas: false,
   });
-  const [tamaño, setTamaño] = useState<"regular" | "grande">("regular");
+  const [tamaño, setTamaño] = useState<"regular" | "grande">(
+    pokeOptions.preselectedSize || "regular"
+  );
 
-  const calculateNutrition = (): NutritionInfo => {
-    const total: NutritionInfo = { kcal: 0, proteina: 0, carbos: 0, fibra: 0 };
+  // Usar datos del servicio
+  const limits = PokeBowlService.getLimits(tamaño);
+  const nutrition = PokeBowlService.calculateNutrition(selectedItems, tamaño);
+  const totalPrice = PokeBowlService.calculateTotalPrice(selectedItems, tamaño);
+  const totalSelected = Object.values(selectedItems).reduce((sum, arr) => sum + arr.length, 0);
 
-    Object.entries(selectedItems).forEach(([category, items]) => {
-      items.forEach((item) => {
-        const nutrition = nutritionData[category]?.[item];
-        if (nutrition) {
-          total.kcal += nutrition.kcal;
-          total.proteina += nutrition.proteina;
-          total.carbos += nutrition.carbos;
-          total.fibra += nutrition.fibra;
-        }
-      });
-    });
-
-    return total;
-  };
-
-  const nutrition = calculateNutrition();
-
-  const getProteinPrice = (): number => {
-    const proteinName = selectedItems.proteinas?.[0] || "";
-    const match = proteinName.match(/\((\+[\d.]+)\)/);
-    if (match) {
-      return parseFloat(match[1].substring(1));
-    }
-    return 0;
-  };
-
-  const calculateTotalPrice = (): number => {
-    const basePrices = {
-      regular: 22,
-      grande: 27,
-    };
-    return basePrices[tamaño] + getProteinPrice();
-  };
-
-  const generateWhatsAppMessage = (): string => {
-    const base = selectedItems.bases?.[0] || "No seleccionada";
-    const proteina = selectedItems.proteinas?.[0] || "No seleccionada";
-    const toppings = selectedItems.toppings?.join(", ") || "Ninguno";
-    const agregados = selectedItems.agregados?.join(", ") || "Ninguno";
-    const salsas = selectedItems.salsas?.join(", ") || "Ninguna";
-
-    return (
-      `🍱 *POKE BOWL PEDIDO*\n\n` +
-      `📏 *Tamaño:* ${tamaño.charAt(0).toUpperCase() + tamaño.slice(1)}\n\n` +
-      `🍚 *Base:* ${base}\n` +
-      `🍗 *Proteína:* ${proteina}\n` +
-      `🥬 *Toppings:* ${toppings}\n` +
-      `✨ *Agregados:* ${agregados}\n` +
-      `🌶️ *Salsas:* ${salsas}`
-    );
-  };
-
-  const handleOrderClick = () => {
-    if (totalSelected === 0) {
-      alert("Por favor selecciona al menos una base y una proteína");
-      return;
-    }
-    if (!selectedItems.bases?.length || !selectedItems.proteinas?.length) {
-      alert("Debes seleccionar una base y una proteína");
-      return;
-    }
-
-    const bowlData = {
-      type: "pokebowl",
-      tamaño,
-      base: selectedItems.bases[0],
-      proteina: selectedItems.proteinas[0],
-      toppings: selectedItems.toppings || [],
-      agregados: selectedItems.agregados || [],
-      salsas: selectedItems.salsas || [],
-      nutrition: calculateNutrition(),
-      message: generateWhatsAppMessage(),
-    };
-
-    // Guardar en localStorage
-    localStorage.setItem("bowlOrder", JSON.stringify(bowlData));
-
-    // Agregar al carrito
-    const bowlProduct = {
-      id: `poke-bowl-${Date.now()}`,
-      name: `Poke Bowl ${tamaño.charAt(0).toUpperCase() + tamaño.slice(1)} - ${selectedItems.bases[0]}`,
-      description: `Base: ${selectedItems.bases[0]}, Proteína: ${selectedItems.proteinas[0]}, Toppings: ${selectedItems.toppings?.join(", ") || "Ninguno"}`,
-      price: calculateTotalPrice(),
-      image: "/images/poke-bowl-2.jpg",
-      category: "poke" as const,
-      ingredients: [
-        ...(selectedItems.toppings || []),
-        ...(selectedItems.agregados || []),
-      ],
-    };
-
-    addItem(bowlProduct, 1);
-
-    // Navegar al checkout
-    router.push("/checkout");
-  };
-
-  const limits: { [key: string]: number } = {
-    bases: 1,
-    proteinas: 1,
-    toppings: 5,
-    agregados: 4,
-    salsas: tamaño === "regular" ? 2 : 3,
-  };
-
+  // Handlers de UI
   const toggleItem = (category: string, item: string) => {
     setSelectedItems((prev) => {
       const current = prev[category] || [];
+
       if (current.includes(item)) {
         return { ...prev, [category]: current.filter((i) => i !== item) };
+      }
+
+      const limit = limits[category];
+      const newState = { ...prev };
+
+      if (current.length < limit) {
+        newState[category] = [...current, item];
+      } else if (limit === 1) {
+        newState[category] = [item];
       } else {
-        const limit = limits[category];
-        if (current.length < limit) {
-          return { ...prev, [category]: [...current, item] };
-        }
         return prev;
       }
+
+      // Si cambia la proteína, limpiar extraProteinas
+      if (category === "proteinas") {
+        newState.extraProteinas = [];
+      }
+
+      return newState;
     });
   };
 
@@ -229,17 +67,47 @@ export default function PokeBowlBuilder({ pokeOptions }: PokeBowlBuilderProps) {
     }));
   };
 
-  const totalSelected = Object.values(selectedItems).reduce(
-    (sum, arr) => sum + arr.length,
-    0,
-  );
-  const categoryLabels: { [key: string]: { label: string; emoji: string } } = {
-    bases: { label: "Base", emoji: "🍚" },
-    proteinas: { label: "Proteína", emoji: "🍗" },
-    toppings: { label: "Toppings", emoji: "🥬" },
-    agregados: { label: "Agregados", emoji: "✨" },
-    salsas: { label: "Salsa", emoji: "🌶️" },
+  const handleOrderClick = () => {
+    const validation = PokeBowlService.validateBowlRequirements(selectedItems, tamaño);
+    if (!validation.isValid) {
+      alert(validation.message);
+      return;
+    }
+
+    const bowlData = PokeBowlService.createBowlOrderData(selectedItems, tamaño);
+    localStorage.setItem("bowlOrder", JSON.stringify(bowlData));
+
+    const bowlProduct = PokeBowlService.createBowlProduct(selectedItems, tamaño);
+    addItem(bowlProduct, 1);
+    router.push("/checkout");
   };
+
+  const getDisplayItems = (category: string): string[] => {
+    if (category === "extraProteinas") {
+      return PokeBowlService.getFilteredExtraProteinas(selectedItems.proteinas?.[0]);
+    }
+    const value = pokeOptions[category as keyof typeof pokeOptions];
+    return Array.isArray(value) ? value : [];
+  };
+
+  const getValidationMessages = () => {
+    const messages: string[] = [];
+    if (!selectedItems.bases?.length) messages.push("Base");
+    if (!selectedItems.proteinas?.length) messages.push("Proteína");
+    if ((selectedItems.toppings?.length || 0) < limits.toppings) {
+      messages.push(`${limits.toppings - (selectedItems.toppings?.length || 0)} topping${limits.toppings - (selectedItems.toppings?.length || 0) !== 1 ? "s" : ""}`);
+    }
+    if ((selectedItems.agregados?.length || 0) < limits.agregados) {
+      messages.push(`${limits.agregados - (selectedItems.agregados?.length || 0)} agregado${limits.agregados - (selectedItems.agregados?.length || 0) !== 1 ? "s" : ""}`);
+    }
+    if (selectedItems.salsas?.length !== limits.salsas) {
+      messages.push(`${limits.salsas - (selectedItems.salsas?.length || 0)} salsa${limits.salsas - (selectedItems.salsas?.length || 0) !== 1 ? "s" : ""}`);
+    }
+    return messages;
+  };
+
+  const validationMessages = getValidationMessages();
+  const isFormValid = validationMessages.length === 0;
 
   return (
     <div className="mb-16">
@@ -252,7 +120,7 @@ export default function PokeBowlBuilder({ pokeOptions }: PokeBowlBuilderProps) {
                 Poke<span className="text-[#9CB973]">Bowl</span>
               </h2>
 
-              <p className="text-gray-600 text-sm leading-relaxed mb-8">
+              <p className="text-gray-600 text-sm mb-8">
                 Personaliza tu poke bowl seleccionando tus ingredientes
                 favoritos. Elige base, proteína, toppings, agregados y salsa
                 para crear tu combinación perfecta. Fresco, nutritivo y hecho a
@@ -287,18 +155,26 @@ export default function PokeBowlBuilder({ pokeOptions }: PokeBowlBuilderProps) {
               </div>
 
               <div className="space-y-4 mb-8">
-                {Object.entries(categoryLabels).map(
+                {Object.entries(POKEBOWLS_CATEGORY_LABELS).map(
                   ([key, { label, emoji }]) => {
                     const isExpanded = expandedCategories[key];
                     const count = selectedItems[key]?.length || 0;
-                    const limit = limits[key];
-                    const isFull = count >= limit;
+                    const isFull = PokeBowlService.isCategoryFull(selectedItems, key, limits);
+                    const isOptional = key === "extraProteinas";
+                    const displayItems = getDisplayItems(key);
 
                     return (
-                      <div key={key}>
+                      <div
+                        key={key}
+                        className={`bg-white border-2 rounded-xl overflow-hidden transition-all ${
+                          isExpanded
+                            ? "border-[#9CB973]"
+                            : "border-gray-200 hover:border-[#9CB973] hover:bg-[#9CB973]/5"
+                        }`}
+                      >
                         <button
                           onClick={() => toggleCategory(key)}
-                          className="w-full flex items-center justify-between p-3 bg-white border-2 border-gray-200 rounded-xl hover:border-[#9CB973] hover:bg-[#9CB973]/5 transition-all text-left group"
+                          className="w-full flex items-center justify-between p-3 text-left group"
                         >
                           <div className="flex items-center gap-3">
                             <span className="text-2xl">{emoji}</span>
@@ -307,12 +183,16 @@ export default function PokeBowlBuilder({ pokeOptions }: PokeBowlBuilderProps) {
                                 {label}
                               </span>
                               <span className="text-xs text-gray-500">
-                                {count}/{limit}
+                                {count}/{limits[key]}
+                                {isOptional && " (Opcional)"}
+                                {isOptional && !selectedItems.proteinas?.length && (
+                                  <span className="text-gray-400 ml-1">- Selecciona proteína</span>
+                                )}
                               </span>
                             </div>
                           </div>
                           <div className="flex items-center gap-2">
-                            {isFull && (
+                            {isFull && !(key === "extraProteinas" && !selectedItems.proteinas?.length) && (
                               <span className="bg-[#9CB973] text-white text-xs font-bold px-2 py-1 rounded-full">
                                 Completo
                               </span>
@@ -324,13 +204,25 @@ export default function PokeBowlBuilder({ pokeOptions }: PokeBowlBuilderProps) {
                         </button>
 
                         {isExpanded && (
-                          <div className="mt-2 p-4 bg-white border-2 border-[#9CB973] rounded-xl">
-                            <div className="space-y-2 max-h-48 overflow-y-auto">
-                              {pokeOptions[key as keyof typeof pokeOptions].map(
-                                (item) => {
-                                  const isSelected =
-                                    selectedItems[key]?.includes(item);
-                                  const canSelect = isSelected || !isFull;
+                          <div className="border-t border-[#9CB973] p-4">
+                            {key === "extraProteinas" && !selectedItems.proteinas?.length ? (
+                              <p className="text-sm text-gray-500 text-center py-6">
+                                Selecciona una proteína base para ver opciones disponibles
+                              </p>
+                            ) : key === "extraProteinas" && displayItems.length === 0 ? (
+                              <p className="text-sm text-gray-500 text-center py-6">
+                                No hay proteína extra disponible para {selectedItems.proteinas?.[0]}
+                              </p>
+                            ) : (
+                              <div className="space-y-2 max-h-48 overflow-y-auto">
+                                {displayItems.map((item) => {
+                                  const isSelected = selectedItems[key]?.includes(item);
+                                  const canSelect = PokeBowlService.canSelectItem(
+                                    selectedItems,
+                                    key,
+                                    item,
+                                    limits,
+                                  );
 
                                   return (
                                     <label
@@ -359,9 +251,9 @@ export default function PokeBowlBuilder({ pokeOptions }: PokeBowlBuilderProps) {
                                       </span>
                                     </label>
                                   );
-                                },
-                              )}
-                            </div>
+                                })}
+                              </div>
+                            )}
                           </div>
                         )}
                       </div>
@@ -378,22 +270,22 @@ export default function PokeBowlBuilder({ pokeOptions }: PokeBowlBuilderProps) {
                   : `🎯 ${totalSelected} ingredientes seleccionados`}
               </p>
               {selectedItems.bases?.length &&
-                selectedItems.proteinas?.length && (
+                selectedItems.proteinas?.length &&
+                totalPrice > 0 && (
                   <p className="text-lg font-bold text-[#6B8E4E] mb-3">
-                    S/ {calculateTotalPrice().toFixed(2)}
+                    S/ {totalPrice.toFixed(2)}
                   </p>
                 )}
+              <div className="text-xs text-gray-600 mb-2 space-y-1">
+                {validationMessages.map((msg, idx) => (
+                  <p key={idx}>• Falta: {msg}</p>
+                ))}
+              </div>
               <button
                 onClick={handleOrderClick}
-                disabled={
-                  totalSelected === 0 ||
-                  !selectedItems.bases?.length ||
-                  !selectedItems.proteinas?.length
-                }
+                disabled={!isFormValid}
                 className={`w-full py-2 px-4 rounded-lg font-bold transition-all ${
-                  totalSelected > 0 &&
-                  selectedItems.bases?.length &&
-                  selectedItems.proteinas?.length
+                  isFormValid
                     ? "bg-[#9CB973] text-white hover:bg-[#6B8E4E] cursor-pointer"
                     : "bg-gray-200 text-gray-400 cursor-not-allowed"
                 }`}
@@ -404,7 +296,7 @@ export default function PokeBowlBuilder({ pokeOptions }: PokeBowlBuilderProps) {
           </div>
 
           {/* CENTER PANEL - Visual */}
-          <div className="relative overflow-hidden bg-linear-to-br from-white via-[#F9FBFA] to-[#9CB973]/10 flex flex-col items-center justify-center p-8 lg:p-12 min-h-[600px]">
+          <div className="relative overflow-hidden bg-linear-to-br from-white via-[#F9FBFA] to-[#9CB973]/10 flex flex-col items-center justify-center p-8 lg:p-12 min-h-150">
             {/* Decorative Elements */}
             <div className="absolute top-10 right-20 w-80 h-80 bg-linear-to-br from-[#9CB973]/20 to-[#6B8E4E]/5 rounded-full blur-3xl pointer-events-none"></div>
             <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-linear-to-tr from-[#6B8E4E]/15 to-[#9CB973]/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -518,6 +410,15 @@ export default function PokeBowlBuilder({ pokeOptions }: PokeBowlBuilderProps) {
                         <p>
                           <span className="font-semibold">Proteína:</span>{" "}
                           {selectedItems.proteinas[0]}
+                        </p>
+                      )}
+                    {selectedItems.extraProteinas &&
+                      selectedItems.extraProteinas.length > 0 && (
+                        <p>
+                          <span className="font-semibold">
+                            Proteína Extra:
+                          </span>{" "}
+                          {selectedItems.extraProteinas.join(", ")}
                         </p>
                       )}
                     {selectedItems.toppings &&

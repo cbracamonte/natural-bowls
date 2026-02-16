@@ -37,7 +37,7 @@ export default function Hero() {
               />
             </div>
 
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#5D4E37] mb-6 leading-tight">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#5D4E37] mb-6">
               Comida fresca y saludable para tu{' '}
               <span className="relative inline-block">
                 <span className="relative z-10">mesa</span>

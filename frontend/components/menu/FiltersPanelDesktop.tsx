@@ -1,6 +1,6 @@
 'use client';
-import { categories } from '@/data/products';
-import { cn } from '@/lib/utils';
+import { PRODUCTS_CATEGORY } from '@/data/products-category';
+import { cn } from '@/lib/utils/utils';
 
 interface FiltersPanelDesktopProps {
   selectedCategory: string;
@@ -34,7 +34,7 @@ export default function FiltersPanelDesktop({
           >
             Todos
           </button>
-          {categories.map((category) => (
+          {PRODUCTS_CATEGORY.map((category) => (
             <button
               key={category.id}
               onClick={() => onCategoryChange(category.id)}

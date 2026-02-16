@@ -29,7 +29,7 @@ export default function HeroTransition() {
         </h2>
 
         {/* Description */}
-        <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
+        <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
           Sabor auténtico con ingredientes que realmente importan. Cada bowl cuenta la historia de productores locales comprometidos con tu salud.
         </p>
 
