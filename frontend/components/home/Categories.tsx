@@ -5,15 +5,9 @@ import Image from 'next/image';
 
 const menuCategories = [
   {
-    name: 'Waffles',
-    image: '/images/categories/waffles.jpg',
-    href: '/menu?category=waffles',
-    description: 'Tradicionales y fit',
-  },
-  {
     name: 'Pancakes',
     image: '/images/categories/pancakes.jpg',
-    href: '/menu?category=pancakes',
+    href: '/menu?category=waffles-panqueques',
     description: 'Clásicos o de avena',
   },
   {
@@ -22,6 +16,13 @@ const menuCategories = [
     href: '/menu?category=wraps',
     description: 'Frescos y deliciosos',
   },
+  {
+    name: 'Postres',
+    image: '/images/categories/postres.jpg',
+    href: '/menu?category=postres',
+    description: 'Saludables',
+  },
+  
 ];
 
 export default function Categories() {
