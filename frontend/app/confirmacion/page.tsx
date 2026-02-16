@@ -41,7 +41,7 @@ export default function ConfirmationPage() {
             ¡Pedido Confirmado!
           </h1>
           <p className="text-gray-600">
-            Gracias por tu compra. Te enviaremos un email con los detalles.
+            Gracias por tu compra.
           </p>
         </div>
 

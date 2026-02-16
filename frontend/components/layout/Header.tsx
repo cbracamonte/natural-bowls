@@ -60,7 +60,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="bg-white sticky top-0 z-40 shadow-sm" role="banner">
+      <header className="bg-white sticky top-0 z-30 shadow-sm" role="banner">
         {/* Desktop Navigation */}
         <nav
           className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
