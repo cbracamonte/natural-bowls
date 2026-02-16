@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { CheckCircle, Package, Clock, MapPin } from 'lucide-react';
-import { Order } from '@/types';
-import { formatPrice } from '@/lib/utils';
+import { Order } from '@/lib/schemas';
+import { formatPrice } from '@/lib/utils/utils';
 import Button from '@/components/ui/Button';
 
 export default function ConfirmationPage() {
@@ -99,12 +99,12 @@ export default function ConfirmationPage() {
           </h2>
           <div className="space-y-3">
             {order.items.map((item) => (
-              <div key={item.product.id} className="flex justify-between">
+              <div key={item.productId} className="flex justify-between">
                 <span className="text-gray-600">
-                  {item.product.name} x{item.quantity}
+                  {item.name} x{item.quantity}
                 </span>
                 <span className="font-medium">
-                  {formatPrice(item.product.price * item.quantity)}
+                  {formatPrice(item.price * item.quantity)}
                 </span>
               </div>
             ))}
@@ -131,11 +131,11 @@ export default function ConfirmationPage() {
             </p>
             <p>
               <span className="font-medium text-gray-900">Dirección:</span>{' '}
-              {order.customer.address}, {order.customer.city}
+              {order.delivery.address}, {order.delivery.city}
             </p>
             <p>
-              <span className="font-medium text-gray-900">Método de pago:</span>{' '}
-              {order.customer.paymentMethod === 'card' ? 'Tarjeta' : 'Efectivo'}
+              <span className="font-medium text-gray-900">Estado:</span>{' '}
+              {order.status}
             </p>
           </div>
         </div>

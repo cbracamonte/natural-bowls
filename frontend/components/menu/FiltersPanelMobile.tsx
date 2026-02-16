@@ -1,7 +1,7 @@
 'use client';
 
-import { categories } from '@/data/products';
-import { cn } from '@/lib/utils';
+import { PRODUCTS_CATEGORY } from '@/data/products-category';
+import { cn } from '@/lib/utils/utils';
 
 interface FiltersPanelMobileProps {
   selectedCategory: string;
@@ -35,7 +35,7 @@ export default function FiltersPanelMobile({
           >
             Todos
           </button>
-          {categories.map((category) => (
+          {PRODUCTS_CATEGORY.map((category) => (
             <button
               key={category.id}
               onClick={() => onCategoryChange(category.id)}

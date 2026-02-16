@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { useCart } from '@/context/CartContext';
-import { formatPrice } from '@/lib/utils';
+import { formatPrice } from '@/lib/utils/utils';
 import { SITE_CONFIG } from '@/lib/seo/constants';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
@@ -97,11 +97,10 @@ export default function CheckoutPage() {
       // Mensaje para carrito normal
       const itemsText = items
         .map((item, index) => {
-          const lineTotal = item.product.price * item.quantity;
+          const lineTotal = item.price * item.quantity;
           return (
-            `${index + 1}. ${item.product.name} x${item.quantity}\n` +
-            `   ${item.product.description}\n` +
-            `   ${formatPrice(item.product.price)} c/u - ${formatPrice(lineTotal)}`
+            `${index + 1}. ${item.name} x${item.quantity}\n` +
+            `   ${formatPrice(item.price)} c/u - ${formatPrice(lineTotal)}`
           );
         })
         .join('\n');
@@ -331,12 +330,12 @@ export default function CheckoutPage() {
                 ) : (
                   <div className="space-y-3 mb-4">
                     {items.map((item) => (
-                      <div key={item.product.id} className="flex justify-between text-sm">
+                      <div key={item.productId} className="flex justify-between text-sm">
                         <span className="text-gray-600">
-                          {item.product.name} x{item.quantity}
+                          {item.name} x{item.quantity}
                         </span>
                         <span className="font-medium">
-                          {formatPrice(item.product.price * item.quantity)}
+                          {formatPrice(item.price * item.quantity)}
                         </span>
                       </div>
                     ))}

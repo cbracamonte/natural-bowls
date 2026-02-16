@@ -1,0 +1,58 @@
+import { Product } from "@/lib/schemas";
+
+export const postres: Product[] = [
+  {
+    id: "brownie-fit",
+    name: "Brownie Fit",
+    description: "Brownie de avena, cacao, plátano y mantequilla de maní.",
+    price: 8.5,
+    image: "/images/postres/brownie-fit.jpg",
+    categoryId: "postres",
+    ingredients: ["Avena", "Cacao", "Plátano", "Mantequilla de maní"],
+  },
+  {
+    id: "carrot-cake",
+    name: "Carrot Cake Fit",
+    description: "Pastel de avena, panela y zanahoria.",
+    price: 11.0,
+    image: "/images/postres/carrot-cake.jpg",
+    categoryId: "postres",
+    ingredients: ["Avena", "Panela", "Zanahoria"],
+  },
+  {
+    id: "cheesecake-frutos-rojos",
+    name: "Cheesecake Frutos Rojos",
+    description: "Cheesecake de Frutos Rojos con yogurt griego y stevia.",
+    price: 13.0,
+    image: "/images/postres/cheesecake-frutos-rojos.jpg",
+    categoryId: "postres",
+    ingredients: ["Yogurt griego", "Stevia", "Frutos rojos"],
+  },
+  {
+    id: "cheesecake-pistacho",
+    name: "Cheesecake de Pistacho",
+    description: "Cheesecake de Pistacho con yogurt griego y stevia.",
+    price: 13.0,
+    image: "/images/postres/cheesecake-pistacho.jpg",
+    categoryId: "postres",
+    ingredients: ["Yogurt griego", "Stevia", "Pistacho"],
+  },
+  {
+    id: "cheesecake-maracumango",
+    name: "Cheesecake Maracumango",
+    description: "Cheesecake de Maracumango con yogurt griego y stevia.",
+    price: 13.0,
+    image: "/images/postres/cheesecake-maracumango.jpg",
+    categoryId: "postres",
+    ingredients: ["Yogurt griego", "Stevia", "Maracuyá", "Mango"],
+  },
+  {
+    id: "crumble-manzana",
+    name: "Crumble de Manzana",
+    description: "Crumble de avena con manzana caramelizada.",
+    price: 11.0,
+    image: "/images/postres/crumble-manzana.jpg",
+    categoryId: "postres",
+    ingredients: ["Avena", "Manzana", "Frutos secos"],
+  },
+];

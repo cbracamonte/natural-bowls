@@ -3,13 +3,13 @@
 import { useMemo, useState, useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { Grid3x3, List, Filter, X } from 'lucide-react';
-import { products, categories } from '@/data/products';
+import { PRODUCTS, PRODUCTS_CATEGORY } from '@/data';
 import ProductGrid from '@/components/products/ProductGrid';
 import ProductListView from './ProductListView';
 import PaginationControls from './PaginationControls';
 import FiltersPanelDesktop from './FiltersPanelDesktop';
 import FiltersPanelMobile from './FiltersPanelMobile';
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils/utils';
 
 const PRODUCTS_PER_PAGE = 12;
 
@@ -28,8 +28,8 @@ export default function MenuContent() {
   const filteredProducts = useMemo(() => {
     let filtered =
       selectedCategory === 'all'
-        ? products
-        : products.filter((p) => p.category === selectedCategory);
+        ? PRODUCTS
+        : PRODUCTS.filter((p) => p.categoryId === selectedCategory);
 
     if (sortBy === 'price-asc') {
       filtered = [...filtered].sort((a, b) => a.price - b.price);
@@ -94,7 +94,7 @@ export default function MenuContent() {
 
   const getCategoryName = (catId: string) => {
     if (catId === 'all') return 'Todos los Productos';
-    return categories.find((c) => c.id === catId)?.name || 'Menú';
+    return PRODUCTS_CATEGORY.find((c) => c.id === catId)?.name || 'Menú';
   };
 
   return (

@@ -1,7 +1,7 @@
 'use client';
 
-import { createContext, useContext, useReducer, ReactNode } from 'react';
-import { Product, CartItem } from '@/types';
+import { createContext, useContext, useReducer, useEffect, ReactNode } from 'react';
+import { Product, CartItem } from '@/lib/schemas';
 
 interface CartState {
   items: CartItem[];
@@ -29,14 +29,14 @@ function cartReducer(state: CartState, action: CartAction): CartState {
   switch (action.type) {
     case 'ADD_ITEM': {
       const existingItem = state.items.find(
-        (item) => item.product.id === action.product.id
+        (item) => item.productId === action.product.id
       );
 
       if (existingItem) {
         return {
           ...state,
           items: state.items.map((item) =>
-            item.product.id === action.product.id
+            item.productId === action.product.id
               ? { ...item, quantity: item.quantity + (action.quantity || 1) }
               : item
           ),
@@ -45,25 +45,35 @@ function cartReducer(state: CartState, action: CartAction): CartState {
 
       return {
         ...state,
-        items: [...state.items, { product: action.product, quantity: action.quantity || 1 }],
+        items: [
+          ...state.items,
+          {
+            id: `cart-${action.product.id}-${Date.now()}`,
+            productId: action.product.id,
+            name: action.product.name,
+            price: action.product.price,
+            quantity: action.quantity || 1,
+            image: action.product.image,
+          },
+        ],
       };
     }
     case 'REMOVE_ITEM':
       return {
         ...state,
-        items: state.items.filter((item) => item.product.id !== action.productId),
+        items: state.items.filter((item) => item.productId !== action.productId),
       };
     case 'UPDATE_QUANTITY':
       if (action.quantity <= 0) {
         return {
           ...state,
-          items: state.items.filter((item) => item.product.id !== action.productId),
+          items: state.items.filter((item) => item.productId !== action.productId),
         };
       }
       return {
         ...state,
         items: state.items.map((item) =>
-          item.product.id === action.productId
+          item.productId === action.productId
             ? { ...item, quantity: action.quantity }
             : item
         ),
@@ -76,7 +86,27 @@ function cartReducer(state: CartState, action: CartAction): CartState {
 }
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(cartReducer, { items: [] });
+  // Inicializar estado desde localStorage
+  const initialState = typeof window !== 'undefined'
+    ? (() => {
+        try {
+          const saved = localStorage.getItem('cart');
+          return saved ? JSON.parse(saved) : { items: [] };
+        } catch (error) {
+          console.error('Error loading cart from localStorage:', error);
+          return { items: [] };
+        }
+      })()
+    : { items: [] };
+
+  const [state, dispatch] = useReducer(cartReducer, initialState);
+
+  // Guardar carrito en localStorage cuando cambia
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('cart', JSON.stringify(state));
+    }
+  }, [state]);
 
   const addItem = (product: Product, quantity?: number) => {
     dispatch({ type: 'ADD_ITEM', product, quantity });
@@ -95,7 +125,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   };
 
   const total = state.items.reduce(
-    (sum, item) => sum + item.product.price * item.quantity,
+    (sum, item) => sum + item.price * item.quantity,
     0
   );
 

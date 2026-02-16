@@ -1,169 +1,82 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
-import { Product } from "@/types";
-
-interface SmoothieBowlBuilderProps {
-  smoothieOptions: {
-    smoothies: Product[];
-    toppings: string[];
-  };
-}
-
-interface NutritionInfo {
-  kcal: number;
-  proteina: number;
-  carbos: number;
-  fibra: number;
-}
-
-const nutritionData: { [key: string]: { [item: string]: NutritionInfo } } = {
-  smoothies: {
-    Chocopower: { kcal: 280, proteina: 12, carbos: 35, fibra: 4 },
-    "Mango Bowl": { kcal: 250, proteina: 8, carbos: 48, fibra: 3 },
-    "Berry Bowl": { kcal: 240, proteina: 10, carbos: 42, fibra: 5 },
-    "Green Bowl": { kcal: 220, proteina: 9, carbos: 40, fibra: 4 },
-    "Açaí Original": { kcal: 300, proteina: 11, carbos: 45, fibra: 6 },
-    "Açaí Tropical": { kcal: 310, proteina: 10, carbos: 48, fibra: 5 },
-    "La Dragona": { kcal: 260, proteina: 9, carbos: 44, fibra: 4 },
-    "Butterfly Bowl": { kcal: 270, proteina: 10, carbos: 43, fibra: 5 },
-    "Blue Sky": { kcal: 290, proteina: 14, carbos: 42, fibra: 6 },
-  },
-  toppings: {
-    Fresa: { kcal: 16, proteina: 0.4, carbos: 3.9, fibra: 0.8 },
-    Plátano: { kcal: 27, proteina: 0.3, carbos: 7, fibra: 0.8 },
-    Arándanos: { kcal: 14, proteina: 0.2, carbos: 3.6, fibra: 0.7 },
-    Kiwi: { kcal: 19, proteina: 0.3, carbos: 4.5, fibra: 0.8 },
-    Aguaymanto: { kcal: 22, proteina: 0.2, carbos: 5, fibra: 1.2 },
-    "Coco rallado": { kcal: 56, proteina: 0.5, carbos: 2.3, fibra: 1.5 },
-    "Kiwicha pop": { kcal: 40, proteina: 1.5, carbos: 6, fibra: 0.5 },
-    Chía: { kcal: 42, proteina: 1.5, carbos: 3.5, fibra: 2.8 },
-    Piña: { kcal: 14, proteina: 0.1, carbos: 3.5, fibra: 0.4 },
-    Mango: { kcal: 25, proteina: 0.4, carbos: 6, fibra: 0.7 },
-    Granola: { kcal: 68, proteina: 2, carbos: 10, fibra: 1.2 },
-    "Mantequilla de maní (+2)": {
-      kcal: 95,
-      proteina: 4,
-      carbos: 4,
-      fibra: 1.3,
-    },
-    "Nibs de cacao (+2)": { kcal: 56, proteina: 1, carbos: 5, fibra: 2 },
-  },
-};
-
-const getAdditionalPrice = (item: string): number => {
-  if (item === "Mantequilla de maní (+2)" || item === "Nibs de cacao (+2)") {
-    return 2;
-  }
-  return 0;
-};
+import { Product, SmoothieBowlBuilderProps } from "@/lib/schemas";
+import { SmoothieBowlService } from "@/lib/services";
 
 export default function SmoothieBowlBuilder({
   smoothieOptions,
 }: SmoothieBowlBuilderProps) {
   const router = useRouter();
   const { addItem } = useCart();
+
+  // Obtener smoothie pre-seleccionado
+  const preselectedSmoothie = useMemo(() => {
+    if (smoothieOptions.preselectedSmoothieId) {
+      return smoothieOptions.smoothies.find(
+        (s) => s.id === smoothieOptions.preselectedSmoothieId,
+      ) || null;
+    }
+    return null;
+  }, [smoothieOptions.preselectedSmoothieId, smoothieOptions.smoothies]);
+
   const [selectedSmoothie, setSelectedSmoothie] = useState<Product | null>(
-    null,
+    preselectedSmoothie,
   );
   const [selectedToppings, setSelectedToppings] = useState<string[]>([]);
-  const [expandedSmoothies, setExpandedSmoothies] = useState(true);
-  const [expandedToppings, setExpandedToppings] = useState(false);
+  const [expandedSmoothies, setExpandedSmoothies] = useState(!preselectedSmoothie);
+  const [expandedToppings, setExpandedToppings] = useState(!!preselectedSmoothie);
 
-  const calculateNutrition = (): NutritionInfo => {
-    const total: NutritionInfo = { kcal: 0, proteina: 0, carbos: 0, fibra: 0 };
-
-    // Agregar nutrición del smoothie base
-    if (selectedSmoothie) {
-      const smoothieNutrition =
-        nutritionData.smoothies?.[selectedSmoothie.name];
-      if (smoothieNutrition) {
-        total.kcal += smoothieNutrition.kcal;
-        total.proteina += smoothieNutrition.proteina;
-        total.carbos += smoothieNutrition.carbos;
-        total.fibra += smoothieNutrition.fibra;
-      }
-    }
-
-    // Agregar nutrición de los toppings
-    selectedToppings.forEach((topping) => {
-      const nutrition = nutritionData.toppings?.[topping];
-      if (nutrition) {
-        total.kcal += nutrition.kcal;
-        total.proteina += nutrition.proteina;
-        total.carbos += nutrition.carbos;
-        total.fibra += nutrition.fibra;
-      }
-    });
-
-    return total;
-  };
-
-  const nutrition = calculateNutrition();
-
-  const calculateTotalPrice = (): number => {
-    if (!selectedSmoothie) return 0;
-    let price = selectedSmoothie.price;
-    selectedToppings.forEach((topping) => {
-      price += getAdditionalPrice(topping);
-    });
-    return price;
-  };
-
-  const generateWhatsAppMessage = (): string => {
-    const smoothieName = selectedSmoothie?.name || "No seleccionado";
-    const toppings = selectedToppings.join(", ") || "Ninguno";
-
-    return (
-      `🥣 *SMOOTHIE BOWL PEDIDO*\n\n` +
-      `🍓 *Smoothie:* ${smoothieName}\n` +
-      `🥬 *Toppings Adicionales:* ${toppings}`
-    );
-  };
+  // Usar servicios para cálculos
+  const nutrition = SmoothieBowlService.calculateNutrition(
+    selectedSmoothie,
+    selectedToppings,
+  );
+  const totalPrice = SmoothieBowlService.calculateTotalPrice(
+    selectedSmoothie,
+    selectedToppings,
+  );
+  const maxToppings = SmoothieBowlService.getMaxToppings();
+  const toppingsFull = !SmoothieBowlService.canSelectMoreToppings(
+    selectedToppings,
+  );
+  const missingToppings =
+    SmoothieBowlService.getMissingToppingsCount(selectedToppings);
 
   const handleOrderClick = () => {
-    if (!selectedSmoothie) {
-      alert("Por favor selecciona un smoothie");
+    const validation = SmoothieBowlService.validateBowlRequirements(
+      selectedSmoothie,
+      selectedToppings,
+    );
+
+    if (!validation.isValid) {
+      alert(validation.message);
       return;
     }
 
-    const totalPrice = calculateTotalPrice();
-    const bowlData = {
-      type: "smoothiebowl",
-      smoothieId: selectedSmoothie.id,
-      smoothieName: selectedSmoothie.name,
-      toppings: selectedToppings,
-      nutrition: calculateNutrition(),
-      message: generateWhatsAppMessage(),
-    };
+    if (!selectedSmoothie) return;
+
+    const bowlData = SmoothieBowlService.createBowlOrderData(
+      selectedSmoothie,
+      selectedToppings,
+    );
 
     // Guardar en localStorage
     localStorage.setItem("bowlOrder", JSON.stringify(bowlData));
 
     // Agregar al carrito
-    const bowlProduct = {
-      id: `smoothie-bowl-${Date.now()}`,
-      name: selectedSmoothie.name,
-      description:
-        selectedToppings.length > 0
-          ? `${selectedSmoothie.description} + Toppings: ${selectedToppings.join(", ")}`
-          : selectedSmoothie.description,
-      price: totalPrice,
-      image: selectedSmoothie.image,
-      category: "smoothie-bowl" as const,
-      ingredients: [...selectedSmoothie.ingredients, ...selectedToppings],
-    };
+    const bowlProduct = SmoothieBowlService.createBowlProduct(
+      selectedSmoothie,
+      selectedToppings,
+    );
 
     addItem(bowlProduct, 1);
 
     // Navegar al checkout
     router.push("/checkout");
   };
-
-  const maxToppings = 5;
-  const toppingsFull = selectedToppings.length >= maxToppings;
 
   return (
     <div className="mb-16">
@@ -176,7 +89,7 @@ export default function SmoothieBowlBuilder({
                 Smoothie<span className="text-[#9CB973]">Bowl</span>
               </h2>
 
-              <p className="text-gray-600 text-sm leading-relaxed mb-8">
+              <p className="text-gray-600 text-sm mb-8">
                 Elige uno de nuestros deliciosos smoothie bowls predefinidos y
                 personaliza con hasta 5 toppings adicionales. Refrescante,
                 nutritivo y delicioso en cada cucharada.
@@ -279,8 +192,11 @@ export default function SmoothieBowlBuilder({
                       <div className="space-y-2 max-h-48 overflow-y-auto">
                         {smoothieOptions.toppings.map((topping) => {
                           const isSelected = selectedToppings.includes(topping);
-                          const canSelect = isSelected || !toppingsFull;
-                          const additionalPrice = getAdditionalPrice(topping);
+                          const canSelect =
+                            SmoothieBowlService.canSelectTopping(
+                              selectedToppings,
+                              topping,
+                            );
 
                           return (
                             <label
@@ -329,14 +245,18 @@ export default function SmoothieBowlBuilder({
                   ? `✓ ${selectedSmoothie.name}${selectedToppings.length > 0 ? ` + ${selectedToppings.length} toppings` : ""}`
                   : "✨ Selecciona un smoothie"}
               </p>
+              <p className="text-xs text-gray-600 mb-3">
+                {missingToppings > 0 &&
+                  `Falta seleccionar ${missingToppings} topping${missingToppings !== 1 ? "s" : ""}`}
+              </p>
               <p className="text-lg font-bold text-[#6B8E4E] mb-3">
-                S/ {calculateTotalPrice().toFixed(2)}
+                S/ {totalPrice.toFixed(2)}
               </p>
               <button
                 onClick={handleOrderClick}
-                disabled={!selectedSmoothie}
+                disabled={!selectedSmoothie || missingToppings > 0}
                 className={`w-full py-2 px-4 rounded-lg font-bold transition-all ${
-                  selectedSmoothie
+                  selectedSmoothie && missingToppings === 0
                     ? "bg-[#9CB973] text-white hover:bg-[#6B8E4E] cursor-pointer"
                     : "bg-gray-200 text-gray-400 cursor-not-allowed"
                 }`}
@@ -347,7 +267,7 @@ export default function SmoothieBowlBuilder({
           </div>
 
           {/* CENTER PANEL - Visual */}
-          <div className="relative overflow-hidden bg-linear-to-br from-white via-[#F9FBFA] to-[#9CB973]/10 flex flex-col items-center justify-center p-8 lg:p-12 min-h-[600px]">
+          <div className="relative overflow-hidden bg-linear-to-br from-white via-[#F9FBFA] to-[#9CB973]/10 flex flex-col items-center justify-center p-8 lg:p-12 min-h-150">
             {/* Decorative Elements */}
             <div className="absolute top-10 right-20 w-80 h-80 bg-linear-to-br from-[#9CB973]/20 to-[#6B8E4E]/5 rounded-full blur-3xl pointer-events-none"></div>
             <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-linear-to-tr from-[#6B8E4E]/15 to-[#9CB973]/10 rounded-full blur-3xl pointer-events-none"></div>

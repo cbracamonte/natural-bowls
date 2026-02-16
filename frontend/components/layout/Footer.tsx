@@ -12,14 +12,14 @@ export default function Footer() {
           <div className="col-span-1 md:col-span-2">
             <Link href="/" className="flex items-center mb-4" aria-label="Volver al inicio">
               <Image
-                src="/images/nb-isotipo-white.svg"
+                src="/icons/nb-isotipo-white.svg"
                 alt="Natural Bowls"
                 width={64}
                 height={64}
                 className="w-16 h-16 md:hidden"
               />
               <Image
-                src="/images/nb-logotipo-white.svg"
+                src="/icons/nb-logotipo-white.svg"
                 alt="Natural Bowls"
                 width={180}
                 height={64}
