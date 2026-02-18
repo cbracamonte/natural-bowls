@@ -21,19 +21,19 @@ export default function manifest(): MetadataRoute.Manifest {
     prefer_related_applications: false,
     icons: [
       {
-        src: "/icons/icon512_rounded.png",
+        src: "/icons/nbicon.png",
         sizes: "192x192",
         type: "image/png",
         purpose: "any",
       },
       {
-        src: "/icons/icon512_rounded.png",
+        src: "/icons/nbicon.png",
         sizes: "384x384",
         type: "image/png",
         purpose: "any",
       },
       {
-        src: "/icons/icon512_rounded.png",
+        src: "/icons/nbicon.png",
         sizes: "512x512",
         type: "image/png",
         purpose: "any",
@@ -43,12 +43,6 @@ export default function manifest(): MetadataRoute.Manifest {
         sizes: "512x512",
         type: "image/png",
         purpose: "maskable",
-      },
-      {
-        src: "/icons/nbicon.png",
-        sizes: "any",
-        type: "image/svg+xml",
-        purpose: "any",
       },
     ],
     // Atajos visibles en el menú contextual al mantener presionado el ícono
