@@ -128,3 +128,6 @@ tsconfig.tsbuildinfo
 # ============================================================================
 .pid
 *.pid
+
+# Added by ggshield
+.cache_ggshield

@@ -6,26 +6,10 @@ import Link from "next/link";
 import { ArrowLeft, Check, X, AlertCircle } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/lib/utils/utils";
-import { SITE_CONFIG } from "@/lib/seo/constants";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
-
-interface BowlOrder {
-  type: "pokebowl" | "smoothiebowl";
-  tamaño?: string;
-  base?: string;
-  proteina?: string;
-  toppings?: string[];
-  agregados?: string[];
-  salsas?: string[];
-  nutrition?: {
-    kcal: number;
-    proteina: number;
-    carbos: number;
-    fibra: number;
-  };
-  message?: string;
-}
+import { CheckoutService } from "@/lib/services";
+import { BowlOrder, CheckoutFormData } from "@/lib/schemas";
 
 export default function CheckoutPage() {
   const { items, total, clearCart } = useCart();
@@ -33,233 +17,53 @@ export default function CheckoutPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [pendingMessage, setPendingMessage] = useState("");
-  const [bowlOrder] = useState<BowlOrder | null>(() => {
-    if (typeof window === "undefined") {
-      return null;
-    }
-    const savedBowlOrder = localStorage.getItem("bowlOrder");
-    if (savedBowlOrder) {
-      try {
-        return JSON.parse(savedBowlOrder);
-      } catch (error) {
-        console.error("Error parsing bowl order:", error);
-        return null;
-      }
-    }
-    return null;
-  });
-  const [formData, setFormData] = useState(() => {
-    const initialFormData = {
+
+  const [bowlOrder] = useState<BowlOrder | null>(() =>
+    CheckoutService.getBowlOrderFromStorage(),
+  );
+
+  const [formData, setFormData] = useState<CheckoutFormData>(() => {
+    const initial: CheckoutFormData = {
       name: "",
-      phone: "",
+      phone: CheckoutService.getPhoneFromStorage(),
       address: "",
       city: "",
       notes: "",
     };
-    if (typeof window === "undefined") {
-      return initialFormData;
-    }
-    const savedPhone = localStorage.getItem("firstOrderPhone");
-    if (savedPhone) {
-      return { ...initialFormData, phone: savedPhone };
-    }
-    return initialFormData;
+    return initial;
   });
+
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [discountCode, setDiscountCode] = useState("");
   const [discountValidated, setDiscountValidated] = useState(false);
   const [discountError, setDiscountError] = useState("");
 
-  // Validar código de descuento con seguridad mejorada
-  const validateDiscountCode = (code: string) => {
-    setDiscountError("");
+  const { discountAmount, finalTotal } = CheckoutService.calculateDiscount(
+    total,
+    discountValidated,
+  );
 
-    const inputCode = code.trim().toUpperCase();
-    const savedCode = localStorage.getItem("firstOrderCode");
-    const savedPhone = localStorage.getItem("firstOrderPhone");
-    const codeCreatedAt = localStorage.getItem("firstOrderCodeTime");
-    const codeUsed = localStorage.getItem("firstOrderCodeUsed");
-
-    // 1. Validar que exista un código guardado
-    if (!savedCode) {
-      setDiscountError("No hay código disponible. Genera uno primero.");
-      return false;
+  const handleValidateCode = async () => {
+    if (!discountCode.trim()) {
+      setDiscountError("Ingresa un código de descuento");
+      return;
     }
-
-    // 2. Validar que el código sea 'NB15'
-    if (inputCode !== "NB15") {
-      setDiscountError("Código de descuento inválido");
-      return false;
+    const result = await CheckoutService.validateDiscountCode(
+      discountCode,
+      formData.phone,
+    );
+    if (result.isValid) {
+      setDiscountValidated(true);
+      setDiscountError("");
+    } else {
+      setDiscountValidated(false);
+      setDiscountError(result.error ?? "Código inválido");
     }
-
-    // 3. Obtener el teléfono: del checkout si está ingresado, o del guardado
-    let phoneToValidate = formData.phone.replace(/\D/g, "");
-    if (!phoneToValidate && savedPhone) {
-      // Si no hay teléfono en checkout pero existe uno guardado, usarlo
-      phoneToValidate = savedPhone;
-    }
-
-    if (!phoneToValidate) {
-      setDiscountError("Por favor ingresa tu teléfono para validar el código");
-      return false;
-    }
-
-    // 4. Validar que el teléfono coincida con el que generó el código
-    if (phoneToValidate !== savedPhone) {
-      setDiscountError(
-        `Teléfono no coincide. Usaste ${savedPhone} para generar el código.`,
-      );
-      return false;
-    }
-
-    // 5. Validar que no haya expirado (7 días)
-    if (codeCreatedAt) {
-      const createdDate = new Date(codeCreatedAt);
-      const expirationDate = new Date(
-        createdDate.getTime() + 7 * 24 * 60 * 60 * 1000,
-      );
-      if (new Date() > expirationDate) {
-        setDiscountError("El código de descuento ha expirado (7 días)");
-        return false;
-      }
-    }
-
-    // 6. Validar que no haya sido usado ya
-    if (codeUsed === "true") {
-      setDiscountError("Este código de descuento ya fue utilizado");
-      return false;
-    }
-
-    setDiscountValidated(true);
-    setDiscountError("");
-    return true;
   };
 
   const handleCodeChange = (code: string) => {
     setDiscountCode(code);
-    if (discountValidated) {
-      setDiscountValidated(false);
-    }
-  };
-
-  const handleValidateCode = () => {
-    if (discountCode.trim()) {
-      validateDiscountCode(discountCode);
-    } else {
-      setDiscountError("Ingresa un código de descuento");
-    }
-  };
-
-  // Calcular descuento (15% si es válido)
-  const discountPercentage = discountValidated ? 0.15 : 0;
-  const discountAmount = total * discountPercentage;
-  const finalTotal = total - discountAmount;
-
-  const validateForm = () => {
-    const newErrors: Record<string, string> = {};
-
-    if (!formData.name.trim()) newErrors.name = "El nombre es requerido";
-    if (!formData.phone.trim()) {
-      newErrors.phone = "El teléfono es requerido";
-    } else if (!/^\d{9}$/.test(formData.phone.replace(/\D/g, ""))) {
-      newErrors.phone = "Teléfono inválido (9 dígitos)";
-    }
-    if (!formData.address.trim())
-      newErrors.address = "La dirección es requerida";
-    if (!formData.city.trim()) newErrors.city = "La ciudad es requerida";
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!validateForm()) return;
-
-    setIsSubmitting(true);
-
-    const whatsappNumber = SITE_CONFIG.phone.replace(/\D/g, "");
-
-    let message = "";
-    let bowlText = "";
-    let itemsText = "";
-
-    // Agregar bowl personalizado si existe
-    if (bowlOrder) {
-      bowlText = `🍽️ *BOWL PERSONALIZADO*\n${bowlOrder.message}\n`;
-    }
-
-    // Agregar items del carrito si existen
-    if (items.length > 0) {
-      itemsText = items
-        .map((item, index) => {
-          const lineTotal = item.price * item.quantity;
-          return (
-            `${index + 1}. ${item.name} x${item.quantity}\n` +
-            `   ${formatPrice(item.price)} c/u - ${formatPrice(lineTotal)}`
-          );
-        })
-        .join("\n");
-    }
-
-    const notesText = formData.notes.trim()
-      ? `\n📝 Notas: ${formData.notes.trim()}`
-      : "";
-
-    const discountText = discountValidated
-      ? `\n💰 Código validado: ${discountCode}\n📊 Descuento 15%: -${formatPrice(discountAmount)}`
-      : "";
-
-    message = [
-      "Nuevo pedido - Natural Bowls",
-      `Nombre: ${formData.name}`,
-      `Telefono: ${formData.phone}`,
-      `Direccion: ${formData.address}, ${formData.city}`,
-      "",
-      bowlText,
-      items.length > 0 ? "Productos:" : "",
-      itemsText,
-      "",
-      `Subtotal: ${formatPrice(total)}`,
-      discountText,
-      `Total: ${formatPrice(finalTotal)}`,
-      "",
-      notesText,
-    ]
-      .filter(Boolean)
-      .join("\n");
-
-    // Guardar mensaje pendiente y mostrar modal de confirmación
-    setPendingMessage(message);
-    setShowConfirmModal(true);
-    setIsSubmitting(false);
-  };
-
-  const handleConfirmOrder = () => {
-    const whatsappNumber = SITE_CONFIG.phone.replace(/\D/g, "");
-    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(pendingMessage)}`;
-
-    // Marcar como usado si el código fue validado
-    if (discountValidated) {
-      localStorage.setItem("firstOrderCodeUsed", "true");
-    }
-
-    // Limpiar carrito y orden de bowl
-    clearCart();
-    localStorage.removeItem("bowlOrder");
-
-    // Cerrar modal y limpiar
-    setShowConfirmModal(false);
-    setPendingMessage("");
-
-    // Abrir WhatsApp
-    window.open(whatsappUrl, "_blank", "noopener,noreferrer");
-
-    // Esperar un poco y luego regresar al menú
-    setTimeout(() => {
-      router.push("/");
-    }, 1000);
+    if (discountValidated) setDiscountValidated(false);
   };
 
   const handleInputChange = (
@@ -267,9 +71,52 @@ export default function CheckoutPage() {
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }));
+    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    const formErrors = CheckoutService.validateForm(formData);
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
+      return;
     }
+
+    setIsSubmitting(true);
+
+    const message = CheckoutService.buildWhatsAppMessage({
+      formData,
+      bowlOrder,
+      cartItems: items,
+      total,
+      discountValidated,
+      discountCode,
+      discountAmount,
+      finalTotal,
+    });
+
+    setPendingMessage(message);
+    setShowConfirmModal(true);
+    setIsSubmitting(false);
+  };
+
+  const handleConfirmOrder = async () => {
+    if (discountValidated) await CheckoutService.markDiscountAsUsed();
+
+    clearCart();
+    CheckoutService.clearOrderStorage();
+
+    setShowConfirmModal(false);
+    setPendingMessage("");
+
+    window.open(
+      CheckoutService.buildWhatsAppUrl(pendingMessage),
+      "_blank",
+      "noopener,noreferrer",
+    );
+
+    setTimeout(() => router.push("/"), 1000);
   };
 
   if (items.length === 0 && !bowlOrder) {
@@ -289,11 +136,10 @@ export default function CheckoutPage() {
 
   return (
     <>
-      {/* Modal de confirmación - Portal style */}
+      {/* Modal de confirmación */}
       {showConfirmModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-9999 p-4 animate-in fade-in flex items-start md:items-center justify-center pt-16 md:pt-0 overflow-y-auto">
           <div className="bg-white rounded-3xl w-full max-w-2xl max-h-[85vh] p-6 md:p-8 relative shadow-2xl border border-gray-200 animate-in zoom-in-95 flex flex-col my-auto">
-            {/* Close button */}
             <button
               onClick={() => setShowConfirmModal(false)}
               className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors z-10"
@@ -301,7 +147,6 @@ export default function CheckoutPage() {
               <X className="w-5 h-5" />
             </button>
 
-            {/* Header - fijo */}
             <div className="text-center mb-6 shrink-0">
               <div className="flex justify-center items-center mb-3">
                 <div className="bg-blue-100 rounded-full p-3 w-14 h-14 flex items-center justify-center">
@@ -316,9 +161,7 @@ export default function CheckoutPage() {
               </p>
             </div>
 
-            {/* Contenido scrollable */}
             <div className="overflow-y-auto flex-1 min-h-0 mb-6">
-              {/* Pedido preview - scrollable */}
               <div className="bg-gray-50 rounded-xl p-4 mb-6 border border-gray-200">
                 <pre className="text-xs md:text-sm font-mono whitespace-pre-wrap break-words text-gray-700 leading-relaxed">
                   {pendingMessage}
@@ -326,7 +169,6 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            {/* Info sobre descuento - fijo */}
             {discountValidated && (
               <div className="bg-green-50 rounded-xl p-4 mb-4 border border-green-200 space-y-2 shrink-0">
                 <div className="flex items-start gap-2">
@@ -336,24 +178,14 @@ export default function CheckoutPage() {
                       ✓ Código NB15 aplicado (15% descuento)
                     </p>
                     <p className="text-green-800 text-xs">
-                      Este código es de una sola vez. No podrá ser utilizado
-                      en próximos pedidos.
+                      Este código es de una sola vez. No podrá ser utilizado en
+                      próximos pedidos.
                     </p>
                   </div>
                 </div>
               </div>
             )}
 
-            {!discountValidated && (
-              <div className="bg-orange-50 rounded-xl p-4 mb-4 border border-orange-200 shrink-0">
-                <p className="text-xs md:text-sm text-orange-800">
-                  <span className="font-semibold">Sin descuento aplicado</span>{" "}
-                  - No se validó código de descuento para este pedido.
-                </p>
-              </div>
-            )}
-
-            {/* Botones de acción - fijo */}
             <div className="flex gap-3 shrink-0 pt-4 border-t border-gray-200">
               <button
                 onClick={() => setShowConfirmModal(false)}
@@ -375,7 +207,6 @@ export default function CheckoutPage() {
 
       <div className="min-h-screen bg-monstera-cream scroll-mt-48">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {/* Back button */}
           <Link
             href="/carrito"
             className="flex items-center text-gray-600 hover:text-[#6B8E4E]-600 mb-6 transition-colors"
@@ -390,9 +221,9 @@ export default function CheckoutPage() {
 
           <form onSubmit={handleSubmit}>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* Form */}
+              {/* Formulario */}
               <div className="lg:col-span-2 space-y-6">
-                {/* Contact Info */}
+                {/* Información de contacto */}
                 <div className="bg-white rounded-2xl p-6">
                   <h2 className="text-lg font-semibold text-gray-900 mb-4">
                     Información de Contacto
@@ -408,7 +239,6 @@ export default function CheckoutPage() {
                         placeholder="Tu nombre"
                       />
                     </div>
-
                     <Input
                       label="Telefono"
                       name="phone"
@@ -422,7 +252,7 @@ export default function CheckoutPage() {
                   </div>
                 </div>
 
-                {/* Delivery Address */}
+                {/* Dirección de entrega */}
                 <div className="bg-white rounded-2xl p-6">
                   <h2 className="text-lg font-semibold text-gray-900 mb-4">
                     Dirección de Entrega
@@ -460,7 +290,25 @@ export default function CheckoutPage() {
                   </div>
                 </div>
 
-                {/* Discount Code */}
+                {/* Info de delivery */}
+                <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 flex gap-4">
+                  <div className="text-2xl shrink-0">🛵</div>
+                  <div>
+                    <h3 className="font-semibold text-amber-900 mb-1">
+                      Delivery
+                    </h3>
+                    <p className="text-sm text-amber-800 leading-relaxed">
+                      El precio del delivery varía según tu ubicación y se
+                      coordina a través de plataformas como{" "}
+                      <span className="font-semibold">Rappi</span> o{" "}
+                      <span className="font-semibold">PedidosYa</span>. Una vez
+                      que recibamos tu pedido por WhatsApp, te informaremos el
+                      costo exacto antes de confirmar el envío.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Código de descuento */}
                 <div className="bg-white rounded-2xl p-6">
                   <h2 className="text-lg font-semibold text-gray-900 mb-4">
                     🎁 Código de Descuento
@@ -477,7 +325,6 @@ export default function CheckoutPage() {
                         onChange={(e) =>
                           handleCodeChange(e.target.value.toUpperCase())
                         }
-                        placeholder=""
                         className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#6B8E4E]-500 focus:border-transparent uppercase font-mono"
                       />
                       {discountError && (
@@ -505,7 +352,7 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
-              {/* Order Summary */}
+              {/* Resumen del pedido */}
               <div className="lg:col-span-1">
                 <div className="bg-white rounded-2xl p-6 sticky top-24">
                   <h2 className="text-lg font-semibold text-gray-900 mb-4">
@@ -513,7 +360,7 @@ export default function CheckoutPage() {
                   </h2>
 
                   <div className="space-y-3 mb-4">
-                    {/* Bowl Personalizado */}
+                    {/* Bowl personalizado */}
                     {bowlOrder && (
                       <div className="pb-3 border-b space-y-2">
                         <p className="text-sm font-semibold text-[#5D4E37]">
@@ -530,16 +377,12 @@ export default function CheckoutPage() {
                             </span>
                           </div>
                         )}
-
                         {bowlOrder.base && (
                           <div className="flex justify-between text-xs">
                             <span className="text-gray-600">Base:</span>
-                            <span className="font-medium">
-                              {bowlOrder.base}
-                            </span>
+                            <span className="font-medium">{bowlOrder.base}</span>
                           </div>
                         )}
-
                         {bowlOrder.proteina && (
                           <div className="flex justify-between text-xs">
                             <span className="text-gray-600">Proteína:</span>
@@ -548,24 +391,21 @@ export default function CheckoutPage() {
                             </span>
                           </div>
                         )}
-
-                        {bowlOrder.toppings &&
-                          bowlOrder.toppings.length > 0 && (
-                            <div className="text-xs">
-                              <span className="text-gray-600">Toppings:</span>
-                              <div className="flex flex-wrap gap-1 mt-1">
-                                {bowlOrder.toppings.map((topping) => (
-                                  <span
-                                    key={topping}
-                                    className="bg-[#9CB973]/10 text-[#5D4E37] px-1.5 py-0.5 rounded text-xs"
-                                  >
-                                    {topping}
-                                  </span>
-                                ))}
-                              </div>
+                        {bowlOrder.toppings && bowlOrder.toppings.length > 0 && (
+                          <div className="text-xs">
+                            <span className="text-gray-600">Toppings:</span>
+                            <div className="flex flex-wrap gap-1 mt-1">
+                              {bowlOrder.toppings.map((topping) => (
+                                <span
+                                  key={topping}
+                                  className="bg-[#9CB973]/10 text-[#5D4E37] px-1.5 py-0.5 rounded text-xs"
+                                >
+                                  {topping}
+                                </span>
+                              ))}
                             </div>
-                          )}
-
+                          </div>
+                        )}
                         {bowlOrder.agregados &&
                           bowlOrder.agregados.length > 0 && (
                             <div className="text-xs">
@@ -582,7 +422,6 @@ export default function CheckoutPage() {
                               </div>
                             </div>
                           )}
-
                         {bowlOrder.salsas && bowlOrder.salsas.length > 0 && (
                           <div className="text-xs">
                             <span className="text-gray-600">Salsas:</span>
@@ -601,7 +440,7 @@ export default function CheckoutPage() {
                       </div>
                     )}
 
-                    {/* Otros Productos */}
+                    {/* Otros productos */}
                     {items.map((item) => (
                       <div
                         key={item.productId}
@@ -622,7 +461,6 @@ export default function CheckoutPage() {
                       <span className="text-gray-600">Subtotal</span>
                       <span className="font-medium">{formatPrice(total)}</span>
                     </div>
-
                     {discountValidated && discountAmount > 0 && (
                       <div className="flex justify-between text-sm text-green-600">
                         <span>Descuento (15%)</span>
@@ -631,12 +469,15 @@ export default function CheckoutPage() {
                         </span>
                       </div>
                     )}
-
                     <div className="flex justify-between font-semibold text-lg pt-2 border-t">
                       <span>Total</span>
                       <span className="text-[#6B8E4E]-600">
                         {formatPrice(finalTotal)}
                       </span>
+                    </div>
+                    <div className="flex justify-between text-sm text-amber-700 bg-amber-50 rounded-lg px-3 py-2 mt-1">
+                      <span>Delivery</span>
+                      <span className="font-medium">A confirmar por WhatsApp</span>
                     </div>
                   </div>
 
