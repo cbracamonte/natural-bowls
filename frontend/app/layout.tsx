@@ -1,7 +1,6 @@
 import { generateRootMetadata, generateViewportConfig } from "@/lib/seo";
 import { LocalBusinessSchema, HeadScripts } from "@/components/seo";
-import CookieBanner from "@/components/layout/CookieBanner";
-import FirstOrderModal from "@/components/banners/FirstOrderModal";
+import OnboardingQueue from "@/components/ui/OnboardingQueue";
 import PromotionNotification from "@/components/banners/PromotionNotification";
 import "./globals.css";
 import Header from "@/components/layout/Header";
@@ -24,7 +23,7 @@ export default function RootLayout({
       </head>
       <body className="antialiased">
         <CartProvider>
-          <FirstOrderModal />
+          <OnboardingQueue />
           <PromotionNotification />
           <div className="min-h-screen flex flex-col">
             <Header />
@@ -32,7 +31,6 @@ export default function RootLayout({
               {children}
             </main>
             <Footer />
-            <CookieBanner />
           </div>
         </CartProvider>
       </body>
