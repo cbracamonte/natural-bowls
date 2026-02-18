@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import Link from "next/link";
-import { getActivePromotions, Promotion } from "@/data/promotions-notifications";
+import { getActivePromotions } from "@/data/promotions-notifications";
+import { Promotion } from "@/lib/schemas";
 
 export default function PromotionNotification() {
   const [currentPromoIndex, setCurrentPromoIndex] = useState(0);
