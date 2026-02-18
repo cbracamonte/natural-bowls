@@ -12,8 +12,8 @@ export function generateViewportConfig(): Viewport {
     // Importante para PWA en iOS: respeta el área segura del notch
     viewportFit: "cover",
     themeColor: [
-      { media: "(prefers-color-scheme: light)", color: "#10b981" },
-      { media: "(prefers-color-scheme: dark)", color: "#10b981" },
+      { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+      { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
     ],
   };
 }
