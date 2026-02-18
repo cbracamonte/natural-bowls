@@ -6,7 +6,11 @@ import Button from "@/components/ui/Button";
 
 const STORAGE_KEY = "nb-cookie-consent";
 
-export default function CookieBanner() {
+interface CookieBannerProps {
+  onDone?: () => void;
+}
+
+export default function CookieBanner({ onDone }: CookieBannerProps = {}) {
   const [accepted, setAccepted] = useState(true);
 
   useEffect(() => {
@@ -18,6 +22,7 @@ export default function CookieBanner() {
   const handleAccept = () => {
     localStorage.setItem(STORAGE_KEY, "true");
     setAccepted(true);
+    onDone?.();
   };
 
   if (accepted) return null;

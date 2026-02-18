@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X, Copy, Check, Gift, Lock } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
@@ -14,7 +14,13 @@ const discountRules = rules.slice(0, 3);
 const discountLabel = `${percentage * 100}% OFF`;
 const bannerText = `Ahorra ${percentage * 100}% en tu primer pedido`;
 
-export default function FirstOrderModal() {
+const NB_FLAG_DISCOUNT = "nb-discount-interacted";
+
+interface FirstOrderModalProps {
+  onDone?: () => void;
+}
+
+export default function FirstOrderModal({ onDone }: FirstOrderModalProps = {}) {
   const [isOpen] = useState(() => DiscountCodeService.getInitialState().isEligible);
   const [phone, setPhone] = useState("");
   const [generatedCode, setGeneratedCode] = useState(
@@ -23,6 +29,22 @@ export default function FirstOrderModal() {
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
   const [modalOpen, setModalOpen] = useState(isOpen);
+
+  // Si el usuario no es elegible (ya tiene/usó código), marcar como interactuado
+  // para que PromotionNotification no quede bloqueada esperando este modal
+  useEffect(() => {
+    if (!isOpen) {
+      localStorage.setItem(NB_FLAG_DISCOUNT, "true");
+      onDone?.();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen]);
+
+  const handleClose = () => {
+    localStorage.setItem(NB_FLAG_DISCOUNT, "true");
+    setModalOpen(false);
+    onDone?.();
+  };
 
   const handlePhoneChange = (value: string) => {
     const cleaned = value.replace(/[^0-9]/g, "").slice(0, 9);
@@ -52,7 +74,7 @@ export default function FirstOrderModal() {
   if (!modalOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center z-50 sm:p-4 animate-in fade-in">
       <style>{`
         .modal-scroll::-webkit-scrollbar { width: 8px; }
         .modal-scroll::-webkit-scrollbar-track { background: transparent; }
@@ -60,13 +82,19 @@ export default function FirstOrderModal() {
         .modal-scroll::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
       `}</style>
       <div
-        className={`bg-white rounded-3xl w-full relative shadow-2xl border border-gray-200 animate-in zoom-in-95 max-h-[90vh] overflow-y-auto modal-scroll smooth-scroll ${
+        className={`bg-white rounded-t-3xl sm:rounded-3xl w-full relative shadow-2xl border border-gray-200 animate-in zoom-in-95 overflow-y-auto modal-scroll smooth-scroll ${
           generatedCode ? "max-w-sm md:max-w-2xl" : "max-w-sm md:max-w-md"
         }`}
+        style={{ maxHeight: "calc(100dvh - 32px)" }}
       >
+        {/* Pill handle en móvil */}
+        <div className="flex justify-center pt-2.5 pb-1 sm:hidden">
+          <div className="w-10 h-1 rounded-full bg-gray-300" />
+        </div>
+
         <button
-          onClick={() => setModalOpen(false)}
-          className="absolute top-3 right-3 md:top-4 md:right-4 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg p-1.5 md:p-1 transition-all z-10"
+          onClick={handleClose}
+          className="sticky top-2 float-right mr-3 sm:absolute sm:top-3 sm:right-3 md:top-4 md:right-4 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg p-1.5 md:p-1 transition-all z-10"
         >
           <X className="w-6 h-6 md:w-5 md:h-5" />
         </button>
@@ -237,7 +265,7 @@ export default function FirstOrderModal() {
                 Ahora dirígete a{" "}
                 <Link
                   href={cta.url}
-                  onClick={() => setModalOpen(false)}
+                  onClick={handleClose}
                   className="font-semibold text-[#6B8E4E] underline underline-offset-2"
                 >
                   {cta.urlText}

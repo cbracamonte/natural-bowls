@@ -6,22 +6,70 @@ import Link from "next/link";
 import { getActivePromotions } from "@/data/promotions-notifications";
 import { Promotion } from "@/lib/schemas";
 
+// Flags de localStorage que deben estar activos antes de mostrar promociones
+const NB_FLAG_COOKIES = "nb-cookie-consent";
+const NB_FLAG_DISCOUNT = "nb-discount-interacted";
+const NB_FLAG_INSTALL = "nb-install-interacted";
+
+function allModalsInteracted(): boolean {
+  return (
+    localStorage.getItem(NB_FLAG_COOKIES) === "true" &&
+    localStorage.getItem(NB_FLAG_DISCOUNT) === "true" &&
+    localStorage.getItem(NB_FLAG_INSTALL) === "true"
+  );
+}
+
 export default function PromotionNotification() {
   const [currentPromoIndex, setCurrentPromoIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
   const [promotions] = useState<Promotion[]>(() => getActivePromotions());
+  // ready = true cuando el usuario ha interactuado con los 3 modales previos
+  const [ready, setReady] = useState(false);
 
+  // Esperar a que los 3 modales sean descartados/interactuados
   useEffect(() => {
-    if (promotions.length === 0) {
-      return;
+    if (promotions.length === 0) return;
+
+    // Verificación inicial
+    if (allModalsInteracted()) {
+      // Pequeña pausa para no solaparse con el último modal en cerrarse
+      const t = setTimeout(() => setReady(true), 2000);
+      return () => clearTimeout(t);
     }
+
+    // Polling cada segundo (cubre cambios en la misma pestaña)
+    const poll = setInterval(() => {
+      if (allModalsInteracted()) {
+        clearInterval(poll);
+        setTimeout(() => setReady(true), 2000);
+      }
+    }, 1000);
+
+    // storage event cubre cambios desde otras pestañas
+    const onStorage = () => {
+      if (allModalsInteracted()) {
+        clearInterval(poll);
+        setTimeout(() => setReady(true), 2000);
+      }
+    };
+    window.addEventListener("storage", onStorage);
+
+    return () => {
+      clearInterval(poll);
+      window.removeEventListener("storage", onStorage);
+    };
+  }, [promotions.length]);
+
+  // Rotación y auto-cierre — solo cuando ready
+  useEffect(() => {
+    if (!ready || promotions.length === 0) return;
 
     // Rotar entre promociones cada 5 segundos
     const rotationInterval = setInterval(() => {
       setCurrentPromoIndex((prev) => (prev + 1) % promotions.length);
     }, 5000);
 
-    // Auto-cerrar la notificación después de 30 segundos de inactividad
+    // Auto-cerrar la notificación después de 30 segundos
     let autoCloseTimeout: NodeJS.Timeout;
     const resetAutoClose = () => {
       clearTimeout(autoCloseTimeout);
@@ -36,9 +84,9 @@ export default function PromotionNotification() {
       clearInterval(rotationInterval);
       clearTimeout(autoCloseTimeout);
     };
-  }, [promotions.length]);
+  }, [ready, promotions.length]);
 
-  if (!isVisible || promotions.length === 0) return null;
+  if (!isVisible || !ready || promotions.length === 0) return null;
 
   const currentPromo = promotions[currentPromoIndex];
 
