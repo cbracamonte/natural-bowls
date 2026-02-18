@@ -21,19 +21,19 @@ export default function manifest(): MetadataRoute.Manifest {
     prefer_related_applications: false,
     icons: [
       {
-        src: "/icons/nbicon.png",
+        src: "/icons/icon512_maskable.png",
         sizes: "192x192",
         type: "image/png",
         purpose: "any",
       },
       {
-        src: "/icons/nbicon.png",
+        src: "/icons/icon512_maskable.png",
         sizes: "384x384",
         type: "image/png",
         purpose: "any",
       },
       {
-        src: "/icons/nbicon.png",
+        src: "/icons/icon512_maskable.png",
         sizes: "512x512",
         type: "image/png",
         purpose: "any",
@@ -44,6 +44,12 @@ export default function manifest(): MetadataRoute.Manifest {
         type: "image/png",
         purpose: "maskable",
       },
+      {
+        src: "/icons/icon512_maskable.png",
+        sizes: "512x512",
+        type: "image/png",
+        purpose: "monochrome",
+      }
     ],
     // Atajos visibles en el menú contextual al mantener presionado el ícono
     shortcuts: [
@@ -52,21 +58,21 @@ export default function manifest(): MetadataRoute.Manifest {
         short_name: "Menú",
         description: "Explora nuestro menú de poke bowls y smoothie bowls",
         url: "/menu",
-        icons: [{ src: "/icons/nbicon.png", sizes: "any" }],
+        icons: [{ src: "/icons/icon512_maskable.png", sizes: "any" }],
       },
       {
         name: "Pide tu Bowl",
         short_name: "Pedir Bowl",
         description: "Personaliza y ordena tu bowl saludable",
         url: "/bowls",
-        icons: [{ src: "/icons/nbicon.png", sizes: "any" }],
+        icons: [{ src: "/icons/icon512_maskable.png", sizes: "any" }],
       },
       {
         name: "Mi Carrito",
         short_name: "Carrito",
         description: "Ver mi carrito de compras",
         url: "/carrito",
-        icons: [{ src: "/icons/nbicon.png", sizes: "any" }],
+        icons: [{ src: "/icons/icon512_maskable.png", sizes: "any" }],
       },
     ],
     screenshots: [],
