@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
 import Link from "next/link";
-import { getActivePromotions, Promotion } from "@/data/promotions-notifications";
+import { getActivePromotions } from "@/data/promotions-notifications";
+import { Promotion } from "@/lib/schemas";
 
 export default function PromotionNotification() {
   const [currentPromoIndex, setCurrentPromoIndex] = useState(0);
@@ -44,7 +45,7 @@ export default function PromotionNotification() {
   return (
     <div className="fixed bottom-4 md:bottom-6 right-4 md:right-6 z-40 animate-in slide-in-from-bottom-4 fade-in">
       <div
-        className={`bg-gradient-to-r ${currentPromo.bgColor} rounded-2xl shadow-2xl border border-gray-200 overflow-hidden max-w-sm w-full`}
+        className={`bg-linear-to-r ${currentPromo.bgColor} rounded-2xl shadow-2xl border border-gray-200 overflow-hidden max-w-sm w-full`}
       >
         {/* Close button */}
         <button

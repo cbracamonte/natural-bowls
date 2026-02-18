@@ -54,3 +54,51 @@ export const BUSINESS_INFO = {
   priceRange: "$$",
   servesCuisine: "Health Food",
 } as const;
+
+export const DISCOUNTS_CODES = {
+  FIRSTORDER: {
+    code: "NB15",
+    description: "15% de descuento en tu primer pedido",
+    percentage: 0.15,
+    expirationDays: 7,
+    rules: [
+      {
+        label: "Tu número no tiene historial previo",
+        tag: "Primer cliente",
+        shortDescription: "Primer cliente o sin pedidos recientes",
+        longDescription:
+          "El código de descuento es válido para clientes que no han realizado pedidos previos o no han tenido actividad reciente en los últimos 6 meses.",
+      },
+      {
+        label: "El formato del pedido es estándar",
+        tag: "Sistema web",
+        shortDescription: "Pedidos regulares en nuestra plataforma",
+        longDescription:
+          "El código es aplicable únicamente a pedidos realizados a través de nuestro sistema web, no es válido para pedidos telefónicos o en persona.",
+      },
+      {
+        label: "El código NB15 coincide",
+        tag: "Único uso",
+        shortDescription: "Código específico para este descuento",
+        longDescription:
+          "El código de descuento debe ser exactamente NB15 para ser válido. No se aceptan variaciones o códigos similares.",
+      },
+      {
+        label: "No transferible y no acumulable con otras ofertas",
+        tag: "No combinable",
+        shortDescription: "No se puede combinar con otros descuentos",
+        longDescription:
+          "El código de descuento no es transferible y no se puede combinar con otras ofertas o promociones vigentes.",
+      },
+    ],
+    terms: [
+      { label: "Una sola vez", description: "Úsalo en tu primer pedido" },
+      { label: "Personal", description: "Vinculado a tu WhatsApp" },
+    ],
+    cta: {
+      label: "Ahora dirigete al Carrito y realiza tu primer pedido",
+      urlText: "Carrito",
+      url: "/checkout",
+    },
+  },
+};

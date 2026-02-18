@@ -1,8 +1,8 @@
 import { generateRootMetadata, generateViewportConfig } from "@/lib/seo";
 import { LocalBusinessSchema, HeadScripts } from "@/components/seo";
 import CookieBanner from "@/components/layout/CookieBanner";
-import FirstOrderModal from "@/components/FirstOrderModal";
-import PromotionNotification from "@/components/PromotionNotification";
+import FirstOrderModal from "@/components/banners/FirstOrderModal";
+import PromotionNotification from "@/components/banners/PromotionNotification";
 import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";

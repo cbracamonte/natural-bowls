@@ -5,7 +5,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { Grid3x3, List, Filter, X } from 'lucide-react';
 import { PRODUCTS, PRODUCTS_CATEGORY } from '@/data';
 import ProductGrid from '@/components/products/ProductGrid';
-import ProductListView from './ProductListView';
+import ProductListView from '../products/ProductListView';
 import PaginationControls from './PaginationControls';
 import FiltersPanelDesktop from './FiltersPanelDesktop';
 import FiltersPanelMobile from './FiltersPanelMobile';
