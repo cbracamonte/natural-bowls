@@ -2,7 +2,7 @@
 
 // components/ui/OnboardingQueue.tsx
 // Renderiza los modales de onboarding de a uno por vez, en orden de prioridad:
-//   1. CookieBanner  →  2. FirstOrderModal  →  3. InstallPrompt  →  4. PushPermission
+//   1. CookieBanner  →  2. FirstOrderModal  →  3. InstallPrompt
 //
 // Si el usuario ya interactuó con alguno en sesiones anteriores (flags en
 // localStorage), ese paso se salta automáticamente y se avanza al siguiente.
@@ -11,15 +11,13 @@ import { useState } from "react";
 import CookieBanner from "@/components/layout/CookieBanner";
 import FirstOrderModal from "@/components/banners/FirstOrderModal";
 import InstallPrompt from "@/components/ui/InstallPrompt";
-import PushPermission from "@/components/ui/PushPermission";
 import { DiscountCodeService } from "@/lib/services";
 
-type Step = "cookies" | "discount" | "install" | "push" | "done";
+type Step = "cookies" | "discount" | "install" | "done";
 
 const FLAG_COOKIES = "nb-cookie-consent";
 const FLAG_DISCOUNT = "nb-discount-interacted";
 const FLAG_INSTALL = "nb-install-interacted";
-const FLAG_PUSH = "nb-push-interacted";
 
 function resolveInitialStep(): Step {
   // SSR guard
@@ -36,17 +34,6 @@ function resolveInitialStep(): Step {
   }
 
   if (localStorage.getItem(FLAG_INSTALL) !== "true") return "install";
-
-  // Solo ofrecer push si el navegador lo soporta y no se ha interactuado
-  if (
-    localStorage.getItem(FLAG_PUSH) !== "true" &&
-    typeof window !== "undefined" &&
-    "PushManager" in window &&
-    "serviceWorker" in navigator &&
-    Notification.permission === "default"
-  ) {
-    return "push";
-  }
 
   return "done";
 }
@@ -68,18 +55,6 @@ export default function OnboardingQueue() {
         }
       } else if (from === "discount") {
         setStep("install");
-      } else if (from === "install") {
-        // Ofrecer notificaciones push solo si el navegador lo soporta
-        if (
-          "PushManager" in window &&
-          "serviceWorker" in navigator &&
-          Notification.permission === "default" &&
-          localStorage.getItem(FLAG_PUSH) !== "true"
-        ) {
-          setStep("push");
-        } else {
-          setStep("done");
-        }
       } else {
         setStep("done");
       }
@@ -98,9 +73,6 @@ export default function OnboardingQueue() {
       )}
       {step === "install" && (
         <InstallPrompt onDone={() => advance("install")} />
-      )}
-      {step === "push" && (
-        <PushPermission onDone={() => advance("push")} />
       )}
     </>
   );
