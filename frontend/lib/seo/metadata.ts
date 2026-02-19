@@ -6,6 +6,9 @@ import { SITE_CONFIG, SEO_KEYWORDS } from "./constants";
 
 export function generateRootMetadata(): Metadata {
   return {
+    // Base URL para resolver rutas relativas en metadata (og, twitter, etc.)
+    metadataBase: new URL(SITE_CONFIG.url),
+
     // Títulos y descripciones
     title: {
       default: SITE_CONFIG.title,
@@ -135,7 +138,12 @@ export function generateRootMetadata(): Metadata {
     // Icons
     icons: {
       icon: [
-        { url: "/images/naturalbowls.ico", sizes: "any" },
+        { url: "/favicon.ico", type: "image/x-icon", sizes: "any" },
+        { url: "/icons/nbicon.png", type: "image/png", sizes: "512x512" },
+      ],
+      shortcut: "/favicon.ico",
+      apple: [
+        { url: "/icons/nbicon.png", sizes: "512x512", type: "image/png" },
       ],
     },
 

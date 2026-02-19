@@ -35,6 +35,23 @@ export const SEO_KEYWORDS = [
   "bebidas naturales",
   "alimentación sana",
   "comida fresca",
+  "comida saludable en Trujillo",
+  "delivery de comida saludable",
+  "comida orgánica",
+  "alimentación saludable",
+  "fitness food",
+  "comida para llevar saludable",
+  "comida rápida saludable",
+  "comida personalizada",
+  "bowls personalizados",
+  "smoothies saludables",
+  "poke bowls a domicilio",
+  "comida saludable para llevar",
+  "comida saludable en Perú",
+  "comida saludable a domicilio",
+  "comida con información nutricional",
+  "comida saludable para deportistas",
+  "comida saludable para niños",
 ] as const;
 
 export const SOCIAL_LINKS = {
