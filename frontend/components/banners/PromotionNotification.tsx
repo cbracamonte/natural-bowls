@@ -139,13 +139,13 @@ export default function PromotionNotification() {
 
             {currentPromo.link && (
               <Link href={currentPromo.link}>
-                <button className="bg-[#6B8E4E] hover:bg-[#5D7A42] text-white text-xs md:text-sm font-semibold px-3 md:px-4 py-2 rounded-lg transition-all transform hover:scale-105 whitespace-nowrap">
+                <button className="bg-[#4D7A30] hover:bg-[#3E6B22] text-white text-xs md:text-sm font-semibold px-3 md:px-4 py-2 rounded-lg transition-all transform hover:scale-105 whitespace-nowrap">
                   Ver más
                 </button>
               </Link>
             )}
             {!currentPromo.link && (
-              <button className="bg-[#6B8E4E] hover:bg-[#5D7A42] text-white text-xs md:text-sm font-semibold px-3 md:px-4 py-2 rounded-lg transition-all transform hover:scale-105 whitespace-nowrap">
+              <button className="bg-[#4D7A30] hover:bg-[#3E6B22] text-white text-xs md:text-sm font-semibold px-3 md:px-4 py-2 rounded-lg transition-all transform hover:scale-105 whitespace-nowrap">
                 Conocer
               </button>
             )}
@@ -153,18 +153,25 @@ export default function PromotionNotification() {
 
           {/* Progress dots - mostrar en desktop */}
           {promotions.length > 1 && (
-            <div className="flex gap-1.5 mt-3 justify-center">
+            <div className="flex gap-0 mt-3 justify-center">
               {promotions.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentPromoIndex(index)}
-                  className={`h-2 rounded-full transition-all ${
-                    index === currentPromoIndex
-                      ? "bg-[#6B8E4E] w-6"
-                      : "bg-gray-300 w-2"
-                  }`}
+                  // Área táctil mínima 44×44px (WCAG 2.5.5 / Lighthouse)
+                  className="flex items-center justify-center min-w-11 min-h-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-current rounded-full"
                   aria-label={`Ir a promoción ${index + 1}`}
-                />
+                  aria-current={index === currentPromoIndex ? "true" : undefined}
+                >
+                  {/* Indicador visual — pequeño, centrado dentro del área táctil */}
+                  <span
+                    className={`block rounded-full transition-all duration-300 h-2 ${
+                      index === currentPromoIndex
+                        ? "bg-[#4D7A30] w-6"
+                        : "bg-gray-300 w-2"
+                    }`}
+                  />
+                </button>
               ))}
             </div>
           )}

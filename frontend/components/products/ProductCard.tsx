@@ -48,7 +48,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           {/* Badges */}
           <div className="absolute top-4 left-4 flex flex-col gap-2">
             {product.featured && (
-              <span className="inline-block px-3 py-1 bg-[#6B8E4E] text-white text-xs font-bold rounded-full">
+              <span className="inline-block px-3 py-1 bg-[#4D7A30] text-white text-xs font-bold rounded-full">
                 Favorito
               </span>
             )}

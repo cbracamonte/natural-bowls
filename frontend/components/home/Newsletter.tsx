@@ -91,7 +91,7 @@ export default function Newsletter() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="rounded-xl bg-[#6B8E4E] hover:bg-[#5D7A42] disabled:bg-gray-400 text-white px-8 py-3 font-bold shadow-lg transition-all duration-200 hover:shadow-xl hover:-translate-y-0.5 whitespace-nowrap"
+                  className="rounded-xl bg-[#4D7A30] hover:bg-[#3E6B22] disabled:bg-gray-400 text-white px-8 py-3 font-bold shadow-lg transition-all duration-200 hover:shadow-xl hover:-translate-y-0.5 whitespace-nowrap"
                 >
                   {loading ? "Suscribiendo..." : "Suscribirme Ahora"}
                 </button>

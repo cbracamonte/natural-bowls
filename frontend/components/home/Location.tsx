@@ -46,7 +46,7 @@ export default function Location() {
         </div>
 
         {/* Map Section - Full Width */}
-        <div className="rounded-3xl overflow-hidden shadow-2xl h-96 md:h-[600px] hover:shadow-3xl transition-shadow duration-300">
+        <div className="rounded-3xl overflow-hidden shadow-2xl h-96 md:h-150 hover:shadow-3xl transition-shadow duration-300">
           <iframe
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3948.4297458145467!2d-79.0395825!3d-8.1253355!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x91ad177641f9d85b%3A0x932edf5ead87cb72!2sNatural%20Bowls!5e0!3m2!1ses!2spe!4v1707250000000"
             width="100%"
@@ -55,6 +55,7 @@ export default function Location() {
             allowFullScreen
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
+            title="Mapa de ubicación de Natural Bowls en Trujillo, Perú"
           ></iframe>
         </div>
       </div>
