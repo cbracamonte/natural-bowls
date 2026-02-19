@@ -192,7 +192,7 @@ export default function Header() {
           <>
             {/* Backdrop */}
             <div
-              className="fixed inset-0 bg-black/30 md:hidden z-40"
+              className="fixed inset-0 bg-black/30 lg:hidden z-40"
               onClick={() => setIsMenuOpen(false)}
               aria-hidden="true"
             />
@@ -200,7 +200,7 @@ export default function Header() {
             <div
               ref={menuRef}
               id="mobile-menu"
-              className={`fixed top-0 right-0 w-4/5 h-screen bg-white shadow-2xl md:hidden z-50 transform transition-transform duration-700 ease-out overflow-y-auto ${
+              className={`fixed top-0 right-0 w-4/5 h-screen bg-white shadow-2xl lg:hidden z-50 transform transition-transform duration-700 ease-out overflow-y-auto ${
                 isMenuOpen ? "translate-x-0" : "translate-x-full"
               }`}
               role="dialog"
