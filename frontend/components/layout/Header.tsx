@@ -60,7 +60,17 @@ export default function Header() {
 
   return (
     <>
-      <header className="bg-white sticky top-0 z-30 shadow-sm" role="banner">
+      <header className="bg-white sticky top-0 z-30 shadow-sm overflow-hidden" role="banner">
+        {/* Monstera background decoration */}
+        <div className="absolute inset-0 pointer-events-none select-none" aria-hidden="true">
+          <Image
+            src="/icons/monstera-bg-1.svg"
+            alt=""
+            fill
+            unoptimized
+            className="object-cover"
+          />
+        </div>
         {/* Desktop Navigation */}
         <nav
           className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
