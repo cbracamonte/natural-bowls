@@ -106,7 +106,7 @@ export default function Footer() {
                   <Clock className="w-5 h-5 text-[#9CB973] shrink-0" aria-hidden />
                   <span aria-label="Horario de atención">Lun-Sáb: {BUSINESS_HOURS.opening}</span>
                 </div>
-                <div className="pl-8 text-sm text-red-300/80">
+                <div className="pl-8 text-sm text-red-200">
                   {BUSINESS_HOURS.closed}: Cerrado
                 </div>
               </div>
@@ -114,16 +114,16 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-white/20 mt-8 pt-8 flex flex-col md:flex-row items-center justify-between text-white/60 text-sm gap-4">
+        <div className="border-t border-white/20 mt-8 pt-8 flex flex-col md:flex-row items-center justify-between text-white/80 text-sm gap-4">
           <p>&copy; {new Date().getFullYear()} Todos los derechos reservados.</p>
           <p className="flex-1 text-center">@naturalbowls.cafe</p>
           <p>
-            <span className="text-[#9CB973] font-medium">Powered By </span>
+            <span className="text-[#C5E0A0] font-medium">Powered By </span>
             <a
               href="https://wa.me/51914797228?text=Hola%20Braxions%2C%20me%20interesa%20obtener%20informaci%C3%B3n%20sobre%20sus%20servicios%20de%20creaci%C3%B3n%20de%20sitios%20web.%20%C2%BFPueden%20compartirme%20m%C3%A1s%20detalles%20y%20costos%3F"
               target="_blank"
               rel="noopener noreferrer external"
-              className="text-[#9CB973] hover:text-white transition-colors font-medium"
+              className="text-[#C5E0A0] hover:text-white transition-colors font-medium"
               aria-label="Braxions - Contactar por WhatsApp"
             >
               Braxions

@@ -15,7 +15,7 @@ export default function Sponsors() {
       <div className="max-w-5xl mx-auto px-6">
         {/* Encabezado */}
         <div className="text-center mb-12">
-          <p className="text-xs font-bold uppercase tracking-widest text-[#9CB973] mb-3">
+          <p className="text-xs font-bold uppercase tracking-widest text-[#4D7A30] mb-3">
             Nuestros Aliados
           </p>
           <h2 className="text-2xl md:text-3xl font-bold text-[#5D4E37]">

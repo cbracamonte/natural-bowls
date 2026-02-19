@@ -166,18 +166,25 @@ export function generatePageMetadata(
     description: string;
     image?: string;
     keywords?: string[];
+    /** Ruta relativa de la página, ej: "/menu" — genera el canonical URL */
+    path?: string;
   }
 ): Metadata {
   const pageTitle = `${pageData.title} | ${SITE_CONFIG.name}`;
   const pageImage = pageData.image || SITE_CONFIG.ogImage;
 
   return {
-    title: pageTitle,
+    // { absolute } evita que el title.template del root layout lo duplique
+    title: { absolute: pageTitle },
     description: pageData.description,
     keywords: pageData.keywords ? [...SEO_KEYWORDS, ...pageData.keywords] : [...SEO_KEYWORDS],
+    ...(pageData.path && {
+      alternates: { canonical: `${SITE_CONFIG.url}${pageData.path}` },
+    }),
     openGraph: {
       title: pageTitle,
       description: pageData.description,
+      url: pageData.path ? `${SITE_CONFIG.url}${pageData.path}` : SITE_CONFIG.url,
       images: [
         {
           url: `${SITE_CONFIG.url}${pageImage}`,
@@ -212,7 +219,7 @@ export function generateProductMetadata(product: {
   const keywords = [product.title, "bowl saludable", "comida orgánica"];
 
   return {
-    title: pageTitle,
+    title: { absolute: pageTitle },
     description: product.description,
     keywords: [...SEO_KEYWORDS, ...keywords],
     openGraph: {

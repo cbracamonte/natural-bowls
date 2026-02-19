@@ -44,7 +44,7 @@ export default function HeroPokebowl() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/bowls?category=pokebowl"
-              className="inline-flex items-center justify-center px-8 py-4 bg-[#6B8E4E] hover:bg-[#5A7A40] text-white rounded-full font-bold text-lg transition-all duration-300 transform hover:scale-105 shadow-xl"
+              className="inline-flex items-center justify-center px-8 py-4 bg-[#4D7A30] hover:bg-[#3E6B22] text-white rounded-full font-bold text-lg transition-all duration-300 transform hover:scale-105 shadow-xl"
             >
               Arma tu Bowl
               <ArrowRight className="w-5 h-5 ml-2" />

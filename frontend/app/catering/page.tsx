@@ -1,4 +1,13 @@
 import Image from 'next/image';
+import { generatePageMetadata } from '@/lib/seo';
+
+export const metadata = generatePageMetadata({
+  title: 'Catering & Eventos',
+  description:
+    'Servicio de catering saludable para eventos corporativos, cumpleaños y celebraciones en Trujillo. Cotiza tu evento con Natural Bowls.',
+  keywords: ['catering saludable', 'catering Trujillo', 'catering eventos', 'bowl catering'],
+  path: '/catering',
+});
 
 export default function CateringPage() {
   const whatsappLink = "https://wa.me/51912341818?text=Hola%20Natural%20Bowls%2C%20quisiera%20m%C3%A1s%20informaci%C3%B3n%20sobre%20su%20servicio%20de%20catering%20para%20un%20evento.";

@@ -62,14 +62,24 @@ export const SOCIAL_LINKS = {
 } as const;
 
 export const BUSINESS_INFO = {
-  type: "LocalBusiness",
+  // Restaurant es más específico que LocalBusiness y habilita rich results de Google
+  type: "Restaurant",
   streetAddress: "Av. América Sur 3875",
   addressLocality: "Trujillo",
   addressRegion: "La Libertad",
   postalCode: "13000",
   addressCountry: "PE",
   priceRange: "$$",
-  servesCuisine: "Health Food",
+  servesCuisine: ["Health Food", "Poke Bowl", "Smoothie Bowl", "Organic"],
+  // Coordenadas de Av. América Sur 3875, Trujillo
+  latitude: -8.1116,
+  longitude: -79.0317,
+  hasMap: "https://maps.google.com/?q=Av.+América+Sur+3875+Trujillo+Perú",
+  openingHours: [
+    "Mo-Sa 08:30-21:00",
+  ],
+  currencyAccepted: "PEN",
+  paymentAccepted: "Cash, Credit Card, Debit Card",
 } as const;
 
 export const DISCOUNTS_CODES = {
