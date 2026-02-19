@@ -1,6 +1,14 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Gift, Percent, Clock, CreditCard } from 'lucide-react';
+import { generatePageMetadata } from '@/lib/seo';
+
+export const metadata = generatePageMetadata({
+  title: 'Promociones y Descuentos',
+  description:
+    'Aprovecha nuestras mejores promociones: descuento en tu primer pedido, combos especiales y beneficios exclusivos para miembros Natural Bowls.',
+  keywords: ['promociones Natural Bowls', 'descuentos bowl', 'combos saludables', 'código descuento'],
+});
 
 export default function PromocionesPage() {
   return (

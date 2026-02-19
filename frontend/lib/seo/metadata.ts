@@ -172,7 +172,8 @@ export function generatePageMetadata(
   const pageImage = pageData.image || SITE_CONFIG.ogImage;
 
   return {
-    title: pageTitle,
+    // { absolute } evita que el title.template del root layout lo duplique
+    title: { absolute: pageTitle },
     description: pageData.description,
     keywords: pageData.keywords ? [...SEO_KEYWORDS, ...pageData.keywords] : [...SEO_KEYWORDS],
     openGraph: {
@@ -212,7 +213,7 @@ export function generateProductMetadata(product: {
   const keywords = [product.title, "bowl saludable", "comida orgánica"];
 
   return {
-    title: pageTitle,
+    title: { absolute: pageTitle },
     description: product.description,
     keywords: [...SEO_KEYWORDS, ...keywords],
     openGraph: {

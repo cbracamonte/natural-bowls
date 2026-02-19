@@ -1,7 +1,15 @@
+import { generatePageMetadata } from "@/lib/seo";
 import { Suspense } from "react";
 import MenuContent from "@/components/menu/MenuContent";
 import MenuLoading from "@/components/menu/MenuLoading";
 import { PRODUCTS, PRODUCTS_CATEGORY } from "@/data";
+
+export const metadata = generatePageMetadata({
+  title: "Menú Completo",
+  description:
+    "Explora nuestro menú: poke bowls, smoothie bowls, wraps, ensaladas, bebidas naturales y café gourmet. Todo fresco y personalizable.",
+  keywords: ["menú saludable", "poke bowls menú", "smoothie bowls menú", "menú Natural Bowls"],
+});
 
 export default function MenuPage() {
   return (
