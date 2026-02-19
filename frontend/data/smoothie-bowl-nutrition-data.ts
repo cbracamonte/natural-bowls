@@ -43,3 +43,19 @@ export const SMOOTHIE_BOWL_NUTRITION_DATA: SmoothieBowlNutritionDataset = {
     },
   },
 };
+
+export const SMOOTHIE_BOWL_TOPPINGS = [
+  "Fresa",
+  "Plátano",
+  "Arándanos",
+  "Kiwi",
+  "Aguaymanto",
+  "Coco rallado",
+  "Kiwicha pop",
+  "Chía",
+  "Piña",
+  "Mango",
+  "Granola",
+  "Mantequilla de maní (+2)",
+  "Nibs de cacao (+2)",
+];

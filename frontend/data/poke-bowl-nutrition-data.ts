@@ -1,4 +1,4 @@
-import { PokeBowlNutritionDataset } from "@/lib/schemas";
+import { PokeBowlBuilderProps, PokeBowlNutritionDataset } from "@/lib/schemas";
 
 export const POKEBOWL_POKE_BOWL_NUTRITION_DATA: PokeBowlNutritionDataset = {
   bases: {
@@ -99,7 +99,7 @@ export const POKEBOWL_POKE_BOWL_NUTRITION_DATA: PokeBowlNutritionDataset = {
       porciones: { regular: 200, grande: 200 },
     },
   },
-  
+
   toppings: {
     "Col morada": {
       id: "col-morada",
@@ -337,3 +337,65 @@ export const POKEBOWLS_CATEGORY_LABELS: Record<
   agregados: { label: "Agregados", emoji: "✨" },
   salsas: { label: "Salsa", emoji: "🌶️" },
 };
+
+export const POKEBOWLS_OPTIONS = (preselectedPokeSize: "regular" | "grande" | null): PokeBowlBuilderProps => ({
+  pokeOptions: {
+    bases: ["Arroz blanco", "Arroz integral", "Mix verdes", "Mix quinoa"],
+    proteinas: [
+      "Pollo crispy",
+      "Pollo a la plancha",
+      "Tofu",
+      "Tofu crispy",
+      "Hamburguesa de lentejas",
+    ],
+    extraProteinas: [
+      "Pollo extra (100g) (+6)",
+      "Pollo extra (200g) (+12)",
+      "Atún extra (100g) (+6)",
+      "Atún extra (200g) (+12)",
+    ],
+    toppings: [
+      "Col morada",
+      "Pepinillo",
+      "Mango",
+      "Piña",
+      "Huevo de codorniz",
+      "Queso fresco",
+      "Camote",
+      "Tomate",
+      "Brócoli",
+      "Rabanito encurtido",
+      "Frejol chino",
+      "Vainitas",
+      "Espinaca",
+      "Lechuga",
+      "Zanahoria",
+      "Choclo",
+      "Palta",
+      "Papa sancochada",
+    ],
+    agregados: [
+      "Tiras de wantán",
+      "Ajonjolí mix",
+      "Cebolla china",
+      "Camotes crocantes",
+      "Canchita",
+      "Nachos",
+      "Chifle",
+      "Crispy algas",
+    ],
+    salsas: [
+      "Vinagreta de la casa",
+      "Acevichada",
+      "Vinagreta blanca",
+      "Teriyaki",
+      "Salsa Olivo",
+      "Ají especial",
+      "Ají huacatay",
+      "Mayopalta",
+      "Vinagreta light",
+      "Honey mustard",
+    ],
+    preselectedSize: preselectedPokeSize,
+  },
+});

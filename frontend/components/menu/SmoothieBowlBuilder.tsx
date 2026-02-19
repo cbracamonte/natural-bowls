@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { useCart } from "@/context/CartContext";
 import { Product, SmoothieBowlBuilderProps } from "@/lib/schemas";
 import { SmoothieBowlService } from "@/lib/services";
@@ -266,24 +267,19 @@ export default function SmoothieBowlBuilder({
             </div>
           </div>
 
-          {/* CENTER PANEL - Visual */}
-          <div className="relative overflow-hidden bg-linear-to-br from-white via-[#F9FBFA] to-[#9CB973]/10 flex flex-col items-center justify-center p-8 lg:p-12 min-h-150">
-            {/* Decorative Elements */}
-            <div className="absolute top-10 right-20 w-80 h-80 bg-linear-to-br from-[#9CB973]/20 to-[#6B8E4E]/5 rounded-full blur-3xl pointer-events-none"></div>
-            <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-linear-to-tr from-[#6B8E4E]/15 to-[#9CB973]/10 rounded-full blur-3xl pointer-events-none"></div>
+          {/* CENTER PANEL - Visual (tablet y desktop únicamente) */}
+          <div className="hidden lg:flex relative overflow-hidden bg-white flex-col items-center justify-center p-8 lg:p-12 min-h-150">
 
             {/* Clean Area for Future Content */}
-            <div className="relative z-10 flex flex-col items-center justify-center h-full">
-              <div className="text-center">
-                <p className="text-3xl font-bold text-[#5D4E37] mb-2">🥣</p>
-                <h3 className="text-2xl font-bold text-[#5D4E37] mb-4">
-                  Crea tu Smoothie Bowl
-                </h3>
-                <p className="text-gray-600 max-w-sm">
-                  Selecciona tu smoothie favorito y personaliza con toppings en
-                  el panel izquierdo para una experiencia única
-                </p>
-              </div>
+            <div className="relative z-10 w-full min-h-120 lg:min-h-140 xl:min-h-160">
+              <Image
+                src="/videos/smoothiebowl-2.gif"
+                alt="Smoothie Bowl animado"
+                fill
+                unoptimized
+                className="object-contain select-none pointer-events-none scale-75"
+                draggable={false}
+              />
             </div>
           </div>
 

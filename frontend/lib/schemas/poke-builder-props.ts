@@ -6,6 +6,6 @@ export interface PokeBowlBuilderProps {
     toppings: string[];
     agregados: string[];
     salsas: string[];
-    preselectedSize?: "regular" | "grande";
+    preselectedSize?: "regular" | "grande" | null;
   };
 }
