@@ -8,6 +8,7 @@ export const metadata = generatePageMetadata({
   description:
     'Aprovecha nuestras mejores promociones: descuento en tu primer pedido, combos especiales y beneficios exclusivos para miembros Natural Bowls.',
   keywords: ['promociones Natural Bowls', 'descuentos bowl', 'combos saludables', 'código descuento'],
+  path: '/promociones',
 });
 
 export default function PromocionesPage() {

@@ -9,6 +9,7 @@ export const metadata = generatePageMetadata({
   description:
     "Explora nuestro menú: poke bowls, smoothie bowls, wraps, ensaladas, bebidas naturales y café gourmet. Todo fresco y personalizable.",
   keywords: ["menú saludable", "poke bowls menú", "smoothie bowls menú", "menú Natural Bowls"],
+  path: "/menu",
 });
 
 export default function MenuPage() {

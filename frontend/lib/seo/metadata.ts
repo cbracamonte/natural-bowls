@@ -166,6 +166,8 @@ export function generatePageMetadata(
     description: string;
     image?: string;
     keywords?: string[];
+    /** Ruta relativa de la página, ej: "/menu" — genera el canonical URL */
+    path?: string;
   }
 ): Metadata {
   const pageTitle = `${pageData.title} | ${SITE_CONFIG.name}`;
@@ -176,9 +178,13 @@ export function generatePageMetadata(
     title: { absolute: pageTitle },
     description: pageData.description,
     keywords: pageData.keywords ? [...SEO_KEYWORDS, ...pageData.keywords] : [...SEO_KEYWORDS],
+    ...(pageData.path && {
+      alternates: { canonical: `${SITE_CONFIG.url}${pageData.path}` },
+    }),
     openGraph: {
       title: pageTitle,
       description: pageData.description,
+      url: pageData.path ? `${SITE_CONFIG.url}${pageData.path}` : SITE_CONFIG.url,
       images: [
         {
           url: `${SITE_CONFIG.url}${pageImage}`,

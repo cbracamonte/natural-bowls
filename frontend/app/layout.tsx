@@ -1,5 +1,5 @@
 import { generateRootMetadata, generateViewportConfig } from "@/lib/seo";
-import { LocalBusinessSchema, HeadScripts } from "@/components/seo";
+import { LocalBusinessSchema, WebSiteSchema, HeadScripts } from "@/components/seo";
 import OnboardingQueue from "@/components/ui/OnboardingQueue";
 import PromotionNotification from "@/components/banners/PromotionNotification";
 import "./globals.css";
@@ -20,6 +20,7 @@ export default function RootLayout({
       <head>
         <HeadScripts />
         <LocalBusinessSchema />
+        <WebSiteSchema />
       </head>
       <body className="antialiased">
         <CartProvider>

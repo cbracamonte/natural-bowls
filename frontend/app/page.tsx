@@ -14,6 +14,7 @@ export const metadata = generatePageMetadata({
   description:
     "Descubre Natural Bowls: poke bowls frescos, smoothie bowls, wraps y más. Comida saludable, personalizable y con delivery en Trujillo, Perú.",
   keywords: ["poke bowls Trujillo", "comida saludable Trujillo", "delivery saludable Trujillo"],
+  path: "/",
 });
 
 export default function Home() {
