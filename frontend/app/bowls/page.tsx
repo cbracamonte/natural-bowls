@@ -6,6 +6,8 @@ import { useSearchParams } from "next/navigation";
 import PokeBowlBuilder from "@/components/menu/PokeBowlBuilder";
 import SmoothieBowlBuilder from "@/components/menu/SmoothieBowlBuilder";
 import { PRODUCTS } from "@/data/products";
+import { POKEBOWLS_OPTIONS } from "@/data/poke-bowl-nutrition-data";
+import { SMOOTHIE_BOWL_TOPPINGS } from "@/data/smoothie-bowl-nutrition-data";
 
 function BowlsContent() {
   const searchParams = useSearchParams();
@@ -21,85 +23,11 @@ function BowlsContent() {
     [],
   );
 
-  const pokeOptions = {
-    bases: ["Arroz blanco", "Arroz integral", "Mix verdes", "Mix quinoa"],
-    proteinas: [
-      "Pollo crispy",
-      "Pollo a la plancha",
-      "Tofu",
-      "Tofu crispy",
-      "Hamburguesa de lentejas",
-    ],
-    extraProteinas: [
-      "Pollo extra (100g) (+6)",
-      "Pollo extra (200g) (+12)",
-      "Atún extra (100g) (+6)",
-      "Atún extra (200g) (+12)",
-    ],
-    toppings: [
-      "Col morada",
-      "Pepinillo",
-      "Mango",
-      "Piña",
-      "Huevo de codorniz",
-      "Queso fresco",
-      "Camote",
-      "Tomate",
-      "Brócoli",
-      "Rabanito encurtido",
-      "Frejol chino",
-      "Vainitas",
-      "Espinaca",
-      "Lechuga",
-      "Zanahoria",
-      "Choclo",
-      "Palta",
-      "Papa sancochada",
-    ],
-    agregados: [
-      "Tiras de wantán",
-      "Ajonjolí mix",
-      "Cebolla china",
-      "Camotes crocantes",
-      "Canchita",
-      "Nachos",
-      "Chifle",
-      "Crispy algas",
-    ],
-    salsas: [
-      "Vinagreta de la casa",
-      "Acevichada",
-      "Vinagreta blanca",
-      "Teriyaki",
-      "Salsa Olivo",
-      "Ají especial",
-      "Ají huacatay",
-      "Mayopalta",
-      "Vinagreta light",
-      "Honey mustard",
-    ],
-    preselectedSize: preselectedPokeSize || undefined,
-  };
-
-  const smoothieToppings = [
-    "Fresa",
-    "Plátano",
-    "Arándanos",
-    "Kiwi",
-    "Aguaymanto",
-    "Coco rallado",
-    "Kiwicha pop",
-    "Chía",
-    "Piña",
-    "Mango",
-    "Granola",
-    "Mantequilla de maní (+2)",
-    "Nibs de cacao (+2)",
-  ];
+  const pokeOptions = POKEBOWLS_OPTIONS(preselectedPokeSize)
 
   const smoothieOptions = {
     smoothies: smoothieProducts,
-    toppings: smoothieToppings,
+    toppings: SMOOTHIE_BOWL_TOPPINGS,
     preselectedSmoothieId: preselectedSmoothieId || undefined,
   };
 
@@ -113,7 +41,7 @@ function BowlsContent() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Poke Bowl Builder - Interactive Component */}
-          <PokeBowlBuilder pokeOptions={pokeOptions} />
+          <PokeBowlBuilder pokeOptions={pokeOptions.pokeOptions} />
         </div>
       </section>
 

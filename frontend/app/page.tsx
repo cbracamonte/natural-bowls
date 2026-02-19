@@ -6,6 +6,7 @@ import HeroSmoothiebowl from "@/components/home/HeroSmoothiebowl";
 import Instagram from "@/components/home/Instagram";
 import Location from "@/components/home/Location";
 import Newsletter from "@/components/home/Newsletter";
+import Sponsors from "@/components/home/Sponsors";
 
 export default function Home() {
   return (
@@ -22,19 +23,19 @@ export default function Home() {
       {/* 4. Favoritos - Social proof: qué otros clientes compran */}
       <Featured />
 
-      {/* 5. Aliados  falta colocar y los logos */}
-      {/* <Values /> */}
-
-      {/* 6. Segundo hero - Mostrar diversidad de productos */}
+      {/* 5. Segundo hero - Mostrar diversidad de productos */}
       <HeroSmoothiebowl />
 
-      {/* 9. Newsletter - Conversiones finales */}
+      {/* 6. Newsletter - Conversiones finales */}
       <Newsletter />
 
-      {/* 7. Instagram - Más social proof y engagement */}
+      {/* 7. Aliados */}
+      <Sponsors />
+
+      {/* 8. Instagram - Más social proof y engagement */}
       <Instagram />
 
-      {/* 8. Ubicación - Facilitar acceso y contacto */}
+      {/* 9. Ubicación */}
       <Location />
     </>
   );
