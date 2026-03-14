@@ -1,23 +1,27 @@
-import { Controller, Post, Param, Patch, Req, Body } from '@nestjs/common';
+import { Controller, Post, Param, Patch, Req, Body, UseGuards, Headers } from '@nestjs/common';
 import { OrdersService } from '../application/orders.service';
-import { Public } from 'src/security/decorators/public.decorator';
+import { Role } from 'src/security/roles.enum';
+import { Roles } from 'src/security/decorators/roles.decorator';
+import { RolesGuard } from 'src/security/guards/roles.guard';
 
 @Controller('orders')
 export class OrdersController {
   constructor(private readonly service: OrdersService) { }
 
-  @Public()
   @Post()
-  create(@Req() req, @Body() body) {
+  create(@Req() req, @Headers('Idempotency-Key') idempotencyKey: string, @Body() body) {
     return this.service.createFromCart(
       req.user.id,
-      body.pointsToUse ?? 0
+      body.pointsToUse ?? 0,
+      idempotencyKey
     );
   }
-  
-  @Public()
+  @UseGuards(RolesGuard)
+  @Roles(Role.ADMIN)
   @Patch(':orderId/status')
   advance(@Param('orderId') orderId: string) {
     return this.service.advance(orderId);
   }
+
+
 }
