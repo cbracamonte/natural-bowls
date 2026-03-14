@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
-import { formatPrice } from '@/lib/utils';
+import { formatPrice } from '@/lib/utils/utils';
 import Button from '@/components/ui/Button';
 
 export default function CartSummary() {

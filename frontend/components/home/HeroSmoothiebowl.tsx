@@ -32,7 +32,7 @@ export default function HeroSmoothiebowl() {
             </span>
           </div>
 
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight drop-shadow-lg">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 drop-shadow-lg">
             Smoothie Bowls<br />
             <span className="text-[#C5D9A4]">Tu Desayuno Perfecto</span>
           </h1>

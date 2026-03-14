@@ -6,6 +6,9 @@ import { SITE_CONFIG, SEO_KEYWORDS } from "./constants";
 
 export function generateRootMetadata(): Metadata {
   return {
+    // Base URL para resolver rutas relativas en metadata (og, twitter, etc.)
+    metadataBase: new URL(SITE_CONFIG.url),
+
     // Títulos y descripciones
     title: {
       default: SITE_CONFIG.title,
@@ -19,6 +22,55 @@ export function generateRootMetadata(): Metadata {
     category: "food & restaurants",
     creator: SITE_CONFIG.name,
     publisher: SITE_CONFIG.name,
+
+    // Apple PWA (iOS)
+    appleWebApp: {
+      capable: true,
+      statusBarStyle: "default",
+      title: SITE_CONFIG.name,
+      startupImage: [
+        {
+          url: "/icons/apple-splash-2048-2732.png",
+          media:
+            "(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)",
+        },
+        {
+          url: "/icons/apple-splash-1668-2224.png",
+          media:
+            "(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2)",
+        },
+        {
+          url: "/icons/apple-splash-1536-2048.png",
+          media:
+            "(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2)",
+        },
+        {
+          url: "/icons/apple-splash-1125-2436.png",
+          media:
+            "(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)",
+        },
+        {
+          url: "/icons/apple-splash-1242-2208.png",
+          media:
+            "(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3)",
+        },
+        {
+          url: "/icons/apple-splash-750-1334.png",
+          media:
+            "(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)",
+        },
+        {
+          url: "/icons/apple-splash-640-1136.png",
+          media:
+            "(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)",
+        },
+      ],
+    },
+
+    // Deshabilitar detección automática de teléfono en iOS
+    formatDetection: {
+      telephone: false,
+    },
 
     // Robots
     robots: {
@@ -86,12 +138,15 @@ export function generateRootMetadata(): Metadata {
     // Icons
     icons: {
       icon: [
-        { url: "/images/naturalbowls.ico", sizes: "any" },
+        { url: "/favicon.ico", type: "image/x-icon", sizes: "any" },
+        { url: "/icons/nbicon.png", type: "image/png", sizes: "512x512" },
+      ],
+      shortcut: "/favicon.ico",
+      apple: [
+        { url: "/icons/nbicon.png", sizes: "512x512", type: "image/png" },
       ],
     },
 
-    // Manifest
-    manifest: "/manifest.json",
   };
 }
 
@@ -111,18 +166,25 @@ export function generatePageMetadata(
     description: string;
     image?: string;
     keywords?: string[];
+    /** Ruta relativa de la página, ej: "/menu" — genera el canonical URL */
+    path?: string;
   }
 ): Metadata {
   const pageTitle = `${pageData.title} | ${SITE_CONFIG.name}`;
   const pageImage = pageData.image || SITE_CONFIG.ogImage;
 
   return {
-    title: pageTitle,
+    // { absolute } evita que el title.template del root layout lo duplique
+    title: { absolute: pageTitle },
     description: pageData.description,
     keywords: pageData.keywords ? [...SEO_KEYWORDS, ...pageData.keywords] : [...SEO_KEYWORDS],
+    ...(pageData.path && {
+      alternates: { canonical: `${SITE_CONFIG.url}${pageData.path}` },
+    }),
     openGraph: {
       title: pageTitle,
       description: pageData.description,
+      url: pageData.path ? `${SITE_CONFIG.url}${pageData.path}` : SITE_CONFIG.url,
       images: [
         {
           url: `${SITE_CONFIG.url}${pageImage}`,
@@ -157,7 +219,7 @@ export function generateProductMetadata(product: {
   const keywords = [product.title, "bowl saludable", "comida orgánica"];
 
   return {
-    title: pageTitle,
+    title: { absolute: pageTitle },
     description: product.description,
     keywords: [...SEO_KEYWORDS, ...keywords],
     openGraph: {

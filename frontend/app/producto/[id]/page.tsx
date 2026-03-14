@@ -7,7 +7,7 @@ import Image from 'next/image';
 import { ArrowLeft, Minus, Plus, ShoppingBag } from 'lucide-react';
 import { getProductById, getProductsByCategory } from '@/data/products';
 import { useCart } from '@/context/CartContext';
-import { formatPrice } from '@/lib/utils';
+import { formatPrice } from '@/lib/utils/utils';
 import ProductCard from '@/components/products/ProductCard';
 
 const categoryNames: Record<string, string> = {
@@ -48,7 +48,7 @@ export default function ProductDetailPage() {
     );
   }
 
-  const relatedProducts = getProductsByCategory(product.category)
+  const relatedProducts = getProductsByCategory(product.categoryId)
     .filter((p) => p.id !== product.id)
     .slice(0, 3);
 
@@ -83,8 +83,8 @@ export default function ProductDetailPage() {
 
           {/* Details */}
           <div className="flex flex-col">
-            <span className="inline-block w-fit px-4 py-1 bg-[#9CB973]/20 text-[#6B8E4E] rounded-full text-sm font-medium mb-4">
-              {categoryNames[product.category] || product.category}
+            <span className="inline-block w-fit px-4 py-1 bg-[#9CB973]/20 text-[#6B8E4E] rounded-full text-sm font-medium mb-4 capitalize">
+              {categoryNames[product.categoryId] || product.categoryId}
             </span>
 
             <h1 className="text-3xl md:text-4xl font-bold text-[#5D4E37] mb-4">

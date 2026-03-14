@@ -5,23 +5,24 @@ import Image from 'next/image';
 
 const menuCategories = [
   {
-    name: 'Waffles',
-    image: '/images/waffles.jpg',
-    href: '/menu?category=waffles',
-    description: 'Tradicionales y fit',
-  },
-  {
     name: 'Pancakes',
-    image: '/images/pancakes.jpg',
-    href: '/menu?category=pancakes',
+    image: '/images/categories/pancakes.jpg',
+    href: '/menu?category=waffles-panqueques',
     description: 'Clásicos o de avena',
   },
   {
     name: 'Wraps & Sándwiches',
-    image: '/images/wrap-crispy.jpg',
+    image: '/images/categories/wraps.jpg',
     href: '/menu?category=wraps',
     description: 'Frescos y deliciosos',
   },
+  {
+    name: 'Postres',
+    image: '/images/categories/postres.jpg',
+    href: '/menu?category=postres',
+    description: 'Saludables',
+  },
+  
 ];
 
 export default function Categories() {
@@ -40,7 +41,7 @@ export default function Categories() {
             <Link
               key={index}
               href={category.href}
-              className="group relative overflow-hidden rounded-3xl aspect-[4/5] shadow-lg"
+              className="group relative overflow-hidden rounded-3xl aspect-4/5 shadow-lg"
             >
               <Image
                 src={category.image}
@@ -48,7 +49,7 @@ export default function Categories() {
                 fill
                 className="object-cover group-hover:scale-105 transition-transform duration-500"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+              <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                 <p className="text-sm opacity-80 mb-1">{category.description}</p>
                 <h3 className="text-2xl font-bold">{category.name}</h3>

@@ -35,6 +35,23 @@ export const SEO_KEYWORDS = [
   "bebidas naturales",
   "alimentación sana",
   "comida fresca",
+  "comida saludable en Trujillo",
+  "delivery de comida saludable",
+  "comida orgánica",
+  "alimentación saludable",
+  "fitness food",
+  "comida para llevar saludable",
+  "comida rápida saludable",
+  "comida personalizada",
+  "bowls personalizados",
+  "smoothies saludables",
+  "poke bowls a domicilio",
+  "comida saludable para llevar",
+  "comida saludable en Perú",
+  "comida saludable a domicilio",
+  "comida con información nutricional",
+  "comida saludable para deportistas",
+  "comida saludable para niños",
 ] as const;
 
 export const SOCIAL_LINKS = {
@@ -45,12 +62,70 @@ export const SOCIAL_LINKS = {
 } as const;
 
 export const BUSINESS_INFO = {
-  type: "LocalBusiness",
+  // Restaurant es más específico que LocalBusiness y habilita rich results de Google
+  type: "Restaurant",
   streetAddress: "Av. América Sur 3875",
   addressLocality: "Trujillo",
   addressRegion: "La Libertad",
   postalCode: "13000",
   addressCountry: "PE",
   priceRange: "$$",
-  servesCuisine: "Health Food",
+  servesCuisine: ["Health Food", "Poke Bowl", "Smoothie Bowl", "Organic"],
+  // Coordenadas de Av. América Sur 3875, Trujillo
+  latitude: -8.1116,
+  longitude: -79.0317,
+  hasMap: "https://maps.google.com/?q=Av.+América+Sur+3875+Trujillo+Perú",
+  openingHours: [
+    "Mo-Sa 08:30-21:00",
+  ],
+  currencyAccepted: "PEN",
+  paymentAccepted: "Cash, Credit Card, Debit Card",
 } as const;
+
+export const DISCOUNTS_CODES = {
+  FIRSTORDER: {
+    code: "NB15",
+    description: "15% de descuento en tu primer pedido",
+    percentage: 0.15,
+    expirationDays: 7,
+    rules: [
+      {
+        label: "Tu número no tiene historial previo",
+        tag: "Primer cliente",
+        shortDescription: "Primer cliente o sin pedidos recientes",
+        longDescription:
+          "El código de descuento es válido para clientes que no han realizado pedidos previos o no han tenido actividad reciente en los últimos 6 meses.",
+      },
+      {
+        label: "El formato del pedido es estándar",
+        tag: "Sistema web",
+        shortDescription: "Pedidos regulares en nuestra plataforma",
+        longDescription:
+          "El código es aplicable únicamente a pedidos realizados a través de nuestro sistema web, no es válido para pedidos telefónicos o en persona.",
+      },
+      {
+        label: "El código NB15 coincide",
+        tag: "Único uso",
+        shortDescription: "Código específico para este descuento",
+        longDescription:
+          "El código de descuento debe ser exactamente NB15 para ser válido. No se aceptan variaciones o códigos similares.",
+      },
+      {
+        label: "No transferible y no acumulable con otras ofertas",
+        tag: "No combinable",
+        shortDescription: "No se puede combinar con otros descuentos",
+        longDescription:
+          "El código de descuento no es transferible y no se puede combinar con otras ofertas o promociones vigentes.",
+      },
+    ],
+    terms: [
+      { label: "Una sola vez", description: "Úsalo en tu primer pedido" },
+      { label: "Personal", description: "Vinculado a tu WhatsApp" },
+    ],
+    cta: {
+      label: "Ahora dirigete al Carrito y realiza tu primer pedido",
+      urlText: "Carrito",
+      url: "/checkout",
+    },
+  },
+};

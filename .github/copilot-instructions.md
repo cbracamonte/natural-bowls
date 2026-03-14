@@ -1,0 +1,18 @@
+# Instrucciones para GitHub Copilot
+- Siempre usa Context7 MCP para verificar sintaxis de React 19, NextJS 16 y NestJS 11.
+- Asegúrate de que el código generado sea compatible con las últimas versiones de React, NextJS y NestJS.
+- Evita usar funciones o características obsoletas en el código generado.
+- Si el código generado no es compatible con las últimas versiones, sugiere alternativas modernas y actualizadas.
+- Prioriza el uso de hooks en React y las mejores prácticas recomendadas para cada framework.
+- Si el código generado incluye dependencias, asegúrate de que sean compatibles con las últimas versiones de los frameworks mencionados.
+- Siempre verifica que el código generado siga las convenciones de estilo y las mejores prácticas de cada framework.
+- Si el código generado no cumple con estas instrucciones, proporciona una explicación clara de por qué no es compatible y sugiere cómo corregirlo para que sea compatible con las últimas versiones de React, NextJS y NestJS.
+- Mantén el código limpio, legible y bien estructurado, siguiendo las mejores prácticas de cada framework.
+- Si el código generado incluye ejemplos o fragmentos de código, asegúrate de que sean relevantes y útiles para el contexto específico del proyecto.
+- Siempre verifica que el código generado no contenga errores de sintaxis o problemas de compatibilidad antes de sugerirlo como solución.
+- Si el código generado no es compatible, proporciona una solución alternativa que sea compatible con las últimas versiones de los frameworks mencionados, y explica por qué es la mejor opción en ese caso.
+- Asegúrate de que el código generado sea eficiente y optimizado para el rendimiento, siguiendo las mejores prácticas de cada framework.
+- Si el código generado incluye dependencias externas, verifica que sean seguras y estén actualizadas, y que no introduzcan vulnerabilidades en el proyecto.
+- Siempre proporciona comentarios claros y concisos en el código generado para explicar su funcionalidad y cómo se integra con el resto del proyecto, especialmente si se trata de código complejo o no trivial.
+- Si el código generado no es compatible, proporciona una explicación detallada de los problemas de compatibilidad y sugiere una solución alternativa que sea compatible con las últimas versiones de los frameworks mencionados, y explica por qué es la mejor opción en ese caso.
+- Mantén una comunicación clara y abierta con el equipo de desarrollo para asegurarte de que el código generado cumpla con las expectativas y requisitos del proyecto, y para abordar cualquier problema de compatibilidad o mejora que pueda surgir durante el proceso de desarrollo.

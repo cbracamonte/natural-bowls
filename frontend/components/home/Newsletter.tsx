@@ -53,10 +53,10 @@ export default function Newsletter() {
             <span className="inline-flex items-center rounded-full border border-[#6B8E4E]/30 bg-[#6B8E4E]/10 px-4 py-2 text-xs uppercase tracking-[0.22em] text-[#6B8E4E] font-semibold">
               Newsletter
             </span>
-            <h2 className="mt-6 text-4xl md:text-5xl lg:text-5xl font-bold leading-tight text-[#5D4E37]">
+            <h2 className="mt-6 text-4xl md:text-5xl lg:text-5xl font-bold text-[#5D4E37]">
               Ofertas Exclusivas<span className="block text-[#6B8E4E]">Para Suscriptores</span>
             </h2>
-            <p className="mt-5 text-gray-700 text-base md:text-lg max-w-lg leading-relaxed">
+            <p className="mt-5 text-gray-700 text-base md:text-lg max-w-lg">
               Suscríbete y recibe <span className="font-semibold text-[#6B8E4E]">ofertas semanales exclusivas</span>, nuevos lanzamientos y promociones. Únete a nuestra comunidad NBLover
             </p>
 
@@ -91,7 +91,7 @@ export default function Newsletter() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="rounded-xl bg-[#6B8E4E] hover:bg-[#5D7A42] disabled:bg-gray-400 text-white px-8 py-3 font-bold shadow-lg transition-all duration-200 hover:shadow-xl hover:-translate-y-0.5 whitespace-nowrap"
+                  className="rounded-xl bg-[#4D7A30] hover:bg-[#3E6B22] disabled:bg-gray-400 text-white px-8 py-3 font-bold shadow-lg transition-all duration-200 hover:shadow-xl hover:-translate-y-0.5 whitespace-nowrap"
                 >
                   {loading ? "Suscribiendo..." : "Suscribirme Ahora"}
                 </button>

@@ -1,0 +1,68 @@
+import { Product } from "@/lib/schemas";
+
+export const infusiones: Product[] = [
+  {
+    id: "infusion-te-canela",
+    name: "Infusión Té y Canela",
+    description: "Infusión caliente de té con canela.",
+    price: 5.0,
+    image: "/images/infusiones/te-canela.jpg",
+    categoryId: "infusiones",
+    ingredients: ["Té", "Canela"],
+  },
+  {
+    id: "infusion-frutos-rojos",
+    name: "Infusión Frutos Rojos",
+    description: "Infusión caliente de frutos rojos.",
+    price: 7.0,
+    image: "/images/infusiones/frutos-rojos.jpg",
+    categoryId: "infusiones",
+    ingredients: ["Frutos rojos"],
+  },
+  {
+    id: "infusion-menta",
+    name: "Infusión de Menta",
+    description: "Infusión caliente refrescante de menta.",
+    price: 7.0,
+    image: "/images/infusiones/menta.jpg",
+    categoryId: "infusiones",
+    ingredients: ["Menta"],
+  },
+  {
+    id: "leche-chocolate",
+    name: "Leche con Chocolate",
+    description: "Leche caliente con chocolate.",
+    price: 8.0,
+    image: "/images/infusiones/leche-chocolate.jpg",
+    categoryId: "infusiones",
+    ingredients: ["Leche", "Chocolate"],
+  },
+  {
+    id: "naranja-cinamoon",
+    name: "Naranja Cinamoon",
+    description:
+      "Infusión de canela, zumo y piel de naranja. Refrescante y aromático.",
+    price: 10.0,
+    image: "/images/infusiones/naranja-cinamoon.jpg",
+    categoryId: "infusiones",
+    ingredients: ["Canela", "Naranja", "Piel de naranja"],
+  },
+  {
+    id: "tropical-pina",
+    name: "Tropical Piña",
+    description: "Infusión de menta y piña. Fresco y tropical.",
+    price: 10.0,
+    image: "/images/infusiones/tropical-pina.jpg",
+    categoryId: "infusiones",
+    ingredients: ["Menta", "Piña"],
+  },
+  {
+    id: "berries-tea",
+    name: "Berries Tea",
+    description: "Infusión de frutos rojos y limón.",
+    price: 11.0,
+    image: "/images/infusiones/berries-tea.jpg",
+    categoryId: "infusiones",
+    ingredients: ["Frutos rojos", "Limón"],
+  },
+];

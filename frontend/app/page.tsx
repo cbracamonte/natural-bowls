@@ -1,3 +1,4 @@
+import { generatePageMetadata } from "@/lib/seo";
 import HeroPokebowl from "@/components/home/HeroPokebowl";
 import HowItWorks from "@/components/home/HowItWorks";
 import Categories from "@/components/home/Categories";
@@ -6,6 +7,15 @@ import HeroSmoothiebowl from "@/components/home/HeroSmoothiebowl";
 import Instagram from "@/components/home/Instagram";
 import Location from "@/components/home/Location";
 import Newsletter from "@/components/home/Newsletter";
+import Sponsors from "@/components/home/Sponsors";
+
+export const metadata = generatePageMetadata({
+  title: "Poke Bowls & Smoothies en Trujillo",
+  description:
+    "Descubre Natural Bowls: poke bowls frescos, smoothie bowls, wraps y más. Comida saludable, personalizable y con delivery en Trujillo, Perú.",
+  keywords: ["poke bowls Trujillo", "comida saludable Trujillo", "delivery saludable Trujillo"],
+  path: "/",
+});
 
 export default function Home() {
   return (
@@ -22,19 +32,19 @@ export default function Home() {
       {/* 4. Favoritos - Social proof: qué otros clientes compran */}
       <Featured />
 
-      {/* 5. Aliados  falta colocar y los logos */}
-      {/* <Values /> */}
-
-      {/* 6. Segundo hero - Mostrar diversidad de productos */}
+      {/* 5. Segundo hero - Mostrar diversidad de productos */}
       <HeroSmoothiebowl />
 
-      {/* 9. Newsletter - Conversiones finales */}
+      {/* 6. Newsletter - Conversiones finales */}
       <Newsletter />
 
-      {/* 7. Instagram - Más social proof y engagement */}
+      {/* 7. Aliados */}
+      <Sponsors />
+
+      {/* 8. Instagram - Más social proof y engagement */}
       <Instagram />
 
-      {/* 8. Ubicación - Facilitar acceso y contacto */}
+      {/* 9. Ubicación */}
       <Location />
     </>
   );
