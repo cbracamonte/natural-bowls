@@ -9,6 +9,7 @@ import { OrderItem } from "../domain/order-item.entity";
 import { BadRequestException, Inject, Injectable, Logger } from "@nestjs/common";
 import { UnitOfWork } from "src/infrastructure/database/unit-of-work";
 import { PricingResult } from "src/modules/pricing/domain/pricing-result";
+import { PaginatedResponse } from "src/common/dto/paginated-response.dto";
 
 @Injectable()
 export class OrdersService {
@@ -27,6 +28,8 @@ export class OrdersService {
     private readonly pricingService: PricingService
   ) { }
 
+  private readonly logger = new Logger(OrdersService.name);
+
   async createFromCart(
     customerId: string,
     pointsToUse = 0,
@@ -36,6 +39,9 @@ export class OrdersService {
 
       // 1. Obtener carrito activo
       const cart = await this.cartRepository.findActiveByCustomer(customerId, client);
+      
+      this.logger.log(`Creating order for customer ${customerId}`);
+
       if (!cart) {
         throw new BadRequestException('No active cart');
       }
@@ -51,7 +57,7 @@ export class OrdersService {
 
       // 2. Mapear items
       const items = cart.getItems().map(
-        i => new OrderItem(i.productId, i.quantity, i.unitPrice)
+        i => new OrderItem(i.productId, i.getQuantity(), i.unitPrice)
       );
 
       // 3. Calcular total base
@@ -91,6 +97,8 @@ export class OrdersService {
       cart.checkout();
       await this.cartRepository.save(cart, client);
 
+      this.logger.log(`Order created successfully: ${order.id}`);
+
       return order;
     });
   }
@@ -127,5 +135,21 @@ export class OrdersService {
 
   async list(): Promise<Order[]> {
     return this.orderRepository.findAll();
+  }
+
+  async listCustomerOrders(
+    customerId: string,
+    page: number,
+    limit: number
+  ): Promise<PaginatedResponse<Order>> {
+
+    const { data, total } =
+      await this.orderRepository.findByCustomerPaginated(
+        customerId,
+        page,
+        limit
+      );
+
+    return new PaginatedResponse(data, page, limit, total);
   }
 }
