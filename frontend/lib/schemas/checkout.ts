@@ -40,8 +40,17 @@ export interface DiscountValidationResult {
 
 export interface WhatsAppOrderPayload {
   formData: CheckoutFormData;
-  bowlOrder: BowlOrder | null;
-  cartItems: { name: string; price: number; quantity: number }[];
+  // after recent refactor we no longer depend on a single bowlOrder object
+  // in most cases; the payload is built using the cart items. keep the
+  // property optional for backwards compatibility with older callers.
+  bowlOrder?: BowlOrder | null;
+  cartItems: Array<{
+    name: string;
+    price: number;
+    quantity: number;
+    description?: string;
+    customizations?: Record<string, any>;
+  }>;
   total: number;
   discountValidated: boolean;
   discountCode: string;

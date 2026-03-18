@@ -9,16 +9,6 @@ import {
 import { DiscountCodeService } from './discount-code';
 
 export class CheckoutService {
-  static getBowlOrderFromStorage(): BowlOrder | null {
-    if (typeof window === 'undefined') return null;
-    const saved = localStorage.getItem('bowlOrder');
-    if (!saved) return null;
-    try {
-      return JSON.parse(saved);
-    } catch {
-      return null;
-    }
-  }
 
   static getPhoneFromStorage(): string {
     return DiscountCodeService.getPhoneFromStorage();
@@ -55,18 +45,51 @@ export class CheckoutService {
   static buildWhatsAppMessage(payload: WhatsAppOrderPayload): string {
     const { formData, bowlOrder, cartItems, total, discountValidated, discountCode, discountAmount, finalTotal } = payload;
 
-    const bowlText = bowlOrder ? `🍽️ *BOWL PERSONALIZADO*\n${bowlOrder.message}\n` : '';
+    // Previously we showed the last custom bowl using `bowlOrder` separately, but
+    // that caused confusion when the user added multiple bowls (only the last
+    // one appeared). Instead we now render **all** cart items and include their
+    // description (which already contains the full specification for custom
+    // bowls). The `bowlOrder` value is kept only as a fallback when there are no
+    // cart items (which shouldn't normally happen).
 
     const itemsText = cartItems.length > 0
       ? cartItems
           .map((item, index) => {
             const lineTotal = item.price * item.quantity;
+            let details = '';
+            const cust = (item as any).customizations;
+            if (cust) {
+              // format block of custom fields
+              const lines: string[] = [];
+              if (cust.tamaño) lines.push(`Tamaño: ${cust.tamaño}`);
+              if (cust.base) lines.push(`Base: ${cust.base}`);
+              if (cust.proteina) lines.push(`Proteína: ${cust.proteina}`);
+              if (cust.toppings && cust.toppings.length)
+                lines.push(`Toppings: ${cust.toppings.join(', ')}`);
+              if (cust.agregados && cust.agregados.length)
+                lines.push(`Agregados: ${cust.agregados.join(', ')}`);
+              if (cust.salsas && cust.salsas.length)
+                lines.push(`Salsas: ${cust.salsas.join(', ')}`);
+              if (lines.length) {
+                details = '\n' + lines.map(l => `   ${l}`).join('\n');
+              }
+            } else if (item.description) {
+              details = `\n   (${item.description})`;
+            }
             return (
               `${index + 1}. ${item.name} x${item.quantity}\n` +
-              `   ${formatPrice(item.price)} c/u - ${formatPrice(lineTotal)}`
+              `   ${formatPrice(item.price)} c/u - ${formatPrice(lineTotal)}` +
+              details
             );
           })
           .join('\n')
+      : '';
+
+    // if there are no cart items but we still have a bowlOrder, fall back to
+    // showing it so older flows continue to work. otherwise the above
+    // `itemsText` already covers every product.
+    const bowlText = !cartItems.length && bowlOrder
+      ? `🍽️ *BOWL PERSONALIZADO*\n${bowlOrder.message}\n`
       : '';
 
     const notesText = formData.notes.trim()
