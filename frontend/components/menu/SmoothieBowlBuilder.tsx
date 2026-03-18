@@ -29,6 +29,7 @@ export default function SmoothieBowlBuilder({
   const [selectedToppings, setSelectedToppings] = useState<string[]>([]);
   const [expandedSmoothies, setExpandedSmoothies] = useState(!preselectedSmoothie);
   const [expandedToppings, setExpandedToppings] = useState(!!preselectedSmoothie);
+  const [cantidad, setCantidad] = useState<number>(1);
 
   // Usar servicios para cálculos
   const nutrition = SmoothieBowlService.calculateNutrition(
@@ -46,7 +47,7 @@ export default function SmoothieBowlBuilder({
   const missingToppings =
     SmoothieBowlService.getMissingToppingsCount(selectedToppings);
 
-  const handleOrderClick = () => {
+  const handleAddToCart = (action: "stay" | "checkout") => {
     const validation = SmoothieBowlService.validateBowlRequirements(
       selectedSmoothie,
       selectedToppings,
@@ -59,24 +60,25 @@ export default function SmoothieBowlBuilder({
 
     if (!selectedSmoothie) return;
 
-    const bowlData = SmoothieBowlService.createBowlOrderData(
-      selectedSmoothie,
-      selectedToppings,
-    );
-
-    // Guardar en localStorage
-    localStorage.setItem("bowlOrder", JSON.stringify(bowlData));
-
-    // Agregar al carrito
     const bowlProduct = SmoothieBowlService.createBowlProduct(
       selectedSmoothie,
       selectedToppings,
     );
 
-    addItem(bowlProduct, 1);
+    addItem(bowlProduct, cantidad);
 
-    // Navegar al checkout
-    router.push("/checkout");
+    setSelectedSmoothie(preselectedSmoothie);
+    setSelectedToppings([]);
+    setExpandedSmoothies(!preselectedSmoothie);
+    setExpandedToppings(!!preselectedSmoothie);
+    setCantidad(1);
+
+    if (action === "checkout") {
+      router.push("/checkout");
+    } else if (action === "stay") {
+      const el = document.getElementById("smoothie-bowl-title");
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   return (
@@ -86,7 +88,7 @@ export default function SmoothieBowlBuilder({
           {/* LEFT PANEL - Description & Options */}
           <div className="p-8 lg:p-12 border-r border-gray-200 flex flex-col justify-between bg-linear-to-b from-white to-gray-50">
             <div>
-              <h2 className="text-4xl md:text-5xl font-bold text-[#5D4E37] mb-3">
+              <h2 id="smoothie-bowl-title" className="text-4xl md:text-5xl font-bold text-[#5D4E37] mb-3">
                 Smoothie<span className="text-[#9CB973]">Bowl</span>
               </h2>
 
@@ -239,7 +241,51 @@ export default function SmoothieBowlBuilder({
                 </div>
               </div>
             </div>
-
+            <div className="group border border-transparent rounded-xl p-4 mb-3 bg-white hover:border-[#9CB973] hover:border-2 transition-all">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="text-[10px] tracking-[.2em] font-semibold text-[#5D4E37] uppercase group-hover:text-[#9CB973]">
+                    CANTIDAD DE SMOOTHIE
+                  </p>
+                  <p className="text-xs text-gray-600">
+                    Elige cuántos smoothies quieres agregar al carrito.
+                  </p>
+                </div>
+                <div className="flex items-center gap-1 text-sm text-[#5D4E37]">
+                  <button
+                    onClick={() => setCantidad((prev) => Math.max(1, prev - 1))}
+                    className="w-8 h-8 rounded-lg border border-[#9CB973] text-[#5D4E37] font-semibold hover:bg-[#F0F7EA] transition-all"
+                    aria-label="Disminuir cantidad"
+                  >
+                    −
+                  </button>
+                    <input
+                      type="number"
+                      min={1}
+                      max={10}
+                      value={cantidad}
+                      onChange={(e) => {
+                        const next = Number(e.target.value);
+                        if (!Number.isNaN(next)) {
+                          setCantidad(Math.max(1, Math.min(10, next)));
+                        }
+                      }}
+                      className="w-16 h-8 text-center border border-gray-300 rounded-lg p-1 text-sm appearance-none outline-none"
+                      style={{ MozAppearance: "textfield", WebkitAppearance: "none", appearance: "none" }}
+                    />
+                    <button
+                      onClick={() => setCantidad((prev) => Math.min(10, prev + 1))}
+                      className="w-8 h-8 rounded-lg border border-[#9CB973] text-[#5D4E37] font-semibold hover:bg-[#F0F7EA] transition-all"
+                      aria-label="Aumentar cantidad"
+                    >
+                      +
+                    </button>
+                </div>
+              </div>
+              <p className="text-xs text-gray-500 mt-2">
+                Cantidad mínima 1, máxima 10
+              </p>
+            </div>
             <div className="bg-[#9CB973]/10 border-2 border-[#9CB973] rounded-xl p-4 text-center">
               <p className="text-sm text-[#5D4E37] font-bold mb-2">
                 {selectedSmoothie
@@ -253,17 +299,37 @@ export default function SmoothieBowlBuilder({
               <p className="text-lg font-bold text-[#6B8E4E] mb-3">
                 S/ {totalPrice.toFixed(2)}
               </p>
-              <button
-                onClick={handleOrderClick}
-                disabled={!selectedSmoothie || missingToppings > 0}
-                className={`w-full py-2 px-4 rounded-lg font-bold transition-all ${
-                  selectedSmoothie && missingToppings === 0
-                    ? "bg-[#9CB973] text-white hover:bg-[#6B8E4E] cursor-pointer"
-                    : "bg-gray-200 text-gray-400 cursor-not-allowed"
-                }`}
-              >
-                🛒 Ir al Checkout
-              </button>
+              <div className="space-y-2">
+                <button
+                  onClick={() => handleAddToCart("stay")}
+                  disabled={!selectedSmoothie || missingToppings > 0}
+                  className={`w-full py-2 px-4 rounded-lg font-bold transition-all ${
+                    selectedSmoothie && missingToppings === 0
+                      ? "bg-[#6B8E4E] text-white hover:bg-[#5D7A42] cursor-pointer"
+                      : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                  }`}
+                >
+                  ✅ Seguir comprando
+                </button>                <button
+                  onClick={() => handleAddToCart("checkout")}
+                  disabled={!selectedSmoothie || missingToppings > 0}
+                  className={`w-full py-2 px-4 rounded-lg font-bold transition-all ${
+                    selectedSmoothie && missingToppings === 0
+                      ? "bg-[#9CB973] text-white hover:bg-[#6B8E4E] cursor-pointer"
+                      : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                  }`}
+                >
+                  🛒 Ir al Checkout
+                </button>
+                <div className="text-center pt-1">
+                  <button
+                    onClick={() => router.push('/menu')}
+                    className="text-sm text-[#5D4E37] underline hover:text-[#6B8E4E]"
+                  >
+                    Volver al menú
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
 

@@ -228,18 +228,37 @@ export class PokeBowlService {
     selectedItems: SelectedBowlItems,
     tamaño: "regular" | "grande",
   ): Product {
+    const base = selectedItems.bases[0];
+    const proteina = selectedItems.proteinas[0];
+    const toppings = selectedItems.toppings || [];
+    const agregados = selectedItems.agregados || [];
+    const salsas = selectedItems.salsas || [];
+
+    // description kept for legacy flows but not relied upon
+    const description = `Base: ${base}, Proteína: ${proteina}${
+      selectedItems.extraProteinas?.length
+        ? `, Extra: ${selectedItems.extraProteinas.join(", ")}`
+        : ""
+    }, Toppings: ${toppings.join(", ") || "Ninguno"}`;
+
     return {
       id: `poke-bowl-${Date.now()}`,
-      name: `Poke Bowl ${tamaño.charAt(0).toUpperCase() + tamaño.slice(1)} - ${selectedItems.bases[0]}`,
-      description: `Base: ${selectedItems.bases[0]}, Proteína: ${selectedItems.proteinas[0]}${selectedItems.extraProteinas?.length ? `, Extra: ${selectedItems.extraProteinas.join(", ")}` : ""}, Toppings: ${selectedItems.toppings?.join(", ") || "Ninguno"}`,
+      // include emoji so summaries display it
+      name: `🍱 Poke Bowl ${tamaño.charAt(0).toUpperCase() + tamaño.slice(1)} - ${base}`,
+      description,
       price: this.calculateTotalPrice(selectedItems, tamaño),
       image: "/images/poke-bowl-2.jpg",
       categoryId: "poke-bowl",
-      ingredients: [
-        ...(selectedItems.toppings || []),
-        ...(selectedItems.agregados || []),
-        ...(selectedItems.extraProteinas || []),
-      ],
+      ingredients: [...toppings, ...agregados, ...(selectedItems.extraProteinas || [])],
+      customizations: {
+        tipo: "pokebowl",
+        tamaño,
+        base,
+        proteina,
+        toppings,
+        agregados,
+        salsas,
+      },
     };
   }
 

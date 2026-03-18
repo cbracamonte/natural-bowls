@@ -9,7 +9,7 @@ import { formatPrice } from "@/lib/utils/utils";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
 import { CheckoutService } from "@/lib/services";
-import { BowlOrder, CheckoutFormData } from "@/lib/schemas";
+import { CheckoutFormData } from "@/lib/schemas";
 
 export default function CheckoutPage() {
   const { items, total, clearCart } = useCart();
@@ -18,9 +18,10 @@ export default function CheckoutPage() {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [pendingMessage, setPendingMessage] = useState("");
 
-  const [bowlOrder] = useState<BowlOrder | null>(() =>
-    CheckoutService.getBowlOrderFromStorage(),
-  );
+  // We no longer rely on a separate "bowlOrder" object stored in
+  // localStorage; every custom bowl is represented as a cart item whose
+  // description already contains the configuration. This simplifies the
+  // checkout and avoids losing data when multiple bowls are added.
 
   const [formData, setFormData] = useState<CheckoutFormData>(() => {
     const initial: CheckoutFormData = {
@@ -87,7 +88,8 @@ export default function CheckoutPage() {
 
     const message = CheckoutService.buildWhatsAppMessage({
       formData,
-      bowlOrder,
+      // we no longer pass bowlOrder: the service will build the message
+      // based solely on the contents of the cart items
       cartItems: items,
       total,
       discountValidated,
@@ -119,7 +121,7 @@ export default function CheckoutPage() {
     setTimeout(() => router.push("/"), 1000);
   };
 
-  if (items.length === 0 && !bowlOrder) {
+  if (items.length === 0) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
         <div className="text-center">
@@ -163,10 +165,77 @@ export default function CheckoutPage() {
 
             <div className="overflow-y-auto flex-1 min-h-0 mb-6">
               <div className="bg-gray-50 rounded-xl p-4 mb-6 border border-gray-200">
-                <pre className="text-xs md:text-sm font-mono whitespace-pre-wrap break-words text-gray-700 leading-relaxed">
-                  {pendingMessage}
-                </pre>
-              </div>
+              {items.map((item, idx) => {
+                const cust = item.customizations || {};
+                const hasCust = cust && Object.keys(cust).length > 0;
+                return (
+                  <div key={item.productId}>
+                    {hasCust && (
+                      <>
+                        <div className="text-sm font-semibold flex items-center gap-1">
+                          <span>{item.name}</span>
+                        </div>
+                        {cust.tamaño && (
+                          <div className="flex justify-between text-xs">
+                            <span className="text-gray-600">Tamaño:</span>
+                            <span className="font-medium capitalize">
+                              {cust.tamaño}
+                            </span>
+                          </div>
+                        )}
+                        {cust.base && (
+                          <div className="flex justify-between text-xs">
+                            <span className="text-gray-600">Base:</span>
+                            <span className="font-medium">
+                              {cust.base}
+                            </span>
+                          </div>
+                        )}
+                        {cust.proteina && (
+                          <div className="flex justify-between text-xs">
+                            <span className="text-gray-600">Proteína:</span>
+                            <span className="font-medium">
+                              {cust.proteina}
+                            </span>
+                          </div>
+                        )}
+                        {['toppings', 'agregados', 'salsas'].map(
+                          (key) =>
+                            cust[key] && cust[key].length > 0 && (
+                              <div key={key} className="text-xs">
+                                <span className="text-gray-600 capitalize">
+                                  {key}:
+                                </span>
+                                <div className="flex flex-wrap gap-1 mt-1">
+                                  {cust[key].map((ing: string) => (
+                                    <span
+                                      key={ing}
+                                      className="border border-[#9CB973]/50 text-[#5D4E37] px-1.5 py-0.5 rounded text-xs"
+                                    >
+                                      {ing}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                            ),
+                        )}
+                      </>
+                    )}
+                    <div className="flex justify-between text-sm mt-1">
+                      <span className="font-medium">
+                        {item.name} x{item.quantity}
+                      </span>
+                      <span className="font-medium">
+                        {formatPrice(item.price * item.quantity)}
+                      </span>
+                    </div>
+                    {idx < items.length - 1 && (
+                      <hr className="border-gray-200 my-2" />
+                    )}
+                  </div>
+                );
+              })}
+            </div>
             </div>
 
             {discountValidated && (
@@ -359,101 +428,83 @@ export default function CheckoutPage() {
                     Resumen del Pedido
                   </h2>
 
-                  <div className="space-y-3 mb-4">
-                    {/* Bowl personalizado */}
-                    {bowlOrder && (
-                      <div className="pb-3 border-b space-y-2">
-                        <p className="text-sm font-semibold text-[#5D4E37]">
-                          {bowlOrder.type === "pokebowl"
-                            ? "🍱 Poke Bowl"
-                            : "🥣 Smoothie Bowl"}
-                        </p>
+                          <div className="space-y-3 mb-4">
+                    {items.map((item, idx) => {
+                      const cust = item.customizations || {};
+                      const hasCust =
+                        cust && Object.keys(cust).length > 0;
 
-                        {bowlOrder.tamaño && (
-                          <div className="flex justify-between text-xs">
-                            <span className="text-gray-600">Tamaño:</span>
-                            <span className="font-medium capitalize">
-                              {bowlOrder.tamaño}
-                            </span>
-                          </div>
-                        )}
-                        {bowlOrder.base && (
-                          <div className="flex justify-between text-xs">
-                            <span className="text-gray-600">Base:</span>
-                            <span className="font-medium">{bowlOrder.base}</span>
-                          </div>
-                        )}
-                        {bowlOrder.proteina && (
-                          <div className="flex justify-between text-xs">
-                            <span className="text-gray-600">Proteína:</span>
-                            <span className="font-medium">
-                              {bowlOrder.proteina}
-                            </span>
-                          </div>
-                        )}
-                        {bowlOrder.toppings && bowlOrder.toppings.length > 0 && (
-                          <div className="text-xs">
-                            <span className="text-gray-600">Toppings:</span>
-                            <div className="flex flex-wrap gap-1 mt-1">
-                              {bowlOrder.toppings.map((topping) => (
-                                <span
-                                  key={topping}
-                                  className="bg-[#9CB973]/10 text-[#5D4E37] px-1.5 py-0.5 rounded text-xs"
-                                >
-                                  {topping}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                        {bowlOrder.agregados &&
-                          bowlOrder.agregados.length > 0 && (
-                            <div className="text-xs">
-                              <span className="text-gray-600">Agregados:</span>
-                              <div className="flex flex-wrap gap-1 mt-1">
-                                {bowlOrder.agregados.map((agregado) => (
-                                  <span
-                                    key={agregado}
-                                    className="bg-[#9CB973]/10 text-[#5D4E37] px-1.5 py-0.5 rounded text-xs"
-                                  >
-                                    {agregado}
-                                  </span>
-                                ))}
+                      return (
+                        <div key={item.productId}>
+                          {hasCust && (
+                            <>
+                              <div className="text-sm font-semibold flex items-center gap-1">
+                                <span>{item.name}</span>
                               </div>
-                            </div>
+                              {cust.tamaño && (
+                                <div className="flex justify-between text-xs">
+                                  <span className="text-gray-600">Tamaño:</span>
+                                  <span className="font-medium capitalize">
+                                    {cust.tamaño}
+                                  </span>
+                                </div>
+                              )}
+                              {cust.base && (
+                                <div className="flex justify-between text-xs">
+                                  <span className="text-gray-600">Base:</span>
+                                  <span className="font-medium">
+                                    {cust.base}
+                                  </span>
+                                </div>
+                              )}
+                              {cust.proteina && (
+                                <div className="flex justify-between text-xs">
+                                  <span className="text-gray-600">
+                                    Proteína:
+                                  </span>
+                                  <span className="font-medium">
+                                    {cust.proteina}
+                                  </span>
+                                </div>
+                              )}
+                              {['toppings', 'agregados', 'salsas'].map(
+                                (key) =>
+                                  cust[key] && cust[key].length > 0 && (
+                                    <div key={key} className="text-xs">
+                                      <span className="text-gray-600 capitalize">
+                                        {key}:
+                                      </span>
+                                      <div className="flex flex-wrap gap-1 mt-1">
+                                        {cust[key].map((ing: string) => (
+                                          <span
+                                            key={ing}
+                                            className="border border-[#9CB973]/50 text-[#5D4E37] px-1.5 py-0.5 rounded text-xs"
+                                          >
+                                            {ing}
+                                          </span>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  ),
+                              )}
+                            </>
                           )}
-                        {bowlOrder.salsas && bowlOrder.salsas.length > 0 && (
-                          <div className="text-xs">
-                            <span className="text-gray-600">Salsas:</span>
-                            <div className="flex flex-wrap gap-1 mt-1">
-                              {bowlOrder.salsas.map((salsa) => (
-                                <span
-                                  key={salsa}
-                                  className="bg-[#9CB973]/10 text-[#5D4E37] px-1.5 py-0.5 rounded text-xs"
-                                >
-                                  {salsa}
-                                </span>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    )}
 
-                    {/* Otros productos */}
-                    {items.map((item) => (
-                      <div
-                        key={item.productId}
-                        className="flex justify-between text-sm"
-                      >
-                        <span className="text-gray-600">
-                          {item.name} x{item.quantity}
-                        </span>
-                        <span className="font-medium">
-                          {formatPrice(item.price * item.quantity)}
-                        </span>
-                      </div>
-                    ))}
+                          <div className="flex justify-between text-sm mt-1">
+                            <span className="text-gray-600">
+                              {item.name} x{item.quantity}
+                            </span>
+                            <span className="font-medium">
+                              {formatPrice(item.price * item.quantity)}
+                            </span>
+                          </div>
+
+                          {idx < items.length - 1 && (
+                            <hr className="border-gray-200 my-2" />
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
 
                   <div className="border-t mt-4 pt-4 space-y-2">
