@@ -1,23 +1,28 @@
-import { Controller, Post, Param, Patch, Req, Body } from '@nestjs/common';
+import { Controller, Post, Param, Patch, Req, Body, UseGuards, Headers, Query, Get } from '@nestjs/common';
 import { OrdersService } from '../application/orders.service';
-import { Public } from 'src/security/decorators/public.decorator';
+import { CreateOrderDto } from './dto/create-order.dto';
+import { PaginationDto } from 'src/common/dto/pagination.dto';
 
 @Controller('orders')
 export class OrdersController {
   constructor(private readonly service: OrdersService) { }
 
-  @Public()
   @Post()
-  create(@Req() req, @Body() body) {
+  create(@Req() req, @Headers('Idempotency-Key') idempotencyKey: string, @Body() dto: CreateOrderDto) {
     return this.service.createFromCart(
       req.user.id,
-      body.pointsToUse ?? 0
+      dto.pointsToUse ?? 0,
+      idempotencyKey
     );
   }
-  
-  @Public()
-  @Patch(':orderId/status')
-  advance(@Param('orderId') orderId: string) {
-    return this.service.advance(orderId);
+
+  @Get()
+  list(@Req() req, @Query() pagination: PaginationDto) {
+    return this.service.listCustomerOrders(
+      req.user.id,
+      pagination.page ?? 1,
+      pagination.limit ?? 10
+    );
   }
+
 }

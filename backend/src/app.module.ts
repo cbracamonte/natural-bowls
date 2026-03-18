@@ -6,10 +6,11 @@ import { CartModule } from './modules/cart/cart.module';
 import { OrdersModule } from './modules/orders/orders.module';
 import { CustomersModule } from './modules/customers/customers.module';
 import { LoyaltyModule } from './modules/loyalty/loyalty.module';
-import { AuthModule } from './security/auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './security/guards/jwt-auth.guard';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { AuthModule } from './modules/auth/auth.module';
+import { OptionalJwtAuthGuard } from './security/guards/optional-jwt-auth.guard';
 
 @Module({
   imports: [AuthModule, CatalogModule, ProductsModule, InventoryModule, CartModule, OrdersModule, CustomersModule, LoyaltyModule,
@@ -27,6 +28,10 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
+    {
+      provide: APP_GUARD,
+      useClass: OptionalJwtAuthGuard,
+    }
   ]
 })
 export class AppModule {}

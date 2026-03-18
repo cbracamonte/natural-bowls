@@ -6,9 +6,10 @@ import { LoyaltyService } from "src/modules/loyalty/application/loyalty.service"
 import { PricingService } from "src/modules/pricing/application/pricing.service";
 import { Order } from "../domain/orders.entity";
 import { OrderItem } from "../domain/order-item.entity";
-import { Inject, Injectable } from "@nestjs/common";
+import { BadRequestException, Inject, Injectable, Logger } from "@nestjs/common";
 import { UnitOfWork } from "src/infrastructure/database/unit-of-work";
 import { PricingResult } from "src/modules/pricing/domain/pricing-result";
+import { PaginatedResponse } from "src/common/dto/paginated-response.dto";
 
 @Injectable()
 export class OrdersService {
@@ -27,22 +28,36 @@ export class OrdersService {
     private readonly pricingService: PricingService
   ) { }
 
+  private readonly logger = new Logger(OrdersService.name);
+
   async createFromCart(
     customerId: string,
-    pointsToUse = 0
+    pointsToUse = 0,
+    idempotencyKey?: string
   ): Promise<Order> {
-
     return this.unitOfWork.execute(async (client) => {
 
       // 1. Obtener carrito activo
       const cart = await this.cartRepository.findActiveByCustomer(customerId, client);
+      
+      this.logger.log(`Creating order for customer ${customerId}`);
+
       if (!cart) {
-        throw new Error('No active cart');
+        throw new BadRequestException('No active cart');
+      }
+
+      if (!idempotencyKey) {
+        throw new BadRequestException('Idempotency-Key required');
+      }
+      const existing =
+        await this.orderRepository.findByIdempotencyKey(idempotencyKey);
+      if (existing) {
+        return existing;
       }
 
       // 2. Mapear items
       const items = cart.getItems().map(
-        i => new OrderItem(i.productId, i.quantity, i.unitPrice)
+        i => new OrderItem(i.productId, i.getQuantity(), i.unitPrice)
       );
 
       // 3. Calcular total base
@@ -72,7 +87,8 @@ export class OrdersService {
         'PAID',
         items,
         pricingResult.total,
-        new Date()
+        new Date(),
+        idempotencyKey
       );
 
       await this.orderRepository.save(order, client);
@@ -81,12 +97,11 @@ export class OrdersService {
       cart.checkout();
       await this.cartRepository.save(cart, client);
 
+      this.logger.log(`Order created successfully: ${order.id}`);
+
       return order;
     });
   }
-
-
-
 
   async advance(orderId: string): Promise<Order> {
 
@@ -94,7 +109,7 @@ export class OrdersService {
 
       const order = await this.orderRepository.findById(orderId, client);
       if (!order) {
-        throw new Error('Order not found');
+        throw new BadRequestException('Order not found');
       }
 
       order.advanceStatus();
@@ -118,8 +133,23 @@ export class OrdersService {
     });
   }
 
-
   async list(): Promise<Order[]> {
     return this.orderRepository.findAll();
+  }
+
+  async listCustomerOrders(
+    customerId: string,
+    page: number,
+    limit: number
+  ): Promise<PaginatedResponse<Order>> {
+
+    const { data, total } =
+      await this.orderRepository.findByCustomerPaginated(
+        customerId,
+        page,
+        limit
+      );
+
+    return new PaginatedResponse(data, page, limit, total);
   }
 }
