@@ -18,10 +18,7 @@ export default function CheckoutPage() {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [pendingMessage, setPendingMessage] = useState("");
 
-  // We no longer rely on a separate "bowlOrder" object stored in
-  // localStorage; every custom bowl is represented as a cart item whose
-  // description already contains the configuration. This simplifies the
-  // checkout and avoids losing data when multiple bowls are added.
+  
 
   const [formData, setFormData] = useState<CheckoutFormData>(() => {
     const initial: CheckoutFormData = {
@@ -88,8 +85,8 @@ export default function CheckoutPage() {
 
     const message = CheckoutService.buildWhatsAppMessage({
       formData,
-      // we no longer pass bowlOrder: the service will build the message
-      // based solely on the contents of the cart items
+      
+
       cartItems: items,
       total,
       discountValidated,

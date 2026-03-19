@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useCart } from "@/context/CartContext";
 import { PokeBowlService, SelectedBowlItems } from "@/lib/services";
@@ -10,7 +9,6 @@ import { PokeBowlBuilderProps } from "@/lib/schemas";
 
 
 export default function PokeBowlBuilder({ pokeOptions }: PokeBowlBuilderProps) {
-  const router = useRouter();
   const { addItem } = useCart();
 
   const [selectedItems, setSelectedItems] = useState<SelectedBowlItems>({});
@@ -27,7 +25,6 @@ export default function PokeBowlBuilder({ pokeOptions }: PokeBowlBuilderProps) {
   const [tamaño, setTamaño] = useState<"regular" | "grande">(
     pokeOptions.preselectedSize || "regular"
   );
-  const [cantidad, setCantidad] = useState<number>(1);
 
   // Usar datos del servicio
   const limits = PokeBowlService.getLimits(tamaño);
@@ -83,13 +80,7 @@ export default function PokeBowlBuilder({ pokeOptions }: PokeBowlBuilderProps) {
     return () => window.removeEventListener("hashchange", onHashChange);
   }, [pokeOptions.preselectedSize]);
 
-  /**
-   * Add current bowl and navigate according to action:
-   *  - "menu": back to menu page
-   *  - "smoothie": scroll to smoothie section on same /bowls page
-   *  - "checkout": go to checkout
-   */
-  const handleAddToCart = (action: string) => {
+    const handleAddToCart = () => {
     const validation = PokeBowlService.validateBowlRequirements(selectedItems, tamaño);
     if (!validation.isValid) {
       alert(validation.message);
@@ -97,35 +88,7 @@ export default function PokeBowlBuilder({ pokeOptions }: PokeBowlBuilderProps) {
     }
 
     const bowlProduct = PokeBowlService.createBowlProduct(selectedItems, tamaño);
-    addItem(bowlProduct, cantidad);
-
-    // clear selections after adding; include empty arrays to uncheck all boxes
-    setSelectedItems({
-      bases: [],
-      proteinas: [],
-      extraProteinas: [],
-      toppings: [],
-      agregados: [],
-      salsas: [],
-    });
-    setCantidad(1);
-    setTamaño(pokeOptions.preselectedSize || "regular");
-    setExpandedCategories(defaultExpanded);
-
-    if (action === "smoothie") {
-      router.push("/bowls#smoothie-bowls");
-      setTimeout(() => {
-        const el = document.getElementById("smoothie-bowls");
-        if (el) el.scrollIntoView({ behavior: "smooth" });
-      }, 100);
-    } else if (action === "checkout") {
-      router.push("/checkout");
-    } else if (action === "stay") {
-      // scroll back to the poke header so user resumes at top of builder
-      const el = document.getElementById("poke-bowl-title");
-      if (el) el.scrollIntoView({ behavior: "smooth" });
-    }
-    // other actions do nothing
+    addItem(bowlProduct, 1);
   };
 
   const getDisplayItems = (category: string): string[] => {
@@ -308,47 +271,6 @@ export default function PokeBowlBuilder({ pokeOptions }: PokeBowlBuilderProps) {
                 )}
               </div>
 
-              <div className="group bg-white border border-transparent rounded-xl p-4 mb-6 hover:border-[#9CB973] hover:border-2 transition-all">
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <p className="text-xs uppercase tracking-wide font-semibold text-[#5D4E37] mb-1 group-hover:text-[#9CB973]">
-                      CANTIDAD DE BOWLS
-                    </p>
-                    <p className="text-sm text-gray-600">Elige cuántos bowls quieres agregar al carrito.</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setCantidad((prev) => Math.max(1, prev - 1))}
-                      className="w-8 h-8 rounded-lg border border-[#9CB973] text-[#5D4E37] font-bold hover:bg-[#F0F7EA] transition-all"
-                    >
-                      −
-                    </button>
-                    <input
-                      type="number"
-                      min={1}
-                      max={10}
-                      value={cantidad}
-                      onChange={(e) => {
-                        const next = Number(e.target.value);
-                        if (!Number.isNaN(next)) {
-                          setCantidad(Math.max(1, Math.min(10, next)));
-                        }
-                      }}
-                      className="w-16 text-center border border-gray-300 rounded-lg p-1 text-sm appearance-none outline-none"
-                      style={{ MozAppearance: "textfield", WebkitAppearance: "none", appearance: "none" }}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setCantidad((prev) => Math.min(10, prev + 1))}
-                      className="w-8 h-8 rounded-lg border border-[#9CB973] text-[#5D4E37] font-bold"
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
-                <p className="text-xs text-gray-500 mt-2">Cantidad mínima 1, máxima 10</p>
-              </div>
             </div>
 
             <div className="bg-[#9CB973]/10 border-2 border-[#9CB973] rounded-xl p-4 text-center">
@@ -371,29 +293,8 @@ export default function PokeBowlBuilder({ pokeOptions }: PokeBowlBuilderProps) {
               </div>
               <div className="space-y-2">
                 <button
-                  onClick={() => handleAddToCart("stay")}
-                  disabled={!isFormValid}
-                  className={`w-full py-2 px-4 rounded-lg font-bold transition-all ${
-                    isFormValid
-                      ? "bg-[#6B8E4E] text-white hover:bg-[#5D7A42] cursor-pointer"
-                      : "bg-gray-200 text-gray-400 cursor-not-allowed"
-                  }`}
-                >
-                  ✅ Seguir comprando
-                </button>
-                <button
-                  onClick={() => handleAddToCart("smoothie")}
-                  disabled={!isFormValid}
-                  className={`w-full py-2 px-4 rounded-lg font-bold transition-all ${
-                    isFormValid
-                      ? "bg-[#4A90E2] text-white hover:bg-[#357ABD] cursor-pointer"
-                      : "bg-gray-200 text-gray-400 cursor-not-allowed"
-                  }`}
-                >
-                  🥣 Escoger SmoothieBowl
-                </button>
-                <button
-                  onClick={() => handleAddToCart("checkout")}
+                  type="button"
+                  onClick={handleAddToCart}
                   disabled={!isFormValid}
                   className={`w-full py-2 px-4 rounded-lg font-bold transition-all ${
                     isFormValid
@@ -401,7 +302,7 @@ export default function PokeBowlBuilder({ pokeOptions }: PokeBowlBuilderProps) {
                       : "bg-gray-200 text-gray-400 cursor-not-allowed"
                   }`}
                 >
-                  🛒 Ir al Checkout
+                  🛒 Agregar al carrito
                 </button>
               </div>
             </div>
