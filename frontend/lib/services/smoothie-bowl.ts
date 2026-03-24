@@ -167,11 +167,6 @@ export class SmoothieBowlService {
       image: selectedSmoothie.image,
       categoryId: "smoothie-bowl",
       ingredients: [...selectedSmoothie.ingredients, ...selectedToppings],
-      customizations: {
-        tipo: "smoothiebowl",
-        base: selectedSmoothie.name,
-        toppings: selectedToppings,
-      },
     };
   }
 
