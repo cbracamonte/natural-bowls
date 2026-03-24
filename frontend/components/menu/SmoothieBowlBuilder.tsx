@@ -27,6 +27,7 @@ export default function SmoothieBowlBuilder({
     preselectedSmoothie,
   );
   const [selectedToppings, setSelectedToppings] = useState<string[]>([]);
+  const [addedToCart, setAddedToCart] = useState(false);
   const [expandedSmoothies, setExpandedSmoothies] = useState(!preselectedSmoothie);
   const [expandedToppings, setExpandedToppings] = useState(!!preselectedSmoothie);
 
@@ -80,6 +81,16 @@ export default function SmoothieBowlBuilder({
     }
   }, [selectedSmoothie, selectedToppings, expandedSmoothies, expandedToppings]);
 
+  useEffect(() => {
+    if (!addedToCart) return;
+
+    const timeoutId = window.setTimeout(() => {
+      setAddedToCart(false);
+    }, 2000);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [addedToCart]);
+
   // Usar servicios para cálculos
   const nutrition = SmoothieBowlService.calculateNutrition(
     selectedSmoothie,
@@ -115,6 +126,7 @@ export default function SmoothieBowlBuilder({
     );
 
     addItem(bowlProduct, 1);
+    setAddedToCart(true);
 
     // Keep current selection so the user stays in context and can continue customizing
     // and/or adding more smoothies without the page jumping.
@@ -184,8 +196,22 @@ export default function SmoothieBowlBuilder({
                                 name="smoothie"
                                 checked={isSelected}
                                 onChange={() => setSelectedSmoothie(smoothie)}
-                                className="w-4 h-4 mt-1 cursor-pointer accent-[#9CB973]"
+                                className="peer sr-only"
                               />
+                              <span
+                                aria-hidden="true"
+                                className={`mt-1 flex h-4 w-4 items-center justify-center rounded-full border transition-all ${
+                                  isSelected
+                                    ? "border-[#9CB973] bg-[#9CB973]"
+                                    : "border-gray-300 bg-white"
+                                } group-hover:border-[#9CB973]`}
+                              >
+                                <span
+                                  className={`h-1.5 w-1.5 rounded-full ${
+                                    isSelected ? "bg-white" : "bg-transparent"
+                                  }`}
+                                />
+                              </span>
                               <div className="flex-1">
                                 <p className="text-sm font-bold text-[#5D4E37] group-hover:text-[#6B8E4E]">
                                   {smoothie.name}
@@ -265,8 +291,35 @@ export default function SmoothieBowlBuilder({
                                   );
                                 }}
                                 disabled={!canSelect}
-                                className="w-4 h-4 cursor-pointer accent-[#9CB973] disabled:cursor-not-allowed"
+                                className="peer sr-only"
                               />
+                              <span
+                                aria-hidden="true"
+                                className={`flex h-4 w-4 items-center justify-center rounded-sm border transition-all ${
+                                  isSelected
+                                    ? "border-[#9CB973] bg-[#9CB973] text-white"
+                                    : "border-gray-300 bg-white text-transparent"
+                                } ${
+                                  canSelect
+                                    ? "group-hover:border-[#9CB973]"
+                                    : "opacity-60"
+                                }`}
+                              >
+                                <svg
+                                  viewBox="0 0 16 16"
+                                  className="h-3 w-3"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M4 8.5L6.5 11L12 5.5"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                  />
+                                </svg>
+                              </span>
                               <span
                                 className={`text-sm flex-1 font-medium ${
                                   canSelect
@@ -308,12 +361,19 @@ export default function SmoothieBowlBuilder({
                   disabled={!selectedSmoothie || missingToppings > 0}
                   className={`w-full py-2 px-4 rounded-lg font-bold transition-all ${
                     selectedSmoothie && missingToppings === 0
-                      ? "bg-[#9CB973] text-white hover:bg-[#6B8E4E] cursor-pointer"
+                      ? addedToCart
+                        ? "bg-[#6B8E4E] text-white"
+                        : "bg-[#9CB973] text-white hover:bg-[#6B8E4E] cursor-pointer"
                       : "bg-gray-200 text-gray-400 cursor-not-allowed"
                   }`}
                 >
-                  🛒 Agregar al carrito
+                  {addedToCart ? "✅ Agregado al carrito" : "🛒 Agregar al carrito"}
                 </button>
+                {addedToCart && (
+                  <p className="text-sm font-medium text-[#6B8E4E]">
+                    Tu smoothie bowl se agrego correctamente al carrito.
+                  </p>
+                )}
               </div>
             </div>
           </div>

@@ -12,6 +12,7 @@ export default function PokeBowlBuilder({ pokeOptions }: PokeBowlBuilderProps) {
   const { addItem } = useCart();
 
   const [selectedItems, setSelectedItems] = useState<SelectedBowlItems>({});
+  const [addedToCart, setAddedToCart] = useState(false);
   const defaultExpanded: Record<string, boolean> = {
     bases: true,
     proteinas: false,
@@ -80,7 +81,17 @@ export default function PokeBowlBuilder({ pokeOptions }: PokeBowlBuilderProps) {
     return () => window.removeEventListener("hashchange", onHashChange);
   }, [pokeOptions.preselectedSize]);
 
-    const handleAddToCart = () => {
+  useEffect(() => {
+    if (!addedToCart) return;
+
+    const timeoutId = window.setTimeout(() => {
+      setAddedToCart(false);
+    }, 2000);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [addedToCart]);
+
+  const handleAddToCart = () => {
     const validation = PokeBowlService.validateBowlRequirements(selectedItems, tamaño);
     if (!validation.isValid) {
       alert(validation.message);
@@ -89,6 +100,7 @@ export default function PokeBowlBuilder({ pokeOptions }: PokeBowlBuilderProps) {
 
     const bowlProduct = PokeBowlService.createBowlProduct(selectedItems, tamaño);
     addItem(bowlProduct, 1);
+    setAddedToCart(true);
   };
 
   const getDisplayItems = (category: string): string[] => {
@@ -247,8 +259,35 @@ export default function PokeBowlBuilder({ pokeOptions }: PokeBowlBuilderProps) {
                                         checked={isSelected}
                                         onChange={() => toggleItem(key, item)}
                                         disabled={!canSelect}
-                                        className="w-4 h-4 cursor-pointer accent-[#9CB973] disabled:cursor-not-allowed"
+                                        className="peer sr-only"
                                       />
+                                      <span
+                                        aria-hidden="true"
+                                        className={`flex h-4 w-4 items-center justify-center rounded-sm border transition-all ${
+                                          isSelected
+                                            ? "border-[#9CB973] bg-[#9CB973] text-white"
+                                            : "border-gray-300 bg-white text-transparent"
+                                        } ${
+                                          canSelect
+                                            ? "group-hover:border-[#9CB973]"
+                                            : "opacity-60"
+                                        }`}
+                                      >
+                                        <svg
+                                          viewBox="0 0 16 16"
+                                          className="h-3 w-3"
+                                          fill="none"
+                                          xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                          <path
+                                            d="M4 8.5L6.5 11L12 5.5"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                          />
+                                        </svg>
+                                      </span>
                                       <span
                                         className={`text-sm flex-1 font-medium ${
                                           canSelect
@@ -298,12 +337,19 @@ export default function PokeBowlBuilder({ pokeOptions }: PokeBowlBuilderProps) {
                   disabled={!isFormValid}
                   className={`w-full py-2 px-4 rounded-lg font-bold transition-all ${
                     isFormValid
-                      ? "bg-[#9CB973] text-white hover:bg-[#6B8E4E] cursor-pointer"
+                      ? addedToCart
+                        ? "bg-[#6B8E4E] text-white"
+                        : "bg-[#9CB973] text-white hover:bg-[#6B8E4E] cursor-pointer"
                       : "bg-gray-200 text-gray-400 cursor-not-allowed"
                   }`}
                 >
-                  🛒 Agregar al carrito
+                  {addedToCart ? "✅ Agregado al carrito" : "🛒 Agregar al carrito"}
                 </button>
+                {addedToCart && (
+                  <p className="text-sm font-medium text-[#6B8E4E]">
+                    Tu poke bowl se agrego correctamente al carrito.
+                  </p>
+                )}
               </div>
             </div>
           </div>
