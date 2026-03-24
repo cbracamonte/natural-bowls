@@ -99,13 +99,20 @@ export default function ConfirmationPage() {
           </h2>
           <div className="space-y-3">
             {order.items.map((item) => (
-              <div key={item.productId} className="flex justify-between">
-                <span className="text-gray-600">
-                  {item.name} x{item.quantity}
-                </span>
-                <span className="font-medium">
-                  {formatPrice(item.price * item.quantity)}
-                </span>
+              <div key={item.productId} className="flex flex-col gap-1">
+                <div className="flex justify-between">
+                  <span className="text-gray-600">
+                    {item.name} x{item.quantity}
+                  </span>
+                  <span className="font-medium">
+                    {formatPrice(item.price * item.quantity)}
+                  </span>
+                </div>
+                {item.description && (
+                  <p className="text-xs text-gray-500">
+                    {item.description}
+                  </p>
+                )}
               </div>
             ))}
           </div>

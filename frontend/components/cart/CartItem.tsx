@@ -13,9 +13,9 @@ interface CartItemProps {
 
 export default function CartItem({ item }: CartItemProps) {
   const { updateQuantity, removeItem } = useCart();
-  const { productId, quantity, name, price, image } = item;
+  const { productId, quantity, name, price, image, ingredients, customizations } = item;
 
-  // Detectar si es un poke-bowl o smoothie-bowl personalizados
+  // used previously to adjust the image/link behaviour – still useful
   const isCustomBowl = name.toLowerCase().includes('poke') || name.toLowerCase().includes('smoothie');
 
   return (
@@ -60,7 +60,52 @@ export default function CartItem({ item }: CartItemProps) {
             {name}
           </Link>
         )}
-        <p className="text-sm text-gray-500 truncate">Bowl personalizado</p>
+
+        {/* show customization lines (size/base/proteina etc) if present */}
+        {customizations && Object.keys(customizations).length > 0 && (
+          <div className="mt-1 text-xs text-gray-600 space-y-1">
+            {customizations.tamaño && (
+              <div>Tamaño: {customizations.tamaño}</div>
+            )}
+            {customizations.base && (
+              <div>Base: {customizations.base}</div>
+            )}
+            {customizations.proteina && (
+              <div>Proteína: {customizations.proteina}</div>
+            )}
+            {['toppings', 'agregados', 'salsas'].map((k) =>
+              customizations[k] && customizations[k].length > 0 ? (
+                <div key={k}>
+                  {k.charAt(0).toUpperCase() + k.slice(1)}:{' '}
+                  <span className="flex flex-wrap gap-1 mt-1">
+                    {customizations[k].map((ing: string) => (
+                      <span
+                        key={ing}
+                        className="border border-[#9CB973]/50 text-[#5D4E37] px-1.5 py-0.5 rounded text-xs"
+                      >
+                        {ing}
+                      </span>
+                    ))}
+                  </span>
+                </div>
+              ) : null,
+            )}
+          </div>
+        )}
+
+        {/* always show ingredients array when available */}
+        {ingredients && ingredients.length > 0 && (
+          <div className="flex flex-wrap gap-1 mt-1">
+            {ingredients.map((ing) => (
+              <span
+                key={ing}
+                className="bg-[#9CB973]/10 text-[#5D4E37] px-1.5 py-0.5 rounded text-xs"
+              >
+                {ing}
+              </span>
+            ))}
+          </div>
+        )}
         <p className="font-semibold text-emerald-600 mt-1">
           {formatPrice(price)}
         </p>
