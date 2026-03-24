@@ -169,8 +169,11 @@ export default function CheckoutPage() {
                   <div key={item.productId}>
                     {hasCust && (
                       <>
-                        <div className="text-sm font-semibold flex items-center gap-1">
+                        <div className="flex justify-between items-start gap-3 text-sm font-semibold">
                           <span>{item.name}</span>
+                          <span className="shrink-0">
+                            x{item.quantity} {formatPrice(item.price * item.quantity)}
+                          </span>
                         </div>
                         {cust.tamaño && (
                           <div className="flex justify-between text-xs">
@@ -218,14 +221,16 @@ export default function CheckoutPage() {
                         )}
                       </>
                     )}
-                    <div className="flex justify-between text-sm mt-1">
-                      <span className="font-medium">
-                        {item.name} x{item.quantity}
-                      </span>
-                      <span className="font-medium">
-                        {formatPrice(item.price * item.quantity)}
-                      </span>
-                    </div>
+                    {!hasCust && (
+                      <div className="flex justify-between text-sm mt-1">
+                        <span className="font-medium">
+                          {item.name} x{item.quantity}
+                        </span>
+                        <span className="font-medium">
+                          {formatPrice(item.price * item.quantity)}
+                        </span>
+                      </div>
+                    )}
                     {idx < items.length - 1 && (
                       <hr className="border-gray-200 my-2" />
                     )}
@@ -435,8 +440,11 @@ export default function CheckoutPage() {
                         <div key={item.productId}>
                           {hasCust && (
                             <>
-                              <div className="text-sm font-semibold flex items-center gap-1">
+                              <div className="flex justify-between items-start gap-3 text-sm font-semibold">
                                 <span>{item.name}</span>
+                                <span className="shrink-0">
+                                  x{item.quantity} {formatPrice(item.price * item.quantity)}
+                                </span>
                               </div>
                               {cust.tamaño && (
                                 <div className="flex justify-between text-xs">
@@ -487,14 +495,16 @@ export default function CheckoutPage() {
                             </>
                           )}
 
-                          <div className="flex justify-between text-sm mt-1">
-                            <span className="text-gray-600">
-                              {item.name} x{item.quantity}
-                            </span>
-                            <span className="font-medium">
-                              {formatPrice(item.price * item.quantity)}
-                            </span>
-                          </div>
+                          {!hasCust && (
+                            <div className="flex justify-between text-sm mt-1">
+                              <span className="text-gray-600">
+                                {item.name} x{item.quantity}
+                              </span>
+                              <span className="font-medium">
+                                {formatPrice(item.price * item.quantity)}
+                              </span>
+                            </div>
+                          )}
 
                           {idx < items.length - 1 && (
                             <hr className="border-gray-200 my-2" />

@@ -232,7 +232,6 @@ export class PokeBowlService {
     const proteina = selectedItems.proteinas[0];
     const toppings = selectedItems.toppings || [];
     const agregados = selectedItems.agregados || [];
-    const salsas = selectedItems.salsas || [];
 
     // description kept for legacy flows but not relied upon
     const description = `Base: ${base}, Proteína: ${proteina}${
@@ -250,15 +249,6 @@ export class PokeBowlService {
       image: "/images/poke-bowl-2.jpg",
       categoryId: "poke-bowl",
       ingredients: [...toppings, ...agregados, ...(selectedItems.extraProteinas || [])],
-      customizations: {
-        tipo: "pokebowl",
-        tamaño,
-        base,
-        proteina,
-        toppings,
-        agregados,
-        salsas,
-      },
     };
   }
 
