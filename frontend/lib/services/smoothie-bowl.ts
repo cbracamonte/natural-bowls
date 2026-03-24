@@ -158,7 +158,7 @@ export class SmoothieBowlService {
 
     return {
       id: `smoothie-bowl-${Date.now()}`,
-      name: selectedSmoothie.name,
+      name: `🥣 ${selectedSmoothie.name}`,
       description:
         selectedToppings.length > 0
           ? `${selectedSmoothie.description} + Toppings: ${selectedToppings.join(", ")}`
