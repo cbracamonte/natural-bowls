@@ -15,7 +15,7 @@ export const wafflesPanqueques: Product[] = [
     name: "Waffle Fit",
     description: "Waffle de avena con frutas y miel.",
     price: 18.0,
-    image: "/icons/nb-logotipo.svg", // falta imagen
+    image: "/images/waffles-panqueques/waffle-fit.jpg",
     categoryId: "waffles-panqueques",
     ingredients: ["Harina de avena", "Frutas", "Miel"],
     featured: true,
