@@ -1,24 +1,24 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
-import Link from 'next/link';
-import Image from 'next/image';
-import { ArrowLeft, Minus, Plus, ShoppingBag } from 'lucide-react';
-import { getProductById, getProductsByCategory } from '@/data/products';
-import { useCart } from '@/context/CartContext';
-import { formatPrice } from '@/lib/utils/utils';
-import ProductCard from '@/components/products/ProductCard';
+import { useState } from "react";
+import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
+import Image from "next/image";
+import { ArrowLeft, Minus, Plus, ShoppingBag } from "lucide-react";
+import { getProductById, getProductsByCategory } from "@/data/products";
+import { useCart } from "@/context/CartContext";
+import { formatPrice } from "@/lib/utils/utils";
+import ProductCard from "@/components/products/ProductCard";
 
 const categoryNames: Record<string, string> = {
-  poke: 'Poke Bowl',
-  'smoothie-bowl': 'Smoothie Bowl',
-  bebidas: 'Bebida',
-  cafe: 'Café',
-  wraps: 'Wrap',
-  sandwiches: 'Sándwich',
-  ensaladas: 'Ensalada',
-  desayunos: 'Desayuno',
+  poke: "Poke Bowl",
+  "smoothie-bowl": "Smoothie Bowl",
+  bebidas: "Bebida",
+  cafe: "Café",
+  wraps: "Wrap",
+  sandwiches: "Sándwich",
+  ensaladas: "Ensalada",
+  desayunos: "Desayuno",
 };
 
 export default function ProductDetailPage() {
@@ -74,7 +74,7 @@ export default function ProductDetailPage() {
           {/* Image */}
           <div className="relative aspect-square rounded-3xl overflow-hidden shadow-lg">
             <Image
-              src={product.image}
+              src={product.image || "/icons/nb-logotipo.svg"}
               alt={product.name}
               fill
               className="object-cover"
@@ -95,7 +95,9 @@ export default function ProductDetailPage() {
 
             {/* Ingredients */}
             <div className="mb-6">
-              <h3 className="font-semibold text-[#5D4E37] mb-3">Ingredientes</h3>
+              <h3 className="font-semibold text-[#5D4E37] mb-3">
+                Ingredientes
+              </h3>
               <div className="flex flex-wrap gap-2">
                 {product.ingredients.map((ingredient, index) => (
                   <span
@@ -147,7 +149,7 @@ export default function ProductDetailPage() {
                 className="flex-1 inline-flex items-center justify-center px-8 py-3.5 bg-[#5D4E37] text-white rounded-full font-medium hover:bg-[#4A3E2C] transition-colors"
               >
                 <ShoppingBag className="w-5 h-5 mr-2" />
-                {added ? '¡Agregado!' : 'Agregar al Carrito'}
+                {added ? "¡Agregado!" : "Agregar al Carrito"}
               </button>
             </div>
 

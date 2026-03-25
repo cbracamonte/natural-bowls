@@ -7,7 +7,7 @@ export const smoothieBowls: Product[] = [
     description:
       "Base de plátano, mantequilla de maní, leche de almendras y cacao.",
     price: 21.0,
-    image: "/images/smoothie-bowl/chocopower.jpg",
+    image: "/icons/nb-logotipo.svg", // falta imagen
     categoryId: "smoothie-bowl",
     ingredients: [
       "Plátano",
@@ -21,7 +21,7 @@ export const smoothieBowls: Product[] = [
     name: "Mango Bowl",
     description: "Base de plátano, mango y yogurt natural. Fresco y tropical.",
     price: 23.0,
-    image: "/images/smoothie-bowl/mangobowl.jpg",
+    image: "/images/smoothie-bowl/mango-bowl.jpg",
     categoryId: "smoothie-bowl",
     ingredients: ["Plátano", "Mango", "Yogurt natural"],
     featured: true,
@@ -31,7 +31,7 @@ export const smoothieBowls: Product[] = [
     name: "Berry Bowl",
     description: "Base de plátano, fresa, arándano y leche de almendras.",
     price: 23.0,
-    image: "/images/smoothie-bowl/berrybowl.jpg",
+    image: "/icons/nb-logotipo.svg", // falta imagen
     categoryId: "smoothie-bowl",
     ingredients: ["Plátano", "Fresa", "Arándano", "Leche de almendras"],
   },
@@ -41,7 +41,7 @@ export const smoothieBowls: Product[] = [
     description:
       "Base de plátano, mango, espinaca y maracuyá. Energía natural.",
     price: 22.0,
-    image: "/images/smoothie-bowl/greenbowl.jpg",
+    image: "/images/smoothie-bowl/green-bowl.jpg",
     categoryId: "smoothie-bowl",
     ingredients: ["Plátano", "Mango", "Espinaca", "Maracuyá"],
   },
@@ -51,7 +51,7 @@ export const smoothieBowls: Product[] = [
     description:
       "Base de plátano, fresa, arándano y açaí. El clásico brasileño.",
     price: 25.0,
-    image: "/images/smoothie-bowl/acai-original.jpg",
+    image: "/icons/nb-logotipo.svg", // falta imagen
     categoryId: "smoothie-bowl",
     ingredients: ["Plátano", "Fresa", "Arándano", "Açaí"],
   },

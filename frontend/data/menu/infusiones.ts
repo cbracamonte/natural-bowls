@@ -6,7 +6,7 @@ export const infusiones: Product[] = [
     name: "Infusión Té y Canela",
     description: "Infusión caliente de té con canela.",
     price: 5.0,
-    image: "/images/infusiones/te-canela.jpg",
+    image: "/icons/nb-logotipo.svg", // falta imagen
     categoryId: "infusiones",
     ingredients: ["Té", "Canela"],
   },
@@ -15,7 +15,7 @@ export const infusiones: Product[] = [
     name: "Infusión Frutos Rojos",
     description: "Infusión caliente de frutos rojos.",
     price: 7.0,
-    image: "/images/infusiones/frutos-rojos.jpg",
+    image: "/icons/nb-logotipo.svg", // falta imagen
     categoryId: "infusiones",
     ingredients: ["Frutos rojos"],
   },
@@ -24,7 +24,7 @@ export const infusiones: Product[] = [
     name: "Infusión de Menta",
     description: "Infusión caliente refrescante de menta.",
     price: 7.0,
-    image: "/images/infusiones/menta.jpg",
+    image: "/icons/nb-logotipo.svg", // falta imagen
     categoryId: "infusiones",
     ingredients: ["Menta"],
   },
@@ -33,7 +33,7 @@ export const infusiones: Product[] = [
     name: "Leche con Chocolate",
     description: "Leche caliente con chocolate.",
     price: 8.0,
-    image: "/images/infusiones/leche-chocolate.jpg",
+    image: "/icons/nb-logotipo.svg", // falta imagen
     categoryId: "infusiones",
     ingredients: ["Leche", "Chocolate"],
   },
@@ -61,7 +61,7 @@ export const infusiones: Product[] = [
     name: "Berries Tea",
     description: "Infusión de frutos rojos y limón.",
     price: 11.0,
-    image: "/images/infusiones/berries-tea.jpg",
+    image: "/icons/nb-logotipo.svg", // falta imagen
     categoryId: "infusiones",
     ingredients: ["Frutos rojos", "Limón"],
   },

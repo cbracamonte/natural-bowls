@@ -15,7 +15,7 @@ export const milkshakes: Product[] = [
     name: "Milkshake de Berries",
     description: "Leche, berries congelados y crema batida.",
     price: 16.0,
-    image: "/images/milkshakes/milkshake-berries.jpg",
+    image: "/icons/nb-logotipo.svg", // falta imagen
     categoryId: "milkshakes",
     ingredients: ["Leche", "Berries", "Crema batida"],
   },

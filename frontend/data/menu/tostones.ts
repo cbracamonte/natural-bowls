@@ -7,7 +7,7 @@ export const tostones: Product[] = [
     description:
       "2 rodajas de pan campesino, palta, huevos revueltos, jamón y tomatitos confitados.",
     price: 23.0,
-    image: "/images/tostones/la-campestre.jpg",
+    image: "/icons/nb-logotipo.svg", // falta imagen
     categoryId: "tostones",
     ingredients: [
       "Pan campesino",
@@ -50,7 +50,7 @@ export const tostones: Product[] = [
     name: "La Caprese",
     description: "Pan masa madre, pesto, mozzarella y tomate confitado.",
     price: 17.5,
-    image: "/images/tostones/la-caprese.jpg",
+    image: "/icons/nb-logotipo.svg", // falta imagen
     categoryId: "tostones",
     ingredients: ["Pan masa madre", "Pesto", "Mozzarella", "Tomate confitado"],
   },
