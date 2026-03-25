@@ -15,7 +15,7 @@ export const parfaitsPuddings: Product[] = [
     name: "Chia Pudding",
     description: "Chia pudding, frutas a elección, granola, miel de abeja y yogurt griego",
     price: 16.5,
-    image: "/images/parfaits-puddings/chia-pudding.jpg",
+    image: "/icons/nb-logotipo.svg", // falta imagen
     categoryId: "parfaits-puddings",
     ingredients: ["Chía", "Frutas", "Miel", "Yogurt griego"],
   },

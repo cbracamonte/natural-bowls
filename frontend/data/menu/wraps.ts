@@ -7,7 +7,7 @@ export const wraps: Product[] = [
     description:
       "Tortilla de maíz, lechuga, tomate, palta, filete de pollo y salsa especial. Incluye camotes crocantes.",
     price: 15.5,
-    image: "/images/wraps/wrap-tradicional.jpg",
+    image: "/icons/nb-logotipo.svg", // falta imagen
     categoryId: "wraps",
     ingredients: [
       "Tortilla de maíz",
@@ -62,7 +62,7 @@ export const wraps: Product[] = [
     description:
       "Tortilla de maíz, pollo empanizado, lechuga, col morada, repollo y salsa thai. Incluye camotes crocantes.",
     price: 17.5,
-    image: "/images/wraps/wrap-thai.jpg",
+    image: "/icons/nb-logotipo.svg", // falta imagen
     categoryId: "wraps",
     ingredients: [
       "Tortilla de maíz",
@@ -80,7 +80,7 @@ export const wraps: Product[] = [
     description:
       "Tortilla de maíz, tofu, zucchini, lechuga, cebolla, palta y salsa de maní. Incluye camotes crocantes.",
     price: 17.0,
-    image: "/images/wraps/vegan-wrap.jpg",
+    image: "/icons/nb-logotipo.svg", // falta imagen
     categoryId: "wraps",
     ingredients: [
       "Tortilla de maíz",
