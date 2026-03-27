@@ -50,10 +50,10 @@ export default function HeroPokebowl() {
               <ArrowRight className="w-5 h-5 ml-2" />
             </Link>
             <Link
-              href="/carrito"
+              href="/menu"
               className="inline-flex items-center justify-center px-8 py-4 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white rounded-full font-bold text-lg border border-white/30 transition-all duration-300"
             >
-              Ordenar Ahora
+              Ver el Menú
             </Link>
           </div>
 

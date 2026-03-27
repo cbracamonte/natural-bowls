@@ -51,7 +51,7 @@ export const smoothieBowls: Product[] = [
     description:
       "Base de plátano, fresa, arándano y açaí. El clásico brasileño.",
     price: 25.0,
-    image: "/icons/nb-logotipo.svg", // falta imagen
+    image: "/images/smoothie-bowl/acai-original.jpg",
     categoryId: "smoothie-bowl",
     ingredients: ["Plátano", "Fresa", "Arándano", "Açaí"],
   },

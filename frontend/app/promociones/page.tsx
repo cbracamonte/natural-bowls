@@ -43,27 +43,26 @@ export default function PromocionesPage() {
                 Loyalty Card
               </h2>
               <p className="text-gray-600 mb-6">
-                Acumula sellos con cada compra de smoothie bowls o poke bowls y obtén
-                un bowl completamente gratis. ¡Es nuestra forma de agradecerte por elegirnos!
+                Acumula sellos con cada visita a nuestra tienda para  obtener descuentos y postres gratis.
               </p>
               <ul className="space-y-3 mb-8">
                 <li className="flex items-start gap-3">
-                  <div className="w-6 h-6 bg-[#9CB973] rounded-full flex items-center justify-center flex-shrink-0">
+                  <div className="w-6 h-6 bg-[#9CB973] rounded-full flex items-center justify-center shrink-0">
                     <span className="text-white text-sm">✓</span>
                   </div>
-                  <span className="text-gray-600">Gana 1 sello por cada bowl que compres</span>
+                  <span className="text-gray-600">Gana 1 sello cada vez que visites nuestro local.</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <div className="w-6 h-6 bg-[#9CB973] rounded-full flex items-center justify-center flex-shrink-0">
+                  <div className="w-6 h-6 bg-[#9CB973] rounded-full flex items-center justify-center shrink-0">
                     <span className="text-white text-sm">✓</span>
                   </div>
-                  <span className="text-gray-600">Completa 10 sellos y recibe un bowl gratis</span>
+                  <span className="text-gray-600">Recibirás 1 postre gratis en tu cuarta visita en nuestro local.</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <div className="w-6 h-6 bg-[#9CB973] rounded-full flex items-center justify-center flex-shrink-0">
+                  <div className="w-6 h-6 bg-[#9CB973] rounded-full flex items-center justify-center shrink-0">
                     <span className="text-white text-sm">✓</span>
                   </div>
-                  <span className="text-gray-600">Pide tu tarjeta en cualquiera de nuestras tiendas</span>
+                  <span className="text-gray-600">Válido solo para consumo en local.</span>
                 </li>
               </ul>
               <Link
@@ -214,7 +213,7 @@ export default function PromocionesPage() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
-              href="https://wa.me/51912341818"
+              href={buildWhatsAppUrl()}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center justify-center px-8 py-3.5 bg-[#5D4E37] text-white rounded-full font-medium hover:bg-[#4A3E2C] transition-colors"
@@ -235,3 +234,4 @@ export default function PromocionesPage() {
     </div>
   );
 }
+import { buildWhatsAppUrl } from "@/lib/utils/contact";
