@@ -1,6 +1,5 @@
 import { generatePageMetadata } from "@/lib/seo";
 import HeroPokebowl from "@/components/home/HeroPokebowl";
-import HowItWorks from "@/components/home/HowItWorks";
 import Categories from "@/components/home/Categories";
 import Featured from "@/components/home/Featured";
 import HeroSmoothiebowl from "@/components/home/HeroSmoothiebowl";
@@ -24,7 +23,7 @@ export default function Home() {
       <HeroPokebowl />
 
       {/* 2. Cómo funciona - Eliminar fricción y explicar el proceso */}
-      <HowItWorks />
+      {/* <HowItWorks /> */}
 
       {/* 3. Categorías - Mostrar opciones disponibles */}
       <Categories />

@@ -12,6 +12,7 @@ export default function SmoothieBowlBuilder({
 }: SmoothieBowlBuilderProps) {
   const router = useRouter();
   const { addItem } = useCart();
+  const SMOOTHIE_BUILDER_STORAGE_KEY = "natural-bowls-smoothie-builder";
 
   // Obtener smoothie pre-seleccionado
   const preselectedSmoothie = useMemo(() => {
@@ -23,22 +24,26 @@ export default function SmoothieBowlBuilder({
     return null;
   }, [smoothieOptions.preselectedSmoothieId, smoothieOptions.smoothies]);
 
-  const [selectedSmoothie, setSelectedSmoothie] = useState<Product | null>(
-    preselectedSmoothie,
-  );
-  const [selectedToppings, setSelectedToppings] = useState<string[]>([]);
-  const [addedToCart, setAddedToCart] = useState(false);
-  const [expandedSmoothies, setExpandedSmoothies] = useState(!preselectedSmoothie);
-  const [expandedToppings, setExpandedToppings] = useState(!!preselectedSmoothie);
+  const getInitialBuilderState = () => {
+    if (typeof window === "undefined") {
+      return {
+        selectedSmoothie: preselectedSmoothie,
+        selectedToppings: [] as string[],
+        expandedSmoothies: !preselectedSmoothie,
+        expandedToppings: !!preselectedSmoothie,
+      };
+    }
 
-  const SMOOTHIE_BUILDER_STORAGE_KEY = "natural-bowls-smoothie-builder";
-
-  // Persist selection so the user stays in context after adding to cart.
-  useEffect(() => {
-    if (typeof window === "undefined") return;
     try {
       const raw = localStorage.getItem(SMOOTHIE_BUILDER_STORAGE_KEY);
-      if (!raw) return;
+      if (!raw) {
+        return {
+          selectedSmoothie: preselectedSmoothie,
+          selectedToppings: [] as string[],
+          expandedSmoothies: !preselectedSmoothie,
+          expandedToppings: !!preselectedSmoothie,
+        };
+      }
 
       const parsed = JSON.parse(raw) as {
         selectedSmoothieId?: string | null;
@@ -47,22 +52,47 @@ export default function SmoothieBowlBuilder({
         expandedToppings?: boolean;
       };
 
-      if (parsed.selectedSmoothieId) {
-        const found = smoothieOptions.smoothies.find(
-          (s) => s.id === parsed.selectedSmoothieId,
-        );
-        if (found) setSelectedSmoothie(found);
-      }
+      const persistedSmoothie = parsed.selectedSmoothieId
+        ? smoothieOptions.smoothies.find((s) => s.id === parsed.selectedSmoothieId) || null
+        : null;
 
-      if (parsed.selectedToppings) setSelectedToppings(parsed.selectedToppings);
-      if (typeof parsed.expandedSmoothies === "boolean")
-        setExpandedSmoothies(parsed.expandedSmoothies);
-      if (typeof parsed.expandedToppings === "boolean")
-        setExpandedToppings(parsed.expandedToppings);
+      return {
+        selectedSmoothie: persistedSmoothie ?? preselectedSmoothie,
+        selectedToppings: parsed.selectedToppings ?? [],
+        expandedSmoothies:
+          typeof parsed.expandedSmoothies === "boolean"
+            ? parsed.expandedSmoothies
+            : !persistedSmoothie,
+        expandedToppings:
+          typeof parsed.expandedToppings === "boolean"
+            ? parsed.expandedToppings
+            : !!persistedSmoothie,
+      };
     } catch {
-      // ignore parse errors
+      return {
+        selectedSmoothie: preselectedSmoothie,
+        selectedToppings: [] as string[],
+        expandedSmoothies: !preselectedSmoothie,
+        expandedToppings: !!preselectedSmoothie,
+      };
     }
-  }, [smoothieOptions.smoothies]);
+  };
+
+  const initialBuilderState = getInitialBuilderState();
+
+  const [selectedSmoothie, setSelectedSmoothie] = useState<Product | null>(
+    initialBuilderState.selectedSmoothie,
+  );
+  const [selectedToppings, setSelectedToppings] = useState<string[]>(
+    initialBuilderState.selectedToppings,
+  );
+  const [addedToCart, setAddedToCart] = useState(false);
+  const [expandedSmoothies, setExpandedSmoothies] = useState(
+    initialBuilderState.expandedSmoothies,
+  );
+  const [expandedToppings, setExpandedToppings] = useState(
+    initialBuilderState.expandedToppings,
+  );
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -84,11 +114,14 @@ export default function SmoothieBowlBuilder({
   useEffect(() => {
     if (!addedToCart) return;
 
-    const timeoutId = window.setTimeout(() => {
-      setAddedToCart(false);
-    }, 2000);
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setAddedToCart(false);
+      }
+    };
 
-    return () => window.clearTimeout(timeoutId);
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
   }, [addedToCart]);
 
   // Usar servicios para cálculos
@@ -107,7 +140,7 @@ export default function SmoothieBowlBuilder({
   const missingToppings =
     SmoothieBowlService.getMissingToppingsCount(selectedToppings);
 
-  const handleAddToCart = (action: "stay" | "checkout") => {
+  const handleAddToCart = () => {
     const validation = SmoothieBowlService.validateBowlRequirements(
       selectedSmoothie,
       selectedToppings,
@@ -127,18 +160,24 @@ export default function SmoothieBowlBuilder({
 
     addItem(bowlProduct, 1);
     setAddedToCart(true);
+  };
 
-    // Keep current selection so the user stays in context and can continue customizing
-    // and/or adding more smoothies without the page jumping.
-    
-    if (action === "checkout") {
-      router.push("/checkout");
-    }
-    // other actions (including "stay") do nothing
+  const handleAddAnother = () => {
+    setSelectedSmoothie(preselectedSmoothie);
+    setSelectedToppings([]);
+    setExpandedSmoothies(!preselectedSmoothie);
+    setExpandedToppings(!!preselectedSmoothie);
+    setAddedToCart(false);
+  };
+
+  const handleGoToCheckout = () => {
+    setAddedToCart(false);
+    router.push("/checkout");
   };
 
   return (
-    <div className="mb-16">
+    <>
+      <div className="mb-16">
       <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-0">
           {/* LEFT PANEL - Description & Options */}
@@ -356,24 +395,17 @@ export default function SmoothieBowlBuilder({
                   type="button"
                   onClick={(e) => {
                     (e.currentTarget as HTMLButtonElement).blur();
-                    handleAddToCart("stay");
+                    handleAddToCart();
                   }}
                   disabled={!selectedSmoothie || missingToppings > 0}
                   className={`w-full py-2 px-4 rounded-lg font-bold transition-all ${
                     selectedSmoothie && missingToppings === 0
-                      ? addedToCart
-                        ? "bg-[#6B8E4E] text-white"
-                        : "bg-[#9CB973] text-white hover:bg-[#6B8E4E] cursor-pointer"
+                      ? "bg-[#9CB973] text-white hover:bg-[#6B8E4E] cursor-pointer"
                       : "bg-gray-200 text-gray-400 cursor-not-allowed"
                   }`}
                 >
-                  {addedToCart ? "✅ Agregado al carrito" : "🛒 Agregar al carrito"}
+                  🛒 Agregar al carrito
                 </button>
-                {addedToCart && (
-                  <p className="text-sm font-medium text-[#6B8E4E]">
-                    Tu smoothie bowl se agrego correctamente al carrito.
-                  </p>
-                )}
               </div>
             </div>
           </div>
@@ -517,6 +549,56 @@ export default function SmoothieBowlBuilder({
           </div>
         </div>
       </div>
-    </div>
+      </div>
+
+      {addedToCart && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setAddedToCart(false)}
+            aria-hidden="true"
+          />
+
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="added-to-cart-title"
+            className="relative w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl"
+          >
+            <div className="text-center">
+              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#9CB973]/15 text-2xl">
+                ✓
+              </div>
+              <h3
+                id="added-to-cart-title"
+                className="text-2xl font-bold text-[#5D4E37]"
+              >
+                Agregado correctamente al Carrito
+              </h3>
+              <p className="mt-2 text-sm text-gray-600">
+                Tu smoothie bowl ya esta listo en tu pedido.
+              </p>
+            </div>
+
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+              <button
+                type="button"
+                onClick={handleAddAnother}
+                className="flex-1 rounded-xl border-2 border-[#9CB973] px-4 py-3 font-bold text-[#6B8E4E] transition-all hover:bg-[#9CB973]/10"
+              >
+                Agregar Otro
+              </button>
+              <button
+                type="button"
+                onClick={handleGoToCheckout}
+                className="flex-1 rounded-xl bg-[#9CB973] px-4 py-3 font-bold text-white transition-all hover:bg-[#6B8E4E]"
+              >
+                Ir a pagar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

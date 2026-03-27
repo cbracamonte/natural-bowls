@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Instagram, Facebook, MapPin, Phone, Clock } from 'lucide-react';
-import { BUSINESS_HOURS } from '@/lib/seo/constants';
+import { BUSINESS_HOURS, SITE_CONFIG } from '@/lib/seo/constants';
 
 export default function Footer() {
   return (
@@ -99,7 +99,7 @@ export default function Footer() {
               </div>
               <div className="flex items-center space-x-3">
                 <Phone className="w-5 h-5 text-[#9CB973] shrink-0" aria-hidden />
-                <a href="tel:+51912341818" className="hover:text-[#9CB973]">912 341 818</a>
+                <a href={`tel:${SITE_CONFIG.phone.replace(/\s+/g, "")}`} className="hover:text-[#9CB973]">{SITE_CONFIG.phone.replace("+51 ", "")}</a>
               </div>
               <div className="flex flex-col space-y-1">
                 <div className="flex items-center space-x-3">

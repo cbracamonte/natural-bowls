@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import { PokeBowlService, SelectedBowlItems } from "@/lib/services";
 import { POKEBOWLS_CATEGORY_LABELS } from "@/data/poke-bowl-nutrition-data";
@@ -10,6 +11,7 @@ import { PokeBowlBuilderProps } from "@/lib/schemas";
 
 export default function PokeBowlBuilder({ pokeOptions }: PokeBowlBuilderProps) {
   const { addItem } = useCart();
+  const router = useRouter();
 
   const [selectedItems, setSelectedItems] = useState<SelectedBowlItems>({});
   const [addedToCart, setAddedToCart] = useState(false);
@@ -84,11 +86,14 @@ export default function PokeBowlBuilder({ pokeOptions }: PokeBowlBuilderProps) {
   useEffect(() => {
     if (!addedToCart) return;
 
-    const timeoutId = window.setTimeout(() => {
-      setAddedToCart(false);
-    }, 2000);
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setAddedToCart(false);
+      }
+    };
 
-    return () => window.clearTimeout(timeoutId);
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
   }, [addedToCart]);
 
   const handleAddToCart = () => {
@@ -101,6 +106,18 @@ export default function PokeBowlBuilder({ pokeOptions }: PokeBowlBuilderProps) {
     const bowlProduct = PokeBowlService.createBowlProduct(selectedItems, tamaño);
     addItem(bowlProduct, 1);
     setAddedToCart(true);
+  };
+
+  const handleGoToCheckout = () => {
+    setAddedToCart(false);
+    router.push("/checkout");
+  };
+
+  const handleAddAnother = () => {
+    setSelectedItems({});
+    setTamaño(pokeOptions.preselectedSize || "regular");
+    setExpandedCategories(defaultExpanded);
+    setAddedToCart(false);
   };
 
   const getDisplayItems = (category: string): string[] => {
@@ -131,7 +148,8 @@ export default function PokeBowlBuilder({ pokeOptions }: PokeBowlBuilderProps) {
   const isFormValid = validationMessages.length === 0;
 
   return (
-    <div className="mb-16">
+    <>
+      <div className="mb-16">
       <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-0">
           {/* LEFT PANEL - Description & Options */}
@@ -337,19 +355,12 @@ export default function PokeBowlBuilder({ pokeOptions }: PokeBowlBuilderProps) {
                   disabled={!isFormValid}
                   className={`w-full py-2 px-4 rounded-lg font-bold transition-all ${
                     isFormValid
-                      ? addedToCart
-                        ? "bg-[#6B8E4E] text-white"
-                        : "bg-[#9CB973] text-white hover:bg-[#6B8E4E] cursor-pointer"
+                      ? "bg-[#9CB973] text-white hover:bg-[#6B8E4E] cursor-pointer"
                       : "bg-gray-200 text-gray-400 cursor-not-allowed"
                   }`}
                 >
-                  {addedToCart ? "✅ Agregado al carrito" : "🛒 Agregar al carrito"}
+                  🛒 Agregar al carrito
                 </button>
-                {addedToCart && (
-                  <p className="text-sm font-medium text-[#6B8E4E]">
-                    Tu poke bowl se agrego correctamente al carrito.
-                  </p>
-                )}
               </div>
             </div>
           </div>
@@ -528,6 +539,56 @@ export default function PokeBowlBuilder({ pokeOptions }: PokeBowlBuilderProps) {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+
+      {addedToCart && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setAddedToCart(false)}
+            aria-hidden="true"
+          />
+
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="added-to-cart-title"
+            className="relative w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl"
+          >
+            <div className="text-center">
+              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#9CB973]/15 text-2xl">
+                ✓
+              </div>
+              <h3
+                id="added-to-cart-title"
+                className="text-2xl font-bold text-[#5D4E37]"
+              >
+                Agregado correctamente al Carrito
+              </h3>
+              <p className="mt-2 text-sm text-gray-600">
+                Tu poke bowl ya esta listo en tu pedido.
+              </p>
+            </div>
+
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+              <button
+                type="button"
+                onClick={handleAddAnother}
+                className="flex-1 rounded-xl border-2 border-[#9CB973] px-4 py-3 font-bold text-[#6B8E4E] transition-all hover:bg-[#9CB973]/10"
+              >
+                Agregar Otro
+              </button>
+              <button
+                type="button"
+                onClick={handleGoToCheckout}
+                className="flex-1 rounded-xl bg-[#9CB973] px-4 py-3 font-bold text-white transition-all hover:bg-[#6B8E4E]"
+              >
+                Ir a pagar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

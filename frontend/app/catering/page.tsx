@@ -1,16 +1,24 @@
-import Image from 'next/image';
-import { generatePageMetadata } from '@/lib/seo';
+import Image from "next/image";
+import { generatePageMetadata } from "@/lib/seo";
+import { buildWhatsAppUrl } from "@/lib/utils/contact";
 
 export const metadata = generatePageMetadata({
-  title: 'Catering & Eventos',
+  title: "Catering & Eventos",
   description:
-    'Servicio de catering saludable para eventos corporativos, cumpleaños y celebraciones en Trujillo. Cotiza tu evento con Natural Bowls.',
-  keywords: ['catering saludable', 'catering Trujillo', 'catering eventos', 'bowl catering'],
-  path: '/catering',
+    "Servicio de catering saludable para eventos corporativos, cumpleaños y celebraciones en Trujillo. Cotiza tu evento con Natural Bowls.",
+  keywords: [
+    "catering saludable",
+    "catering Trujillo",
+    "catering eventos",
+    "bowl catering",
+  ],
+  path: "/catering",
 });
 
 export default function CateringPage() {
-  const whatsappLink = "https://wa.me/51912341818?text=Hola%20Natural%20Bowls%2C%20quisiera%20m%C3%A1s%20informaci%C3%B3n%20sobre%20su%20servicio%20de%20catering%20para%20un%20evento.";
+  const whatsappLink = buildWhatsAppUrl(
+    "Hola Natural Bowls, quisiera más información sobre su servicio de catering para un evento.",
+  );
 
   return (
     <div className="bg-white min-h-screen">
@@ -31,19 +39,12 @@ export default function CateringPage() {
             EVENTOS Y REUNIONES
           </span>
           <h1 className="text-5xl md:text-6xl font-bold text-[#5D4E37] mb-6">
-            Catering <span className="text-[#8FB355]">Natural</span>
+            Natural <span className="text-[#8FB355]">Catering</span>
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-8">
-            Lleva la frescura y el sabor de Natural Bowls a tus eventos corporativos, reuniones familiares o celebraciones especiales.
+            Lleva la frescura y el sabor de Natural Bowls a tus eventos
+            corporativos, reuniones familiares o celebraciones especiales.
           </p>
-          <a
-            href={whatsappLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center px-8 py-3 rounded-full bg-[#8FB355] text-white font-semibold hover:bg-[#7a9c46] transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 duration-200"
-          >
-            Cotizar Evento
-          </a>
         </div>
       </section>
 
@@ -55,14 +56,15 @@ export default function CateringPage() {
               Una experiencia saludable para tus invitados
             </h2>
             <p className="text-gray-600 text-lg">
-              Olvídate de lo convencional. Ofrecemos una propuesta gastronómica fresca, colorida y nutritiva que encantará a todos. Nuestros bowls, wraps y opciones saludables son preparados con ingredientes de la más alta calidad, seleccionados diariamente para garantizar el mejor sabor.
+              Te Ofrecemos novedosas y saludables propuestas, para compartir con
+              amigos, activaciones, reuniones, eventos corporativos, y más.
+              Ingredientes 100% frescos y naturales
             </p>
             <ul className="space-y-4 pt-4">
               {[
-                "Ingredientes 100% frescos y naturales",
-                "Opciones veganas, vegetarianas y sin gluten",
-                "Presentación eco-amigable",
-                "Menús personalizados según tu presupuesto"
+                "Opciones personalizadas para cada tipo de evento.",
+                "Presentación eco-amigable.",
+                "Menús personalizados según tu presupuesto.",
               ].map((item, index) => (
                 <li key={index} className="flex items-center text-gray-700">
                   <span className="w-2 h-2 bg-[#8FB355] rounded-full mr-3"></span>
@@ -90,10 +92,11 @@ export default function CateringPage() {
               Nuestras Propuestas
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              Desde coffee breaks saludables hasta almuerzos corporativos completos.
+              Desde coffee breaks saludables hasta almuerzos corporativos
+              completos.
             </p>
           </div>
-          
+
           <div className="grid md:grid-cols-3 gap-8">
             {/* Item 1 */}
             <div className="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300">
@@ -105,9 +108,26 @@ export default function CateringPage() {
                   className="object-cover group-hover:scale-110 transition-transform duration-500"
                 />
               </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-[#5D4E37] mb-2">Activaciones</h3>
-                <p className="text-gray-600">Smoothie bowls, tostadas de aguacate, jugos prensados en frío y café de especialidad.</p>
+              <div className="p-6 text-center flex flex-col items-center">
+                <h3 className="text-xl font-bold text-[#5D4E37] mb-2">
+                  Activaciones
+                </h3>
+                <p className="text-gray-600 max-w-sm">
+                  Si tienes un evento y quieres que nuestra marca este presente
+                  con activaciones, o algún catering, contáctanos.
+                </p>
+                <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+                  <a
+                    href={buildWhatsAppUrl(
+                      "Hola Natural Bowls, quiero cotizar la opción de Activaciones para mi evento.",
+                    )}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center px-8 py-4 bg-[#4D7A30] hover:bg-[#3E6B22] text-white rounded-full font-bold text-lg transition-all duration-300 transform hover:scale-105 shadow-xl"
+                  >
+                    Cotiza Aquí
+                  </a>
+                </div>
               </div>
             </div>
 
@@ -115,15 +135,31 @@ export default function CateringPage() {
             <div className="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300">
               <div className="relative h-64 overflow-hidden">
                 <Image
-                  src="/images/wraps.jpg"
+                  src="/images/lunch-boxes.jpg"
                   alt="Lunch Boxes"
                   fill
                   className="object-cover group-hover:scale-110 transition-transform duration-500"
                 />
               </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-[#5D4E37] mb-2">Lunch Boxes</h3>
-                <p className="text-gray-600">Wraps, sándwiches gourmet y ensaladas frescas en empaques individuales listos para comer.</p>
+              <div className="p-6 text-center flex flex-col items-center">
+                <h3 className="text-xl font-bold text-[#5D4E37] mb-2">
+                  Lunch Boxes
+                </h3>
+                <p className="text-gray-600 max-w-sm">
+                  Para tus eventos corporativos o fechas especiales, regala lunch boxes y comparte con tu comunidad.
+                </p>
+                <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+                  <a
+                    href={buildWhatsAppUrl(
+                      "Hola Natural Bowls, quiero cotizar la opción de Lunch Boxes para mi evento.",
+                    )}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center px-8 py-4 bg-[#4D7A30] hover:bg-[#3E6B22] text-white rounded-full font-bold text-lg transition-all duration-300 transform hover:scale-105 shadow-xl"
+                  >
+                    Cotiza Aquí
+                  </a>
+                </div>
               </div>
             </div>
 
@@ -137,9 +173,25 @@ export default function CateringPage() {
                   className="object-cover group-hover:scale-110 transition-transform duration-500"
                 />
               </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-[#5D4E37] mb-2">Estación de Bowls</h3>
-                <p className="text-gray-600">Una barra interactiva donde tus invitados pueden armar sus propios poke bowls o ensaladas.</p>
+              <div className="p-6 text-center flex flex-col items-center">
+                <h3 className="text-xl font-bold text-[#5D4E37] mb-2">
+                  Poke Party
+                </h3>
+                <p className="text-gray-600 max-w-sm">
+                  Lleva nuestra barra de pokes a tu mesa, arma tus propios poke bowls y ensalada junto a tus invitados.
+                </p>
+                <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+                  <a
+                    href={buildWhatsAppUrl(
+                      "Hola Natural Bowls, quiero cotizar la opción de Poke Partyocione para mi evento.",
+                    )}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center px-8 py-4 bg-[#4D7A30] hover:bg-[#3E6B22] text-white rounded-full font-bold text-lg transition-all duration-300 transform hover:scale-105 shadow-xl"
+                  >
+                    Cotiza Aquí
+                  </a>
+                </div>
               </div>
             </div>
           </div>
@@ -149,7 +201,7 @@ export default function CateringPage() {
       {/* CTA Section */}
       <section className="py-24 bg-[#5D4E37] relative overflow-hidden">
         <div className="absolute inset-0 opacity-10">
-           <Image
+          <Image
             src="/icons/monstera-pattern.svg"
             alt="Pattern"
             fill
@@ -161,7 +213,8 @@ export default function CateringPage() {
             ¿Listo para tu próximo evento?
           </h2>
           <p className="text-white/80 text-xl mb-10 max-w-2xl mx-auto">
-            Cuéntanos qué necesitas y nosotros nos encargamos del resto. Hacemos que comer saludable sea fácil y delicioso.
+            Cuéntanos qué necesitas y nosotros nos encargamos del resto. Hacemos
+            que comer saludable sea fácil y delicioso.
           </p>
           <a
             href={whatsappLink}
