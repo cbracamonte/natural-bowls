@@ -17,8 +17,8 @@ import { VerifyEmailUseCase } from '../application/use-cases/verify-email.usecas
 @Controller('auth')
 export class AuthController {
   constructor(
-    private readonly authOrchestrator: AuthOrchestrator,
-    private readonly verifyEmailUseCase: VerifyEmailUseCase,
+    private readonly authOrchestrator: AuthOrchestrator, 
+    private readonly verifyEmailUseCase: VerifyEmailUseCase, 
     private readonly resendVerificationUseCase: ResendVerificationUseCase
   ) { }
 
