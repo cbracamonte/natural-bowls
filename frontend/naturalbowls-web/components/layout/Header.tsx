@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
-import { ShoppingBag, Menu, X } from "lucide-react";
+import { ShoppingBag, Menu, X, User, ChevronDown } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 
 import ReservationModal from "@/components/reservation/ReservationModal";
@@ -11,27 +11,25 @@ import ReservationModal from "@/components/reservation/ReservationModal";
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isReservationOpen, setIsReservationOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [touchStart, setTouchStart] = useState(0);
   const [isHydrated] = useState(true);
   const menuRef = useRef<HTMLDivElement>(null);
+  const dropdownRef = useRef<HTMLLIElement>(null);
   const { itemCount } = useCart();
 
-  /* Split navigation for desktop */
-  const leftNavigation = [
+  /* Main navigation — visible in desktop navbar */
+  const mainNavigation = [
     { name: "Inicio", href: "/" },
-    { name: "Menú", href: "/menu" },
     { name: "Pide tu Bowl", href: "/bowls" },
-  ];
-
-  const rightNavigation = [
-    { name: "Catering", href: "/catering" },
     { name: "Promociones", href: "/promociones" },
-    { name: "Nosotros", href: "/nosotros" },
-    { name: "Ubicación", href: "/#ubicacion" },
   ];
 
-  // Combined for mobile
-  const allNavigation = [...leftNavigation, ...rightNavigation];
+  /* Secondary navigation — dropdown + mobile menu */
+  const secondaryNavigation = [
+    { name: "Nosotros", href: "/nosotros" },
+    { name: "Catering", href: "/catering" },
+  ];
 
   // Handle swipe to close menu
   useEffect(() => {
@@ -59,11 +57,22 @@ export default function Header() {
     };
   }, [isMenuOpen, touchStart]);
 
+  // Close dropdown on click outside
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
     <>
-      <header className="bg-white sticky top-0 z-30 shadow-sm overflow-hidden" role="banner">
+      <header className="bg-white sticky top-0 z-30 shadow-sm" role="banner">
         {/* Monstera background decoration */}
-        <div className="absolute inset-0 pointer-events-none select-none" aria-hidden="true">
+        <div className="absolute inset-0 pointer-events-none select-none overflow-hidden" aria-hidden="true">
           <Image
             src="/icons/monstera-bg-1.svg"
             alt=""
@@ -74,16 +83,16 @@ export default function Header() {
         </div>
         {/* Desktop Navigation */}
         <nav
-          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative"
           aria-label="Navegación principal"
         >
-          <div className="flex justify-center items-center h-24 md:h-28 relative">
-            {/* Left Navigation */}
+          <div className="flex items-center justify-between h-24 md:h-28">
+            {/* Left Navigation (Desktop) */}
             <ul
-              className="hidden lg:flex items-center space-x-6 absolute left-0"
+              className="hidden lg:flex items-center gap-6"
               role="list"
             >
-              {leftNavigation.map((item) => (
+              {mainNavigation.map((item) => (
                 <li key={item.name}>
                   <Link
                     href={item.href}
@@ -93,58 +102,85 @@ export default function Header() {
                   </Link>
                 </li>
               ))}
+
+              {/* Dropdown "Más" */}
+              <li ref={dropdownRef} className="relative">
+                <button
+                  onClick={() => setIsDropdownOpen((prev) => !prev)}
+                  className="flex items-center gap-1 text-[#8B7355] hover:text-[#6B8E4E] font-semibold text-sm transition-colors"
+                  aria-expanded={isDropdownOpen}
+                  aria-haspopup="true"
+                >
+                  Más
+                  <ChevronDown
+                    className={`w-4 h-4 transition-transform duration-200 ${
+                      isDropdownOpen ? "rotate-180" : ""
+                    }`}
+                    aria-hidden
+                  />
+                </button>
+                {isDropdownOpen && (
+                  <ul
+                    className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-44 bg-white rounded-xl shadow-xl border border-gray-100 py-1.5 z-50 animate-[fadeIn_150ms_ease-out]"
+                    role="list"
+                  >
+                    {secondaryNavigation.map((item) => (
+                      <li key={item.name}>
+                        <Link
+                          href={item.href}
+                          className="block px-4 py-2.5 text-[#8B7355] hover:text-[#6B8E4E] hover:bg-[#F9FBE7] text-sm font-medium transition-colors rounded-lg mx-1"
+                          onClick={() => setIsDropdownOpen(false)}
+                        >
+                          {item.name}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+
               <li>
                 <button
                   onClick={() => setIsReservationOpen(true)}
-                  className="border-2 border-[#5D4E37] text-[#5D4E37] rounded-full px-5 py-2 font-semibold text-sm hover:bg-[#5D4E37] hover:text-white transition-all transform hover:scale-105"
+                  className="border-2 border-[#5D4E37] text-[#5D4E37] rounded-full px-5 py-2 font-semibold text-sm hover:bg-[#5D4E37] hover:text-white transition-all"
                 >
                   Reserva
                 </button>
               </li>
             </ul>
 
-            {/* Center Logo */}
-            <Link href="/" className="shrink-0" aria-label="Ir al inicio">
-              {/* Mobile Logo */}
+            {/* Logo (Center) */}
+            <Link href="/" className="shrink-0 lg:absolute lg:left-1/2 lg:-translate-x-1/2" aria-label="Ir al inicio">
               <Image
                 src="/icons/nb-isotipo.svg"
                 alt="Natural Bowls"
-                width={64}
-                height={64}
-                className="h-14 w-14 md:h-16 md:w-16 lg:hidden"
+                width={72}
+                height={72}
+                className="h-16 w-16 md:h-18 md:w-18 lg:hidden"
                 priority
               />
-              {/* Desktop Logo - Large and centered */}
               <Image
                 src="/icons/nb-logotipo.svg"
                 alt="Natural Bowls"
                 width={220}
                 height={80}
-                className="hidden lg:block h-20 w-auto object-contain filter drop-shadow-sm"
+                className="hidden lg:block h-20 w-auto object-contain"
                 priority
               />
             </Link>
 
-            {/* Right Section */}
-            <div className="flex items-center space-x-2 md:space-x-4 absolute right-0">
-              {/* Right Navigation Links (Desktop) */}
-              <ul
-                className="hidden lg:flex items-center space-x-6 mr-4"
-                role="list"
+            {/* Right Actions */}
+            <div className="flex items-center gap-1 md:gap-2">
+              {/* Auth (Desktop) */}
+              <Link
+                href="/login"
+                className="hidden lg:inline-flex items-center gap-1.5 px-3 py-2 text-[#5D4E37] hover:text-[#6B8E4E] font-semibold text-sm transition-colors"
               >
-                {rightNavigation.map((item) => (
-                  <li key={item.name}>
-                    <Link
-                      href={item.href}
-                      className="text-[#5D4E37] hover:text-[#6B8E4E] font-semibold text-sm transition-colors"
-                    >
-                      {item.name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
+                <User className="w-4 h-4" aria-hidden />
+                Entrar
+              </Link>
 
-              {/* Cart Button */}
+              {/* Cart */}
               <Link
                 href="/carrito"
                 className="relative p-2 text-[#5D4E37] hover:text-[#6B8E4E] transition-colors"
@@ -161,7 +197,7 @@ export default function Header() {
                 )}
               </Link>
 
-              {/* Desktop CTA Button */}
+              {/* Ordenar CTA (Desktop) */}
               <Link
                 href="/menu"
                 className="hidden md:inline-flex items-center px-5 py-2.5 bg-[#5D4E37] text-white rounded-full font-semibold hover:bg-[#4A3E2C] transition-all hover:shadow-md text-sm"
@@ -220,9 +256,10 @@ export default function Header() {
               </div>
 
               {/* Navigation Items */}
-              <nav className="p-6 space-y-1">
+              <nav className="p-6">
+                {/* Main Links */}
                 <ul role="list" className="space-y-1">
-                  {allNavigation.map((item) => (
+                  {mainNavigation.map((item) => (
                     <li key={item.name}>
                       <Link
                         href={item.href}
@@ -232,11 +269,42 @@ export default function Header() {
                         {item.name}
                       </Link>
                     </li>
-                  ))}{" "}
+                  ))}
                 </ul>
 
-                {/* CTA Buttons in Menu */}
-                <div className="mt-6 space-y-3 px-4">
+                {/* Secondary Links */}
+                <div className="border-t border-gray-100 mt-3 pt-3">
+                  <p className="px-4 pb-1 text-xs font-semibold text-gray-400 uppercase tracking-wider">
+                    Más
+                  </p>
+                  <ul role="list" className="space-y-1">
+                    {secondaryNavigation.map((item) => (
+                      <li key={item.name}>
+                        <Link
+                          href={item.href}
+                          className="block px-4 py-3 text-[#5D4E37]/70 hover:text-[#6B8E4E] hover:bg-gray-50 font-medium transition-colors"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          {item.name}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Auth Link */}
+                <div className="border-t border-gray-100 mt-3 pt-4 px-4">
+                  <Link
+                    href="/login"
+                    className="block w-full py-3 border-2 border-[#5D4E37] text-[#5D4E37] rounded-full font-semibold text-center hover:bg-[#5D4E37] hover:text-white transition-all"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Entrar
+                  </Link>
+                </div>
+
+                {/* CTA Buttons */}
+                <div className="mt-4 space-y-3 px-4">
                   <button
                     onClick={() => {
                       setIsMenuOpen(false);
