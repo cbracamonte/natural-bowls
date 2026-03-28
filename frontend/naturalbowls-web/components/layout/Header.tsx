@@ -26,6 +26,7 @@ export default function Header() {
   const rightNavigation = [
     { name: "Catering", href: "/catering" },
     { name: "Promociones", href: "/promociones" },
+    { name: "Nosotros", href: "/nosotros" },
     { name: "Ubicación", href: "/#ubicacion" },
   ];
 

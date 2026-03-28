@@ -15,6 +15,7 @@ export const SITE_CONFIG = {
   phone: "+51 912 341 818",
   address: "Av. América Sur 3875, Trujillo - Perú",
   locale: "es_ES",
+  libroReclamacionesUrl: "#",
 } as const;
 
 export const BUSINESS_HOURS = {
