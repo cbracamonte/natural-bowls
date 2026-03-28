@@ -1,0 +1,604 @@
+"use client";
+
+import { useState, useMemo, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+import { useCart } from "@/context/CartContext";
+import { Product, SmoothieBowlBuilderProps } from "@/lib/schemas";
+import { SmoothieBowlService } from "@/lib/services";
+
+export default function SmoothieBowlBuilder({
+  smoothieOptions,
+}: SmoothieBowlBuilderProps) {
+  const router = useRouter();
+  const { addItem } = useCart();
+  const SMOOTHIE_BUILDER_STORAGE_KEY = "natural-bowls-smoothie-builder";
+
+  // Obtener smoothie pre-seleccionado
+  const preselectedSmoothie = useMemo(() => {
+    if (smoothieOptions.preselectedSmoothieId) {
+      return smoothieOptions.smoothies.find(
+        (s) => s.id === smoothieOptions.preselectedSmoothieId,
+      ) || null;
+    }
+    return null;
+  }, [smoothieOptions.preselectedSmoothieId, smoothieOptions.smoothies]);
+
+  const getInitialBuilderState = () => {
+    if (typeof window === "undefined") {
+      return {
+        selectedSmoothie: preselectedSmoothie,
+        selectedToppings: [] as string[],
+        expandedSmoothies: !preselectedSmoothie,
+        expandedToppings: !!preselectedSmoothie,
+      };
+    }
+
+    try {
+      const raw = localStorage.getItem(SMOOTHIE_BUILDER_STORAGE_KEY);
+      if (!raw) {
+        return {
+          selectedSmoothie: preselectedSmoothie,
+          selectedToppings: [] as string[],
+          expandedSmoothies: !preselectedSmoothie,
+          expandedToppings: !!preselectedSmoothie,
+        };
+      }
+
+      const parsed = JSON.parse(raw) as {
+        selectedSmoothieId?: string | null;
+        selectedToppings?: string[];
+        expandedSmoothies?: boolean;
+        expandedToppings?: boolean;
+      };
+
+      const persistedSmoothie = parsed.selectedSmoothieId
+        ? smoothieOptions.smoothies.find((s) => s.id === parsed.selectedSmoothieId) || null
+        : null;
+
+      return {
+        selectedSmoothie: persistedSmoothie ?? preselectedSmoothie,
+        selectedToppings: parsed.selectedToppings ?? [],
+        expandedSmoothies:
+          typeof parsed.expandedSmoothies === "boolean"
+            ? parsed.expandedSmoothies
+            : !persistedSmoothie,
+        expandedToppings:
+          typeof parsed.expandedToppings === "boolean"
+            ? parsed.expandedToppings
+            : !!persistedSmoothie,
+      };
+    } catch {
+      return {
+        selectedSmoothie: preselectedSmoothie,
+        selectedToppings: [] as string[],
+        expandedSmoothies: !preselectedSmoothie,
+        expandedToppings: !!preselectedSmoothie,
+      };
+    }
+  };
+
+  const initialBuilderState = getInitialBuilderState();
+
+  const [selectedSmoothie, setSelectedSmoothie] = useState<Product | null>(
+    initialBuilderState.selectedSmoothie,
+  );
+  const [selectedToppings, setSelectedToppings] = useState<string[]>(
+    initialBuilderState.selectedToppings,
+  );
+  const [addedToCart, setAddedToCart] = useState(false);
+  const [expandedSmoothies, setExpandedSmoothies] = useState(
+    initialBuilderState.expandedSmoothies,
+  );
+  const [expandedToppings, setExpandedToppings] = useState(
+    initialBuilderState.expandedToppings,
+  );
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    try {
+      localStorage.setItem(
+        SMOOTHIE_BUILDER_STORAGE_KEY,
+        JSON.stringify({
+          selectedSmoothieId: selectedSmoothie?.id ?? null,
+          selectedToppings,
+          expandedSmoothies,
+          expandedToppings,
+        }),
+      );
+    } catch {
+      // ignore write errors
+    }
+  }, [selectedSmoothie, selectedToppings, expandedSmoothies, expandedToppings]);
+
+  useEffect(() => {
+    if (!addedToCart) return;
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setAddedToCart(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, [addedToCart]);
+
+  // Usar servicios para cálculos
+  const nutrition = SmoothieBowlService.calculateNutrition(
+    selectedSmoothie,
+    selectedToppings,
+  );
+  const totalPrice = SmoothieBowlService.calculateTotalPrice(
+    selectedSmoothie,
+    selectedToppings,
+  );
+  const maxToppings = SmoothieBowlService.getMaxToppings();
+  const toppingsFull = !SmoothieBowlService.canSelectMoreToppings(
+    selectedToppings,
+  );
+  const missingToppings =
+    SmoothieBowlService.getMissingToppingsCount(selectedToppings);
+
+  const handleAddToCart = () => {
+    const validation = SmoothieBowlService.validateBowlRequirements(
+      selectedSmoothie,
+      selectedToppings,
+    );
+
+    if (!validation.isValid) {
+      alert(validation.message);
+      return;
+    }
+
+    if (!selectedSmoothie) return;
+
+    const bowlProduct = SmoothieBowlService.createBowlProduct(
+      selectedSmoothie,
+      selectedToppings,
+    );
+
+    addItem(bowlProduct, 1);
+    setAddedToCart(true);
+  };
+
+  const handleAddAnother = () => {
+    setSelectedSmoothie(preselectedSmoothie);
+    setSelectedToppings([]);
+    setExpandedSmoothies(!preselectedSmoothie);
+    setExpandedToppings(!!preselectedSmoothie);
+    setAddedToCart(false);
+  };
+
+  const handleGoToCheckout = () => {
+    setAddedToCart(false);
+    router.push("/checkout");
+  };
+
+  return (
+    <>
+      <div className="mb-16">
+      <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-0">
+          {/* LEFT PANEL - Description & Options */}
+          <div className="p-8 lg:p-12 border-r border-gray-200 flex flex-col justify-between bg-linear-to-b from-white to-gray-50">
+            <div>
+              <h2 id="smoothie-bowl-title" className="text-4xl md:text-5xl font-bold text-[#5D4E37] mb-3">
+                Smoothie<span className="text-[#9CB973]">Bowl</span>
+              </h2>
+
+              <p className="text-gray-600 text-sm mb-8">
+                Elige uno de nuestros deliciosos smoothie bowls predefinidos y
+                personaliza con hasta 5 toppings adicionales. Refrescante,
+                nutritivo y delicioso en cada cucharada.
+              </p>
+
+              {/* Smoothies Selection */}
+              <div className="space-y-4 mb-8">
+                <div>
+                  <button
+                    onClick={() => setExpandedSmoothies(!expandedSmoothies)}
+                    className="w-full flex items-center justify-between p-3 bg-white border-2 border-gray-200 rounded-xl hover:border-[#9CB973] hover:bg-[#9CB973]/5 transition-all text-left group"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">🥣</span>
+                      <div>
+                        <span className="font-bold text-[#5D4E37] group-hover:text-[#6B8E4E] block">
+                          Mi Smoothie
+                        </span>
+                        <span className="text-xs text-gray-500">
+                          {selectedSmoothie
+                            ? selectedSmoothie.name
+                            : "Selecciona uno"}
+                        </span>
+                      </div>
+                    </div>
+                    <span className="text-[#9CB973] text-lg font-bold">
+                      {expandedSmoothies ? "−" : "+"}
+                    </span>
+                  </button>
+
+                  {expandedSmoothies && (
+                    <div className="mt-2 p-4 bg-white border-2 border-[#9CB973] rounded-xl">
+                      <div className="space-y-2 max-h-64 overflow-y-auto">
+                        {smoothieOptions.smoothies.map((smoothie) => {
+                          const isSelected =
+                            selectedSmoothie?.id === smoothie.id;
+
+                          return (
+                            <label
+                              key={smoothie.id}
+                              className="flex items-start gap-3 p-3 cursor-pointer group rounded-lg hover:bg-gray-50 border border-transparent"
+                            >
+                              <input
+                                type="radio"
+                                name="smoothie"
+                                checked={isSelected}
+                                onChange={() => setSelectedSmoothie(smoothie)}
+                                className="peer sr-only"
+                              />
+                              <span
+                                aria-hidden="true"
+                                className={`mt-1 flex h-4 w-4 items-center justify-center rounded-full border transition-all ${
+                                  isSelected
+                                    ? "border-[#9CB973] bg-[#9CB973]"
+                                    : "border-gray-300 bg-white"
+                                } group-hover:border-[#9CB973]`}
+                              >
+                                <span
+                                  className={`h-1.5 w-1.5 rounded-full ${
+                                    isSelected ? "bg-white" : "bg-transparent"
+                                  }`}
+                                />
+                              </span>
+                              <div className="flex-1">
+                                <p className="text-sm font-bold text-[#5D4E37] group-hover:text-[#6B8E4E]">
+                                  {smoothie.name}
+                                </p>
+                                <p className="text-xs text-gray-600 mt-1">
+                                  {smoothie.description}
+                                </p>
+                                <p className="text-sm font-semibold text-[#9CB973] mt-2">
+                                  S/ {smoothie.price.toFixed(2)}
+                                </p>
+                              </div>
+                            </label>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Toppings Selection */}
+                <div>
+                  <button
+                    onClick={() => setExpandedToppings(!expandedToppings)}
+                    className="w-full flex items-center justify-between p-3 bg-white border-2 border-gray-200 rounded-xl hover:border-[#9CB973] hover:bg-[#9CB973]/5 transition-all text-left group"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">🍓</span>
+                      <div>
+                        <span className="font-bold text-[#5D4E37] group-hover:text-[#6B8E4E] block">
+                          Toppings Adicionales
+                        </span>
+                        <span className="text-xs text-gray-500">
+                          {selectedToppings.length}/{maxToppings}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {toppingsFull && (
+                        <span className="bg-[#9CB973] text-white text-xs font-bold px-2 py-1 rounded-full">
+                          Máximo
+                        </span>
+                      )}
+                      <span className="text-[#9CB973] text-lg font-bold">
+                        {expandedToppings ? "−" : "+"}
+                      </span>
+                    </div>
+                  </button>
+
+                  {expandedToppings && (
+                    <div className="mt-2 p-4 bg-white border-2 border-[#9CB973] rounded-xl">
+                      <div className="space-y-2 max-h-48 overflow-y-auto">
+                        {smoothieOptions.toppings.map((topping) => {
+                          const isSelected = selectedToppings.includes(topping);
+                          const canSelect =
+                            SmoothieBowlService.canSelectTopping(
+                              selectedToppings,
+                              topping,
+                            );
+
+                          return (
+                            <label
+                              key={topping}
+                              className={`flex items-center gap-3 p-2 cursor-pointer group rounded-lg ${
+                                canSelect
+                                  ? "hover:bg-gray-50"
+                                  : "opacity-50 cursor-not-allowed"
+                              }`}
+                            >
+                              <input
+                                type="checkbox"
+                                checked={isSelected}
+                                onChange={() => {
+                                  setSelectedToppings((prev) =>
+                                    isSelected
+                                      ? prev.filter((t) => t !== topping)
+                                      : [...prev, topping],
+                                  );
+                                }}
+                                disabled={!canSelect}
+                                className="peer sr-only"
+                              />
+                              <span
+                                aria-hidden="true"
+                                className={`flex h-4 w-4 items-center justify-center rounded-sm border transition-all ${
+                                  isSelected
+                                    ? "border-[#9CB973] bg-[#9CB973] text-white"
+                                    : "border-gray-300 bg-white text-transparent"
+                                } ${
+                                  canSelect
+                                    ? "group-hover:border-[#9CB973]"
+                                    : "opacity-60"
+                                }`}
+                              >
+                                <svg
+                                  viewBox="0 0 16 16"
+                                  className="h-3 w-3"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    d="M4 8.5L6.5 11L12 5.5"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                  />
+                                </svg>
+                              </span>
+                              <span
+                                className={`text-sm flex-1 font-medium ${
+                                  canSelect
+                                    ? "text-gray-700 group-hover:text-[#6B8E4E]"
+                                    : "text-gray-400"
+                                }`}
+                              >
+                                {topping}
+                              </span>
+                            </label>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="bg-[#9CB973]/10 border-2 border-[#9CB973] rounded-xl p-4 text-center">
+              <p className="text-sm text-[#5D4E37] font-bold mb-2">
+                {selectedSmoothie
+                  ? `✓ ${selectedSmoothie.name}${selectedToppings.length > 0 ? ` + ${selectedToppings.length} toppings` : ""}`
+                  : "✨ Selecciona un smoothie"}
+              </p>
+              <p className="text-xs text-gray-600 mb-3">
+                {missingToppings > 0 &&
+                  `Falta seleccionar ${missingToppings} topping${missingToppings !== 1 ? "s" : ""}`}
+              </p>
+              <p className="text-lg font-bold text-[#6B8E4E] mb-3">
+                S/ {totalPrice.toFixed(2)}
+              </p>
+              <div className="space-y-2">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    (e.currentTarget as HTMLButtonElement).blur();
+                    handleAddToCart();
+                  }}
+                  disabled={!selectedSmoothie || missingToppings > 0}
+                  className={`w-full py-2 px-4 rounded-lg font-bold transition-all ${
+                    selectedSmoothie && missingToppings === 0
+                      ? "bg-[#9CB973] text-white hover:bg-[#6B8E4E] cursor-pointer"
+                      : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                  }`}
+                >
+                  🛒 Agregar al carrito
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* CENTER PANEL - Visual (tablet y desktop únicamente) */}
+          <div className="hidden lg:flex relative overflow-hidden bg-white flex-col items-center justify-center p-8 lg:p-12 min-h-150">
+
+            {/* Clean Area for Future Content */}
+            <div className="relative z-10 w-full min-h-120 lg:min-h-140 xl:min-h-160">
+              <Image
+                src="/videos/smoothiebowl-2.gif"
+                alt="Smoothie Bowl animado"
+                fill
+                unoptimized
+                className="object-contain select-none pointer-events-none scale-75"
+                draggable={false}
+              />
+            </div>
+          </div>
+
+          {/* RIGHT PANEL - Nutritional Facts */}
+          <div className="p-8 lg:p-12 border-l border-gray-200 bg-linear-to-b from-gray-50 to-white flex flex-col justify-between">
+            <div>
+              <p className="text-xs text-gray-500 uppercase tracking-widest font-bold mb-6">
+                Información Nutricional
+              </p>
+
+              <h3 className="text-xl font-bold text-[#5D4E37] mb-8 uppercase tracking-wider">
+                Tu Smoothie Bowl
+              </h3>
+
+              <div className="grid grid-cols-2 gap-4 mb-8">
+                <div
+                  className={`bg-white border-2 rounded-lg p-4 text-center transition-all ${
+                    nutrition.kcal > 0
+                      ? "border-[#9CB973] hover:shadow-lg"
+                      : "border-gray-200"
+                  }`}
+                >
+                  <p className="text-xs text-gray-500 font-bold uppercase mb-2">
+                    Energía
+                  </p>
+                  <p className="text-2xl font-bold text-[#5D4E37]">
+                    {Math.round(nutrition.kcal)}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">kcal</p>
+                </div>
+
+                <div
+                  className={`bg-white border-2 rounded-lg p-4 text-center transition-all ${
+                    nutrition.proteina > 0
+                      ? "border-[#9CB973] hover:shadow-lg"
+                      : "border-gray-200"
+                  }`}
+                >
+                  <p className="text-xs text-gray-500 font-bold uppercase mb-2">
+                    Proteína
+                  </p>
+                  <p className="text-2xl font-bold text-[#5D4E37]">
+                    {Math.round(nutrition.proteina)}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">g</p>
+                </div>
+
+                <div
+                  className={`bg-white border-2 rounded-lg p-4 text-center transition-all ${
+                    nutrition.carbos > 0
+                      ? "border-[#9CB973] hover:shadow-lg"
+                      : "border-gray-200"
+                  }`}
+                >
+                  <p className="text-xs text-gray-500 font-bold uppercase mb-2">
+                    Carbohidratos
+                  </p>
+                  <p className="text-2xl font-bold text-[#5D4E37]">
+                    {Math.round(nutrition.carbos)}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">g</p>
+                </div>
+
+                <div
+                  className={`bg-white border-2 rounded-lg p-4 text-center transition-all ${
+                    nutrition.fibra > 0
+                      ? "border-[#9CB973] hover:shadow-lg"
+                      : "border-gray-200"
+                  }`}
+                >
+                  <p className="text-xs text-gray-500 font-bold uppercase mb-2">
+                    Fibra
+                  </p>
+                  <p className="text-2xl font-bold text-[#5D4E37]">
+                    {Math.round(nutrition.fibra * 10) / 10}
+                  </p>
+                  <p className="text-xs text-gray-500 mt-1">g</p>
+                </div>
+              </div>
+
+              {(selectedSmoothie || selectedToppings.length > 0) && (
+                <div className="bg-[#9CB973]/10 rounded-lg p-4 mb-8 border border-[#9CB973]/20">
+                  <p className="text-xs text-[#5D4E37] font-bold mb-3">
+                    📋 MI SMOOTHIE BOWL
+                  </p>
+                  <div className="space-y-2 text-xs text-gray-600">
+                    {selectedSmoothie && (
+                      <p>
+                        <span className="font-semibold">Smoothie:</span>{" "}
+                        {selectedSmoothie.name}
+                      </p>
+                    )}
+                    {selectedToppings.length > 0 && (
+                      <p>
+                        <span className="font-semibold">
+                          Toppings ({selectedToppings.length}):
+                        </span>{" "}
+                        {selectedToppings.join(", ")}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              <div className="bg-[#F5F5F5] rounded-lg p-4 mb-8">
+                <p className="text-xs text-gray-600 font-semibold">
+                  ✨ VARIEDADES
+                </p>
+                <p className="text-sm text-gray-500 mt-2">
+                  Todos nuestros smoothie bowls son elaborados con frutas
+                  frescas de la más alta calidad.
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-[#9CB973]/10 border-2 border-[#9CB973] rounded-lg p-4 text-center">
+              <p className="text-xs text-[#5D4E37] font-bold mb-2">
+                💚 OPCIONES PRÉMIUM
+              </p>
+              <p className="text-xs text-gray-600">
+                Mantequilla de maní y Nibs de cacao (+2 soles)
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+
+      {addedToCart && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setAddedToCart(false)}
+            aria-hidden="true"
+          />
+
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="added-to-cart-title"
+            className="relative w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl"
+          >
+            <div className="text-center">
+              <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-[#9CB973]/15 text-2xl">
+                ✓
+              </div>
+              <h3
+                id="added-to-cart-title"
+                className="text-2xl font-bold text-[#5D4E37]"
+              >
+                Agregado correctamente al Carrito
+              </h3>
+              <p className="mt-2 text-sm text-gray-600">
+                Tu smoothie bowl ya esta listo en tu pedido.
+              </p>
+            </div>
+
+            <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+              <button
+                type="button"
+                onClick={handleAddAnother}
+                className="flex-1 rounded-xl border-2 border-[#9CB973] px-4 py-3 font-bold text-[#6B8E4E] transition-all hover:bg-[#9CB973]/10"
+              >
+                Agregar Otro
+              </button>
+              <button
+                type="button"
+                onClick={handleGoToCheckout}
+                className="flex-1 rounded-xl bg-[#9CB973] px-4 py-3 font-bold text-white transition-all hover:bg-[#6B8E4E]"
+              >
+                Ir a pagar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
