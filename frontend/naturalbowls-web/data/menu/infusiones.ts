@@ -15,7 +15,7 @@ export const infusiones: Product[] = [
     name: "Infusión Frutos Rojos",
     description: "Infusión caliente de frutos rojos.",
     price: 7.0,
-    image: "/icons/nb-logotipo.svg", // falta imagen
+    image: "/images/infusiones/infusion-frutos-rojos.jpg",
     categoryId: "infusiones",
     ingredients: ["Frutos rojos"],
   },

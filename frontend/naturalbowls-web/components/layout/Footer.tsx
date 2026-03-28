@@ -9,7 +9,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
-          <div className="col-span-1 md:col-span-2">
+          <div className="col-span-1">
             <Link href="/" className="flex items-center mb-4" aria-label="Volver al inicio">
               <Image
                 src="/icons/nb-isotipo-white.svg"
@@ -111,6 +111,34 @@ export default function Footer() {
                 </div>
               </div>
             </address>
+          </div>
+
+          {/* Información Legal */}
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Información Legal</h3>
+            <ul className="space-y-3">
+              <li>
+                <Link href="/nosotros" className="text-white/70 hover:text-[#9CB973] transition-colors">
+                  Nosotros
+                </Link>
+              </li>
+              <li>
+                <a
+                  href={SITE_CONFIG.libroReclamacionesUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 bg-white/10 rounded-lg px-3 py-2 text-white font-medium hover:bg-[#6B8E4E] transition-colors"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
+                    <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+                    <path d="M10 12h4" />
+                    <path d="M10 16h4" />
+                  </svg>
+                  Libro de Reclamaciones
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
 
