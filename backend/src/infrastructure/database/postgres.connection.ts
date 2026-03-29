@@ -1,30 +1,27 @@
 import { Pool } from 'pg';
-import fs from 'fs';
-import path from 'path';
 import { getDbCredentials } from './postgres.secrets';
 
 let pool: Pool | null = null;
 
 export async function initPostgres(): Promise<void> {
-  const creds = await getDbCredentials();
-  
-  const caPath = path.join(process.cwd(), 'certs', 'global-bundle.pem');
+  const connectionString = process.env.DATABASE_URL?.trim();
+
+  const connectionConfig = connectionString
+    ? {
+        connectionString,
+      }
+    : await buildConnectionConfigFromSecret();
 
   pool = new Pool({
-    host: creds.host,
-    port: creds.port,
-    user: creds.username,
-    password: creds.password,
-    database: creds.dbname,
+    ...connectionConfig,
     ssl: {
-      ca: fs.readFileSync(caPath).toString(),
+      rejectUnauthorized: false,
     },
     max: 10,
     idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 10000
+    connectionTimeoutMillis: 10000,
   });
 
-  // Smoke test obligatorio
   await pool.query('SELECT 1');
 }
 
@@ -33,4 +30,22 @@ export function getPgPool(): Pool {
     throw new Error('Postgres pool not initialized');
   }
   return pool;
+}
+
+async function buildConnectionConfigFromSecret() {
+  if (!process.env.DB_SECRET_NAME) {
+    throw new Error(
+      'Postgres config missing. Define DATABASE_URL or DB_SECRET_NAME.',
+    );
+  }
+
+  const creds = await getDbCredentials();
+
+  return {
+    host: creds.host,
+    port: creds.port,
+    user: creds.username,
+    password: creds.password,
+    database: creds.dbname,
+  };
 }
