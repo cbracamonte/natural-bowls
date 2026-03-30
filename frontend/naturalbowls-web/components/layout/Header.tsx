@@ -3,10 +3,11 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
-import { ShoppingBag, Menu, X, User, ChevronDown } from "lucide-react";
+import { ShoppingBag, Menu, X, ChevronDown } from "lucide-react";
 import { useCart } from "@/context/CartContext";
-
 import ReservationModal from "@/components/reservation/ReservationModal";
+import UserMenu from "@/components/layout/UserMenu";
+import MobileUserAuth from "@/components/layout/MobileUserAuth";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -172,13 +173,9 @@ export default function Header() {
             {/* Right Actions */}
             <div className="flex items-center gap-1 md:gap-2">
               {/* Auth (Desktop) */}
-              <Link
-                href="/login"
-                className="hidden lg:inline-flex items-center gap-1.5 px-3 py-2 text-[#5D4E37] hover:text-[#6B8E4E] font-semibold text-sm transition-colors"
-              >
-                <User className="w-4 h-4" aria-hidden />
-                Entrar
-              </Link>
+              <div className="hidden lg:block">
+                <UserMenu />
+              </div>
 
               {/* Cart */}
               <Link
@@ -292,16 +289,8 @@ export default function Header() {
                   </ul>
                 </div>
 
-                {/* Auth Link */}
-                <div className="border-t border-gray-100 mt-3 pt-4 px-4">
-                  <Link
-                    href="/login"
-                    className="block w-full py-3 border-2 border-[#5D4E37] text-[#5D4E37] rounded-full font-semibold text-center hover:bg-[#5D4E37] hover:text-white transition-all"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Entrar
-                  </Link>
-                </div>
+                {/* Auth */}
+                <MobileUserAuth onNavigate={() => setIsMenuOpen(false)} />
 
                 {/* CTA Buttons */}
                 <div className="mt-4 space-y-3 px-4">

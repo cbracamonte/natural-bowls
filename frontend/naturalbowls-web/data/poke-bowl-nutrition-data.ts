@@ -33,13 +33,13 @@ export const POKEBOWL_POKE_BOWL_NUTRITION_DATA: PokeBowlNutritionDataset = {
       id: "pollo-crispy",
       label: "Pollo crispy",
       density: { kcal: 246, proteina: 23, carbos: 9, fibra: 0 },
-      porciones: { regular: 120, grande: 160 },
+      porciones: { regular: 135, grande: 180 },
     },
     "Pollo a la plancha": {
       id: "pollo-plancha",
       label: "Pollo a la plancha",
       density: { kcal: 165, proteina: 31, carbos: 0, fibra: 0 },
-      porciones: { regular: 120, grande: 160 },
+      porciones: { regular: 135, grande: 180 },
     },
     Tofu: {
       id: "tofu",
@@ -62,11 +62,11 @@ export const POKEBOWL_POKE_BOWL_NUTRITION_DATA: PokeBowlNutritionDataset = {
   },
 
   extraProteinas: {
-    "Pollo extra (100g) (+6)": {
-      id: "pollo-extra-100",
-      label: "Pollo extra (100g) (+6)",
+    "Pollo extra (135g) (+6)": {
+      id: "pollo-extra-135",
+      label: "Pollo extra (135g) (+6)",
       density: { kcal: 165, proteina: 31, carbos: 0, fibra: 0 },
-      porciones: { regular: 100, grande: 100 },
+      porciones: { regular: 135, grande: 135 },
     },
     "Pollo extra (200g) (+12)": {
       id: "pollo-extra-200",
