@@ -1,133 +1,56 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
-# ============================================================================
-# Dependencies
-# ============================================================================
+# compiled output
+/dist
 /node_modules
-/.pnp
-.pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
+/build
 
-# ============================================================================
-# Testing
-# ============================================================================
-/coverage
-/.nyc_output
-*.lcov
-
-# ============================================================================
-# Next.js & Build
-# ============================================================================
-/.next/
-/out/
-/build/
-/.turbo/
-/dist/
-*.tsbuildinfo
-
-# ============================================================================
-# IDE & Editor
-# ============================================================================
-.vscode/
-.vscode-insiders/
-.idea/
-*.swp
-*.swo
-*~
-.sublime-project
-.sublime-workspace
-.project
-.classpath
-*.klondike
-.c9/
-*.jmx
-*.launch
-.settings/
-.loadpath
-
-# ============================================================================
-# OS & System Files
-# ============================================================================
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db
-*.lnk
-.AppleDouble
-.LSOverride
-
-# ============================================================================
-# Environment & Configuration
-# ============================================================================
-.env
-.env.local
-.env.*.local
-.env.production.local
-.env.development.local
-.env.test.local
-
-# ============================================================================
 # Logs
-# ============================================================================
+logs
+*.log
 npm-debug.log*
+pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.pnpm-debug.log*
 lerna-debug.log*
-*.log
-logs/
 
-# ============================================================================
-# Temporary & Cache Files
-# ============================================================================
-.cache/
-.temp/
-/tmp/
-*.tmp
-*.swp
-*.swo
-*~
-.parcel-cache
-.eslintcache
+# OS
+.DS_Store
 
-# ============================================================================
-# Package Manager Lock Files (Optional - choose based on your workflow)
-# ============================================================================
-# Uncomment if you want to ignore lock files
-# package-lock.json
-# yarn.lock
-# pnpm-lock.yaml
+# Tests
+/coverage
+/.nyc_output
 
-# ============================================================================
-# Vercel
-# ============================================================================
-.vercel
-.vercel.json
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
 
-# ============================================================================
-# TypeScript & React
-# ============================================================================
-next-env.d.ts
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
 
-# ============================================================================
-# IDE Generated Files
-# ============================================================================
-*.pem
-.env.example
-tsconfig.tsbuildinfo
+# dotenv environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
 
-# ============================================================================
-# Runtime & Process Files
-# ============================================================================
-.pid
+# temp directory
+.temp
+.tmp
+
+# Runtime data
+pids
 *.pid
+*.seed
+*.pid.lock
 
-# Added by ggshield
-.cache_ggshield
+# Diagnostic reports (https://nodejs.org/api/report.html)
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
