@@ -1,10 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { X } from "lucide-react";
+import { X, ArrowRight, MessageCircle } from "lucide-react";
 import Link from "next/link";
-import { getActivePromotions } from "@/data/promotions-notifications";
-import { Promotion } from "@/lib/schemas";
+import {
+  getActivePromotions,
+  type NotificationPromotion,
+} from "@/data/promotions-notifications";
+import { buildWhatsAppUrl } from "@/lib/utils/contact";
 
 // Flags de localStorage que deben estar activos antes de mostrar promociones
 const NB_FLAG_COOKIES = "nb-cookie-consent";
@@ -19,10 +22,47 @@ function allModalsInteracted(): boolean {
   );
 }
 
+function PromoCTA({ promo }: { promo: NotificationPromotion }) {
+  const baseClasses =
+    "inline-flex items-center gap-1.5 bg-[#4D7A30] hover:bg-[#3E6B22] text-white text-xs md:text-sm font-semibold px-3 md:px-4 py-2 rounded-lg transition-all transform hover:scale-105 whitespace-nowrap";
+
+  if (promo.ctaLink) {
+    return (
+      <Link href={promo.ctaLink} className={baseClasses}>
+        {promo.ctaText}
+        <ArrowRight className="w-3.5 h-3.5" />
+      </Link>
+    );
+  }
+
+  if (promo.whatsAppMessage) {
+    return (
+      <a
+        href={buildWhatsAppUrl(promo.whatsAppMessage)}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={baseClasses}
+      >
+        <MessageCircle className="w-3.5 h-3.5" />
+        {promo.ctaText}
+      </a>
+    );
+  }
+
+  return (
+    <Link href="/promociones" className={baseClasses}>
+      {promo.ctaText}
+      <ArrowRight className="w-3.5 h-3.5" />
+    </Link>
+  );
+}
+
 export default function PromotionNotification() {
   const [currentPromoIndex, setCurrentPromoIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
-  const [promotions] = useState<Promotion[]>(() => getActivePromotions());
+  const [promotions] = useState<NotificationPromotion[]>(() =>
+    getActivePromotions()
+  );
   // ready = true cuando el usuario ha interactuado con los 3 modales previos
   const [ready, setReady] = useState(false);
 
@@ -105,65 +145,50 @@ export default function PromotionNotification() {
         </button>
 
         <div className="p-4 md:p-5">
-          {/* Header with icon and close space */}
+          {/* Header with icon */}
           <div className="flex items-start gap-3 mb-3 pr-8">
             <span className="text-2xl md:text-3xl shrink-0">
               {currentPromo.icon}
             </span>
             <div className="flex-1">
-              <h3 className={`text-sm md:text-base font-bold ${currentPromo.textColor} leading-tight`}>
+              <h3
+                className={`text-sm md:text-base font-bold ${currentPromo.textColor} leading-tight`}
+              >
                 {currentPromo.title}
               </h3>
               {currentPromo.discount && (
                 <p className="text-xs md:text-sm font-semibold text-gray-600 mt-0.5">
-                  {currentPromo.discount} OFF
+                  {currentPromo.discount}
                 </p>
               )}
             </div>
           </div>
 
           {/* Description */}
-          <p className={`text-xs md:text-sm ${currentPromo.textColor} opacity-85 mb-3 leading-snug`}>
+          <p
+            className={`text-xs md:text-sm ${currentPromo.textColor} opacity-85 mb-3 leading-snug`}
+          >
             {currentPromo.description}
           </p>
 
-          {/* Footer with code and CTA */}
-          <div className="flex items-center gap-2 justify-between">
-            {currentPromo.code && (
-              <div className="bg-white/60 rounded-lg px-3 py-1.5 border border-gray-200">
-                <p className="text-xs font-mono font-bold text-gray-900">
-                  {currentPromo.code}
-                </p>
-              </div>
-            )}
-
-            {currentPromo.link && (
-              <Link href={currentPromo.link}>
-                <button className="bg-[#4D7A30] hover:bg-[#3E6B22] text-white text-xs md:text-sm font-semibold px-3 md:px-4 py-2 rounded-lg transition-all transform hover:scale-105 whitespace-nowrap">
-                  Ver más
-                </button>
-              </Link>
-            )}
-            {!currentPromo.link && (
-              <button className="bg-[#4D7A30] hover:bg-[#3E6B22] text-white text-xs md:text-sm font-semibold px-3 md:px-4 py-2 rounded-lg transition-all transform hover:scale-105 whitespace-nowrap">
-                Conocer
-              </button>
-            )}
+          {/* Footer with CTA */}
+          <div className="flex items-center justify-end">
+            <PromoCTA promo={currentPromo} />
           </div>
 
-          {/* Progress dots - mostrar en desktop */}
+          {/* Progress dots */}
           {promotions.length > 1 && (
             <div className="flex gap-0 mt-3 justify-center">
               {promotions.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentPromoIndex(index)}
-                  // Área táctil mínima 44×44px (WCAG 2.5.5 / Lighthouse)
                   className="flex items-center justify-center min-w-11 min-h-11 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-current rounded-full"
                   aria-label={`Ir a promoción ${index + 1}`}
-                  aria-current={index === currentPromoIndex ? "true" : undefined}
+                  aria-current={
+                    index === currentPromoIndex ? "true" : undefined
+                  }
                 >
-                  {/* Indicador visual — pequeño, centrado dentro del área táctil */}
                   <span
                     className={`block rounded-full transition-all duration-300 h-2 ${
                       index === currentPromoIndex

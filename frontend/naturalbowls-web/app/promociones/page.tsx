@@ -1,214 +1,215 @@
-import Image from 'next/image';
-import Link from 'next/link';
-import { Gift, Percent, Clock, CreditCard } from 'lucide-react';
-import { generatePageMetadata } from '@/lib/seo';
+import Image from "next/image";
+import Link from "next/link";
+import {
+  Clock,
+  CreditCard,
+  ArrowRight,
+  MessageCircle,
+} from "lucide-react";
+import { generatePageMetadata } from "@/lib/seo";
+import { buildWhatsAppUrl } from "@/lib/utils/contact";
+import {
+  LOYALTY_PROGRAM,
+  PROMOTIONS,
+  GENERAL_TERMS,
+} from "@/data/promotions";
+import PlanPokesHero from "@/components/promotions/PlanPokesHero";
 
 export const metadata = generatePageMetadata({
-  title: 'Promociones y Descuentos',
+  title: "Promociones y Descuentos",
   description:
-    'Aprovecha nuestras mejores promociones: descuento en tu primer pedido, combos especiales y beneficios exclusivos para miembros Natural Bowls.',
-  keywords: ['promociones Natural Bowls', 'descuentos bowl', 'combos saludables', 'código descuento'],
-  path: '/promociones',
+    "Aprovecha nuestras mejores promociones: descuento en tu primer pedido, combos especiales y beneficios exclusivos para miembros Natural Bowls.",
+  keywords: [
+    "promociones Natural Bowls",
+    "descuentos bowl",
+    "combos saludables",
+    "código descuento",
+  ],
+  path: "/promociones",
 });
 
 export default function PromocionesPage() {
+  const highlightedPromo = PROMOTIONS.find((p) => p.highlighted);
+  const regularPromos = PROMOTIONS.filter((p) => !p.highlighted);
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <section className="relative bg-linear-to-r from-[#5D4E37] to-[#7A6B52] py-20 scroll-mt-48">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <span className="inline-flex items-center gap-2 px-4 py-1 bg-[#9CB973] text-[#5D4E37] rounded-full text-sm font-medium mb-4">
-            <Gift className="w-4 h-4" />
-            Ofertas Especiales
-          </span>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
-            Promociones
-          </h1>
-          <p className="text-xl text-white/80 max-w-2xl mx-auto">
-            Aprovecha nuestras ofertas exclusivas y disfruta más por menos.
-          </p>
-        </div>
-      </section>
+    <div className="min-h-screen bg-[#F5F3EF]">
+      {/* Plan Pokes — Hero + Modal */}
+      {highlightedPromo && <PlanPokesHero promo={highlightedPromo} />}
 
-      {/* Loyalty Card Section */}
-      <section className="py-16 bg-monstera-cream">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <span className="inline-flex items-center gap-2 px-4 py-1 bg-lime-100 text-lime-700 rounded-full text-sm font-medium mb-4">
-                <CreditCard className="w-4 h-4" />
-                Programa de Fidelidad
+      {/* ═══════════════════════════════════════════════
+          LOYALTY CARD — full-width alternating band
+          ═══════════════════════════════════════════════ */}
+      <section className="bg-white">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 items-center">
+          {/* Image */}
+          <div className="relative min-h-[360px] lg:min-h-[520px]">
+            <Image
+              src={LOYALTY_PROGRAM.image}
+              alt={LOYALTY_PROGRAM.subtitle}
+              fill
+              className="object-cover"
+            />
+          </div>
+
+          {/* Content */}
+          <div className="px-8 py-14 md:px-14 lg:px-20">
+            <div className="flex items-center gap-3 mb-5">
+              <CreditCard className="w-5 h-5 text-[#9CB973]" />
+              <span className="text-[#9CB973] text-sm font-semibold uppercase tracking-widest">
+                {LOYALTY_PROGRAM.title}
               </span>
-              <h2 className="text-3xl md:text-4xl font-bold text-[#5D4E37] mb-4">
-                Loyalty Card
-              </h2>
-              <p className="text-gray-600 mb-6">
-                Acumula sellos con cada visita a nuestra tienda para  obtener descuentos y postres gratis.
-              </p>
-              <ul className="space-y-3 mb-8">
-                <li className="flex items-start gap-3">
-                  <div className="w-6 h-6 bg-[#9CB973] rounded-full flex items-center justify-center shrink-0">
-                    <span className="text-white text-sm">✓</span>
-                  </div>
-                  <span className="text-gray-600">Gana 1 sello cada vez que visites nuestro local.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <div className="w-6 h-6 bg-[#9CB973] rounded-full flex items-center justify-center shrink-0">
-                    <span className="text-white text-sm">✓</span>
-                  </div>
-                  <span className="text-gray-600">Recibirás 1 postre gratis en tu cuarta visita en nuestro local.</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <div className="w-6 h-6 bg-[#9CB973] rounded-full flex items-center justify-center shrink-0">
-                    <span className="text-white text-sm">✓</span>
-                  </div>
-                  <span className="text-gray-600">Válido solo para consumo en local.</span>
-                </li>
-              </ul>
-              <Link
-                href="/menu"
-                className="inline-flex items-center px-6 py-3 bg-[#5D4E37] text-white rounded-full font-medium hover:bg-[#4A3E2C] transition-colors"
-              >
-                Empezar a acumular
-              </Link>
             </div>
-            <div className="relative">
-              <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl">
-                <Image
-                  src="/images/loyalty-card.jpg"
-                  alt="Loyalty Card Natural Bowls"
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Current Promotions */}
-      <section className="py-16 gradient-section">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#5D4E37] mb-4">
-              Promociones Activas
+            <h2 className="text-3xl md:text-4xl font-bold text-[#5D4E37] mb-4 tracking-tight">
+              {LOYALTY_PROGRAM.subtitle}
             </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Accede a estas promociones mostrando este código en tienda. ¡No te las pierdas! (NBLover generar codigo con boton)
+            <p className="text-[#5D4E37]/80 text-lg leading-relaxed mb-8 max-w-md">
+              {LOYALTY_PROGRAM.description}
             </p>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Combo Almuerzo */}
-            <div className="bg-white rounded-3xl overflow-hidden shadow-lg">
-              <div className="relative aspect-4/3">
-                <Image
-                  src="/images/wrap-crispy.jpg"
-                  alt="Combo Almuerzo"
-                  fill
-                  className="object-cover"
-                />
-                <div className="absolute top-4 right-4 px-4 py-2 bg-[#6B8E4E] text-white rounded-full font-bold">
-                  15% OFF
+            <div className="space-y-4 mb-10">
+              {LOYALTY_PROGRAM.benefits.map((benefit) => (
+                <div key={benefit} className="flex items-start gap-3">
+                  <div className="w-6 h-6 bg-[#9CB973] rounded-full flex items-center justify-center shrink-0 mt-0.5">
+                    <svg
+                      className="w-3 h-3 text-white"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      strokeWidth={3}
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                  </div>
+                  <span className="text-[#5D4E37] text-sm md:text-base">
+                    {benefit}
+                  </span>
                 </div>
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-[#5D4E37] mb-2">
-                  Combo Almuerzo
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  Wrap o ensalada + bebida por un precio especial.
-                  Perfecto para tu hora de almuerzo.
-                </p>
-                <div className="flex items-center gap-2 text-sm text-gray-500">
-                  <Clock className="w-4 h-4" />
-                  <span>Lun - Vie, 12pm - 3pm</span>
-                </div>
-              </div>
+              ))}
             </div>
 
-            {/* Happy Hour */}
-            <div className="bg-white rounded-3xl overflow-hidden shadow-lg">
-              <div className="relative aspect-[4/3]">
-                <Image
-                  src="/images/smoothie-bowl.jpg"
-                  alt="Happy Hour"
-                  fill
-                  className="object-cover"
-                />
-                <div className="absolute top-4 right-4 px-4 py-2 bg-[#6B8E4E] text-white rounded-full font-bold">
-                  2x1
-                </div>
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-[#5D4E37] mb-2">
-                  Happy Hour
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  2x1 en smoothies y jugos. Comparte con un amigo
-                  o guarda uno para después.
-                </p>
-                <div className="flex items-center gap-2 text-sm text-gray-500">
-                  <Clock className="w-4 h-4" />
-                  <span>Lun - Jue, 4pm - 6pm</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Descuento Primera Compra */}
-            <div className="bg-white rounded-3xl overflow-hidden shadow-lg">
-              <div className="relative aspect-[4/3]">
-                <Image
-                  src="/images/poke-bowl.jpg"
-                  alt="Primera Compra"
-                  fill
-                  className="object-cover"
-                />
-                <div className="absolute top-4 right-4 px-4 py-2 bg-[#6B8E4E] text-white rounded-full font-bold">
-                  10% OFF
-                </div>
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-[#5D4E37] mb-2">
-                  Primera Compra
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  ¿Es tu primera vez en Natural Bowls?
-                  Obtén 10% de descuento en tu primer pedido.
-                </p>
-                <div className="flex items-center gap-2 text-sm text-gray-500">
-                  <Percent className="w-4 h-4" />
-                  <span>Solo clientes nuevos</span>
-                </div>
-              </div>
-            </div>
+            <Link
+              href="/menu"
+              className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#5D4E37] text-white rounded-full font-semibold text-sm hover:bg-[#4A3E2C] transition-all hover:shadow-lg group/link"
+            >
+              Empezar a acumular
+              <ArrowRight className="w-4 h-4 transition-transform group-hover/link:translate-x-0.5" />
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Terms Section */}
-      <section className="py-12 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h3 className="text-lg font-semibold text-[#5D4E37] mb-4">
+      {/* ═══════════════════════════════════════════════
+          PROMOS — Bandas alternadas full-width
+          ═══════════════════════════════════════════════ */}
+      {regularPromos.map((promo, index) => {
+        const imageFirst = index % 2 !== 0;
+
+        return (
+          <section
+            key={promo.id}
+            className={index % 2 === 0 ? "bg-[#F5F3EF]" : "bg-white"}
+          >
+            <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 items-center">
+              {/* Image */}
+              <div
+                className={`relative min-h-[320px] lg:min-h-[460px] ${
+                  !imageFirst ? "lg:order-2" : ""
+                }`}
+              >
+                <Image
+                  src={promo.image}
+                  alt={promo.title}
+                  fill
+                  className="object-cover"
+                />
+                {promo.badge && (
+                  <div className="absolute top-6 right-6 px-5 py-2 bg-[#9CB973] text-white text-sm font-bold rounded-full shadow-lg">
+                    {promo.badge}
+                  </div>
+                )}
+              </div>
+
+              {/* Content */}
+              <div
+                className={`px-8 py-14 md:px-14 lg:px-20 ${
+                  !imageFirst ? "lg:order-1" : ""
+                }`}
+              >
+                <h2 className="text-3xl md:text-4xl font-bold text-[#5D4E37] mb-4 tracking-tight">
+                  {promo.title}
+                </h2>
+                <p className="text-[#5D4E37]/80 text-lg leading-relaxed mb-6 max-w-md">
+                  {promo.description}
+                </p>
+
+                {promo.schedule && (
+                  <div className="flex items-center gap-2 text-[#5D4E37]/60 text-sm mb-4">
+                    <Clock className="w-4 h-4" />
+                    <span>{promo.schedule}</span>
+                  </div>
+                )}
+
+                {promo.terms.length > 0 && (
+                  <p className="text-[#5D4E37]/50 text-sm mb-8">
+                    {promo.terms[0]}
+                  </p>
+                )}
+
+                <a
+                  href={buildWhatsAppUrl(
+                    `Hola! Me interesa la promo ${promo.title}`
+                  )}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#9CB973] text-white rounded-full font-semibold text-sm hover:bg-[#8aab5f] transition-all hover:shadow-lg group/btn"
+                >
+                  <MessageCircle className="w-4 h-4" />
+                  Consultar
+                  <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-0.5" />
+                </a>
+              </div>
+            </div>
+          </section>
+        );
+      })}
+
+      {/* ═══════════════════════════════════════════════
+          TERMS & CONDITIONS
+          ═══════════════════════════════════════════════ */}
+      <section className="px-4 sm:px-6 lg:px-8 py-14">
+        <div className="max-w-3xl mx-auto">
+          <h3 className="text-xs font-semibold text-[#5D4E37] uppercase tracking-widest mb-5">
             Términos y Condiciones
           </h3>
-          <ul className="text-sm text-gray-600 space-y-2">
-            <li>• Las promociones no son acumulables entre sí.</li>
-            <li>• Válido solo en compras presenciales en tienda.</li>
-            <li>• Los descuentos no aplican para delivery.</li>
-            <li>• Promociones sujetas a disponibilidad.</li>
-            <li>• Natural Bowls se reserva el derecho de modificar o cancelar promociones sin previo aviso.</li>
+          <ul className="space-y-2">
+            {GENERAL_TERMS.map((term) => (
+              <li
+                key={term}
+                className="flex items-start gap-3 text-sm text-[#5D4E37]/80 leading-relaxed"
+              >
+                <span className="w-1 h-1 rounded-full bg-[#5D4E37]/50 mt-2 shrink-0" />
+                {term}
+              </li>
+            ))}
           </ul>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16 bg-[#9CB973]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold text-[#5D4E37] mb-4">
+      {/* ═══════════════════════════════════════════════
+          CTA FOOTER
+          ═══════════════════════════════════════════════ */}
+      <section className="bg-[#5D4E37] py-20">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 tracking-tight">
             ¿Tienes alguna duda?
           </h2>
-          <p className="text-[#5D4E37]/80 mb-8">
+          <p className="text-white/70 mb-10 text-lg">
             Contáctanos por WhatsApp o visítanos en tienda.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -216,15 +217,16 @@ export default function PromocionesPage() {
               href={buildWhatsAppUrl()}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center px-8 py-3.5 bg-[#5D4E37] text-white rounded-full font-medium hover:bg-[#4A3E2C] transition-colors"
+              className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-[#9CB973] text-white rounded-full font-semibold hover:bg-[#8aab5f] transition-all hover:shadow-lg text-sm"
             >
               WhatsApp
+              <ArrowRight className="w-4 h-4" />
             </a>
             <a
               href="https://www.instagram.com/naturalbowls.cafe/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center px-8 py-3.5 border-2 border-[#5D4E37] text-[#5D4E37] rounded-full font-medium hover:bg-[#5D4E37] hover:text-white transition-colors"
+              className="inline-flex items-center justify-center px-8 py-3.5 border border-white/20 text-white rounded-full font-semibold hover:bg-white/10 transition-all text-sm"
             >
               Instagram
             </a>
@@ -234,4 +236,3 @@ export default function PromocionesPage() {
     </div>
   );
 }
-import { buildWhatsAppUrl } from "@/lib/utils/contact";
