@@ -6,7 +6,7 @@ export const jugos: Product[] = [
     name: "Jugo Surtido",
     description: "Papaya, manzana, piña y fresa. Vitaminas naturales.",
     price: 10.0,
-    image: "/icons/nb-logotipo.svg", // falta imagen
+    image: "/images/jugos/jugo-surtido.jpg", 
     categoryId: "jugos",
     ingredients: ["Papaya", "Manzana", "Piña", "Fresa"],
   },
