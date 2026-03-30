@@ -32,8 +32,6 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { email } = body;
 
-    console.log('📧 Recibido email:', email);
-    console.log('🔑 API Key presente:', !!apiKey);
 
     // Validar email
     if (!email || !email.includes('@')) {
@@ -55,7 +53,6 @@ export async function POST(request: NextRequest) {
     subscribers.add(email);
 
     // Enviar email
-    console.log('📤 Enviando email con Resend...');
 
     const result = await resend.emails.send({
       from: 'onboarding@resend.dev',
@@ -106,7 +103,6 @@ export async function POST(request: NextRequest) {
       `,
     });
 
-    console.log('📬 Respuesta de Resend:', result);
 
     if (result.error) {
       console.error('❌ Error de Resend:', result.error);
@@ -116,7 +112,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.log('✅ Email enviado exitosamente');
 
     return NextResponse.json(
       {
