@@ -6,6 +6,7 @@ export type SessionTokens = {
   refreshToken: string;
   expiresAt: Date;
   userId: string;
+  sessionId: string;
   customerId: string | null;
 };
 
@@ -41,6 +42,11 @@ export class AuthResponsePresenter {
       birthDate: user.getBirthDate(),
       gender: user.getGender(),
       emailVerified: user.isEmailVerified(),
+      emailVerifiedAt: user.getEmailVerifiedAt(),
+      marketingOptIn: user.isMarketingOptedIn(),
+      marketingConsentAt: user.getMarketingConsentAt(),
+      termsAcceptedAt: user.getTermsAcceptedAt(),
+      privacyAcceptedAt: user.getPrivacyAcceptedAt(),
       role: user.getRole(),
     };
   }
