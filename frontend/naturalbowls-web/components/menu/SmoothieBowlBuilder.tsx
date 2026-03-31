@@ -377,7 +377,8 @@ export default function SmoothieBowlBuilder({
                 </div>
               </div>
             </div>
-            <div className="bg-[#9CB973]/10 border-2 border-[#9CB973] rounded-xl p-4 text-center">
+            {/* Cart action — desktop only (mobile version below nutrition panel) */}
+            <div className="hidden lg:block bg-[#9CB973]/10 border-2 border-[#9CB973] rounded-xl p-4 text-center">
               <p className="text-sm text-[#5D4E37] font-bold mb-2">
                 {selectedSmoothie
                   ? `✓ ${selectedSmoothie.name}${selectedToppings.length > 0 ? ` + ${selectedToppings.length} toppings` : ""}`
@@ -390,23 +391,21 @@ export default function SmoothieBowlBuilder({
               <p className="text-lg font-bold text-[#6B8E4E] mb-3">
                 S/ {totalPrice.toFixed(2)}
               </p>
-              <div className="space-y-2">
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    (e.currentTarget as HTMLButtonElement).blur();
-                    handleAddToCart();
-                  }}
-                  disabled={!selectedSmoothie || missingToppings > 0}
-                  className={`w-full py-2 px-4 rounded-lg font-bold transition-all ${
-                    selectedSmoothie && missingToppings === 0
-                      ? "bg-[#9CB973] text-white hover:bg-[#6B8E4E] cursor-pointer"
-                      : "bg-gray-200 text-gray-400 cursor-not-allowed"
-                  }`}
-                >
-                  🛒 Agregar al carrito
-                </button>
-              </div>
+              <button
+                type="button"
+                onClick={(e) => {
+                  (e.currentTarget as HTMLButtonElement).blur();
+                  handleAddToCart();
+                }}
+                disabled={!selectedSmoothie || missingToppings > 0}
+                className={`w-full py-2 px-4 rounded-lg font-bold transition-all ${
+                  selectedSmoothie && missingToppings === 0
+                    ? "bg-[#9CB973] text-white hover:bg-[#6B8E4E] cursor-pointer"
+                    : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                }`}
+              >
+                🛒 Agregar al carrito
+              </button>
             </div>
           </div>
 
@@ -545,6 +544,39 @@ export default function SmoothieBowlBuilder({
               <p className="text-xs text-gray-600">
                 Mantequilla de maní y Nibs de cacao (+2 soles)
               </p>
+            </div>
+          </div>
+
+          {/* Cart action — mobile only */}
+          <div className="lg:hidden p-8 border-t border-gray-200 bg-white">
+            <div className="bg-[#9CB973]/10 border-2 border-[#9CB973] rounded-xl p-4 text-center">
+              <p className="text-sm text-[#5D4E37] font-bold mb-2">
+                {selectedSmoothie
+                  ? `✓ ${selectedSmoothie.name}${selectedToppings.length > 0 ? ` + ${selectedToppings.length} toppings` : ""}`
+                  : "✨ Selecciona un smoothie"}
+              </p>
+              <p className="text-xs text-gray-600 mb-3">
+                {missingToppings > 0 &&
+                  `Falta seleccionar ${missingToppings} topping${missingToppings !== 1 ? "s" : ""}`}
+              </p>
+              <p className="text-lg font-bold text-[#6B8E4E] mb-3">
+                S/ {totalPrice.toFixed(2)}
+              </p>
+              <button
+                type="button"
+                onClick={(e) => {
+                  (e.currentTarget as HTMLButtonElement).blur();
+                  handleAddToCart();
+                }}
+                disabled={!selectedSmoothie || missingToppings > 0}
+                className={`w-full py-3 px-4 rounded-lg font-bold transition-all ${
+                  selectedSmoothie && missingToppings === 0
+                    ? "bg-[#9CB973] text-white hover:bg-[#6B8E4E] cursor-pointer"
+                    : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                }`}
+              >
+                🛒 Agregar al carrito
+              </button>
             </div>
           </div>
         </div>

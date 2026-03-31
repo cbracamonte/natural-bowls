@@ -38,14 +38,16 @@ export class PokeBowlService {
   /**
    * Obtiene los límites de selección por categoría
    */
-  static getLimits(tamaño: "regular" | "grande"): Record<string, number> {
+  static getLimits(
+    tamaño: "regular" | "grande",
+  ): Record<string, { min: number; max: number }> {
     return {
-      bases: 1,
-      proteinas: 1,
-      extraProteinas: 1,
-      toppings: 5,
-      agregados: 4,
-      salsas: tamaño === "regular" ? 2 : 3,
+      bases: { min: 1, max: 1 },
+      proteinas: { min: 1, max: 1 },
+      extraProteinas: { min: 0, max: 1 },
+      toppings: { min: 3, max: 5 },
+      agregados: { min: 1, max: 5 },
+      salsas: { min: tamaño === "regular" ? 2 : 3, max: tamaño === "regular" ? 2 : 3 },
     };
   }
 
@@ -169,31 +171,27 @@ export class PokeBowlService {
       return { isValid: false, message: "Por favor selecciona una proteína" };
     }
 
-    if ((selectedItems.toppings?.length || 0) < limits.toppings) {
-      const missing = limits.toppings - (selectedItems.toppings?.length || 0);
+    if ((selectedItems.toppings?.length || 0) < limits.toppings.min) {
+      const missing = limits.toppings.min - (selectedItems.toppings?.length || 0);
       return {
         isValid: false,
-        message: `Por favor selecciona ${missing} topping${missing !== 1 ? "s" : ""}`,
+        message: `Por favor selecciona ${missing} topping${missing !== 1 ? "s" : ""} más`,
       };
     }
 
-    if ((selectedItems.agregados?.length || 0) < limits.agregados) {
-      const missing = limits.agregados - (selectedItems.agregados?.length || 0);
+    if ((selectedItems.agregados?.length || 0) < limits.agregados.min) {
+      const missing = limits.agregados.min - (selectedItems.agregados?.length || 0);
       return {
         isValid: false,
-        message: `Por favor selecciona ${missing} agregado${missing !== 1 ? "s" : ""}`,
+        message: `Por favor selecciona ${missing} agregado${missing !== 1 ? "s" : ""} más`,
       };
     }
 
-    const requiredSalsas = limits.salsas;
-    if (
-      !selectedItems.salsas?.length ||
-      selectedItems.salsas.length !== requiredSalsas
-    ) {
-      const missing = requiredSalsas - (selectedItems.salsas?.length || 0);
+    if ((selectedItems.salsas?.length || 0) < limits.salsas.min) {
+      const missing = limits.salsas.min - (selectedItems.salsas?.length || 0);
       return {
         isValid: false,
-        message: `Por favor selecciona ${missing} salsa${missing !== 1 ? "s" : ""}`,
+        message: `Por favor selecciona ${missing} salsa${missing !== 1 ? "s" : ""} más`,
       };
     }
 
@@ -258,11 +256,11 @@ export class PokeBowlService {
   static isCategoryFull(
     selectedItems: SelectedBowlItems,
     category: string,
-    limits: Record<string, number>,
+    limits: Record<string, { min: number; max: number }>,
   ): boolean {
     const count = selectedItems[category]?.length || 0;
-    const limit = limits[category];
-    return count >= limit && limit > 0;
+    const { max } = limits[category];
+    return count >= max && max > 0;
   }
 
   /**
@@ -272,7 +270,7 @@ export class PokeBowlService {
     selectedItems: SelectedBowlItems,
     category: string,
     item: string,
-    limits: Record<string, number>,
+    limits: Record<string, { min: number; max: number }>,
   ): boolean {
     const isSelected = selectedItems[category]?.includes(item);
     const isFull = this.isCategoryFull(selectedItems, category, limits);

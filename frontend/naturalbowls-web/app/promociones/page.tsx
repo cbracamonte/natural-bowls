@@ -1,18 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import {
-  Clock,
-  CreditCard,
-  ArrowRight,
-  MessageCircle,
-} from "lucide-react";
+import { Clock, CreditCard, ArrowRight, MessageCircle } from "lucide-react";
 import { generatePageMetadata } from "@/lib/seo";
 import { buildWhatsAppUrl } from "@/lib/utils/contact";
-import {
-  LOYALTY_PROGRAM,
-  PROMOTIONS,
-  GENERAL_TERMS,
-} from "@/data/promotions";
+import { LOYALTY_PROGRAM, PROMOTIONS, GENERAL_TERMS } from "@/data/promotions";
 import PlanPokesHero from "@/components/promotions/PlanPokesHero";
 
 export const metadata = generatePageMetadata({
@@ -36,6 +27,94 @@ export default function PromocionesPage() {
     <div className="min-h-screen bg-[#F5F3EF]">
       {/* Plan Pokes — Hero + Modal */}
       {highlightedPromo && <PlanPokesHero promo={highlightedPromo} />}
+
+      {/* ═══════════════════════════════════════════════
+          PROMOS — Bandas alternadas full-width
+          ═══════════════════════════════════════════════ */}
+      {regularPromos.map((promo, index) => {
+        const imageFirst = index % 2 !== 0;
+
+        return (
+          <section
+            key={promo.id}
+            className={index % 2 === 0 ? "bg-[#F5F3EF]" : "bg-white"}
+          >
+            <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 items-center">
+              {/* Image */}
+              <div
+                className={`relative min-h-[320px] lg:min-h-[460px] ${
+                  !imageFirst ? "lg:order-2" : ""
+                }`}
+              >
+                <Image
+                  src={promo.image}
+                  alt={promo.title}
+                  fill
+                  className="object-cover"
+                />
+                {promo.badge && (
+                  <div className="absolute top-6 right-6 px-5 py-2 bg-[#9CB973] text-white text-sm font-bold rounded-full shadow-lg">
+                    {promo.badge}
+                  </div>
+                )}
+              </div>
+
+              {/* Content */}
+              <div
+                className={`px-8 py-14 md:px-14 lg:px-20 ${
+                  !imageFirst ? "lg:order-1" : ""
+                }`}
+              >
+                <h2 className="text-3xl md:text-4xl font-bold text-[#5D4E37] mb-4 tracking-tight">
+                  {promo.title}
+                </h2>
+                <p className="text-[#5D4E37]/80 text-lg leading-relaxed mb-6 max-w-md">
+                  {promo.description}
+                </p>
+
+                {promo.schedule && (
+                  <div className="flex items-center gap-2 text-[#5D4E37]/60 text-sm mb-4">
+                    <Clock className="w-4 h-4" />
+                    <span>{promo.schedule}</span>
+                  </div>
+                )}
+
+                {promo.terms.length > 0 && (
+                  <ul className="text-[#5D4E37]/50 text-sm mb-8 list-disc list-inside space-y-1">
+                    {promo.terms.map((term, i) => (
+                      <li key={i}>{term}</li>
+                    ))}
+                  </ul>
+                )}
+
+                {promo.cta.href ? (
+                  <Link
+                    href={promo.cta.href}
+                    className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#9CB973] text-white rounded-full font-semibold text-sm hover:bg-[#8aab5f] transition-all hover:shadow-lg group/btn"
+                  >
+                    {promo.cta.text}
+                    <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-0.5" />
+                  </Link>
+                ) : (
+                  <a
+                    href={buildWhatsAppUrl(
+                      promo.cta.whatsAppMessage ?? `Hola! Me interesa la promo ${promo.title}`,
+                    )}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#9CB973] text-white rounded-full font-semibold text-sm hover:bg-[#8aab5f] transition-all hover:shadow-lg group/btn"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    {promo.cta.text}
+                    <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-0.5" />
+                  </a>
+                )}
+              </div>
+            </div>
+          </section>
+        );
+      })}
+
 
       {/* ═══════════════════════════════════════════════
           LOYALTY CARD — full-width alternating band
@@ -103,81 +182,6 @@ export default function PromocionesPage() {
           </div>
         </div>
       </section>
-
-      {/* ═══════════════════════════════════════════════
-          PROMOS — Bandas alternadas full-width
-          ═══════════════════════════════════════════════ */}
-      {regularPromos.map((promo, index) => {
-        const imageFirst = index % 2 !== 0;
-
-        return (
-          <section
-            key={promo.id}
-            className={index % 2 === 0 ? "bg-[#F5F3EF]" : "bg-white"}
-          >
-            <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 items-center">
-              {/* Image */}
-              <div
-                className={`relative min-h-[320px] lg:min-h-[460px] ${
-                  !imageFirst ? "lg:order-2" : ""
-                }`}
-              >
-                <Image
-                  src={promo.image}
-                  alt={promo.title}
-                  fill
-                  className="object-cover"
-                />
-                {promo.badge && (
-                  <div className="absolute top-6 right-6 px-5 py-2 bg-[#9CB973] text-white text-sm font-bold rounded-full shadow-lg">
-                    {promo.badge}
-                  </div>
-                )}
-              </div>
-
-              {/* Content */}
-              <div
-                className={`px-8 py-14 md:px-14 lg:px-20 ${
-                  !imageFirst ? "lg:order-1" : ""
-                }`}
-              >
-                <h2 className="text-3xl md:text-4xl font-bold text-[#5D4E37] mb-4 tracking-tight">
-                  {promo.title}
-                </h2>
-                <p className="text-[#5D4E37]/80 text-lg leading-relaxed mb-6 max-w-md">
-                  {promo.description}
-                </p>
-
-                {promo.schedule && (
-                  <div className="flex items-center gap-2 text-[#5D4E37]/60 text-sm mb-4">
-                    <Clock className="w-4 h-4" />
-                    <span>{promo.schedule}</span>
-                  </div>
-                )}
-
-                {promo.terms.length > 0 && (
-                  <p className="text-[#5D4E37]/50 text-sm mb-8">
-                    {promo.terms[0]}
-                  </p>
-                )}
-
-                <a
-                  href={buildWhatsAppUrl(
-                    `Hola! Me interesa la promo ${promo.title}`
-                  )}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#9CB973] text-white rounded-full font-semibold text-sm hover:bg-[#8aab5f] transition-all hover:shadow-lg group/btn"
-                >
-                  <MessageCircle className="w-4 h-4" />
-                  Consultar
-                  <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-0.5" />
-                </a>
-              </div>
-            </div>
-          </section>
-        );
-      })}
 
       {/* ═══════════════════════════════════════════════
           TERMS & CONDITIONS
