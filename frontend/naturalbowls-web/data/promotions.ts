@@ -36,7 +36,7 @@ export interface Promotion {
   schedule?: string;
   terms: string[];
   highlighted?: boolean;
-  cta: PromotionCTA;
+  cta?: PromotionCTA;
   notification?: PromotionNotificationConfig;
 }
 
@@ -74,11 +74,12 @@ export const PROMOTIONS: Promotion[] = [
     detailImage: "/images/promotions/plan-pokes.jpg",
     highlighted: true,
     badge: "Ahorra más",
-    cta: {
-      text: "Quiero mi plan",
-      whatsAppMessage: "Hola! Quiero activar mi Plan Pokes 🍣",
-    },
+    // cta: {
+    //   text: "Quiero mi plan",
+    //   whatsAppMessage: "Hola! Quiero activar mi Plan Pokes 🍣",
+    // },
     terms: [
+      "Válido solo para consumo en local.",
       "No incluye delivery.",
       "Válido hasta 45 días desde la compra.",
       "Disponible en modalidad mensual o quincenal."
@@ -101,13 +102,13 @@ export const PROMOTIONS: Promotion[] = [
       "Tu primera experiencia merece ser perfecta. Obtén 15% de descuento y descubre una nueva forma de comer saludable, personalizada y deliciosa.",
     image: "/images/promotions/primera-compra.jpg",
     badge: "15% OFF",
-    cta: {
-      text: "Explorar menú",
-      href: "/menu",
-    },
+    // cta: {
+    //   text: "Explorar menú",
+    //   href: "/menu",
+    // },
     terms: [
       "Válido solo para nuevos clientes.",
-      "Aplica en el primer pedido."
+      "Aplica en el primer pedido.",
     ],
     notification: {
       icon: "🎉",
@@ -128,11 +129,12 @@ export const PROMOTIONS: Promotion[] = [
     image: "/images/promotions/combo-universitario.jpg",
     schedule: "Lun - Vie, 12pm - 3pm",
     badge: "Precio especial",
-    cta: {
-      text: "Pedir combo",
-      whatsAppMessage: "Hola! Quiero el Combo Universitario 🎓",
-    },
+    // cta: {
+    //   text: "Pedir combo",
+    //   whatsAppMessage: "Hola! Quiero el Combo Universitario 🎓",
+    // },
     terms: [
+      "Válido solo para consumo en local.",
       "Sujeto a disponibilidad."
     ],
     notification: {
@@ -154,11 +156,12 @@ export const PROMOTIONS: Promotion[] = [
     image: "/images/promotions/20-discount-smoothie.jpg",
     badge: "20% OFF",
     schedule: "Lun - Vie, 9:00am - 3:00pm",
-    cta: {
-      text: "Pedir ahora",
-      whatsAppMessage: "Hola! Quiero aprovechar el 20% OFF en smoothie bowls 🥣",
-    },
+    // cta: {
+    //   text: "Pedir ahora",
+    //   whatsAppMessage: "Hola! Quiero aprovechar el 20% OFF en smoothie bowls 🥣",
+    // },
     terms: [
+      "Válido solo para consumo en local.",
       "Aplica para todos los smoothie bowls.",
       "No acumulable con otras promociones."
     ],
@@ -178,7 +181,6 @@ export const PROMOTIONS: Promotion[] = [
 
 export const GENERAL_TERMS = [
   "Las promociones no son acumulables entre sí.",
-  "Válido solo en compras presenciales en tienda.",
   "Los descuentos no aplican para delivery.",
   "Promociones sujetas a disponibilidad.",
   "Natural Bowls se reserva el derecho de modificar o cancelar promociones sin previo aviso.",

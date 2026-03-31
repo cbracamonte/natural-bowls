@@ -5,6 +5,7 @@ import { generatePageMetadata } from "@/lib/seo";
 import { buildWhatsAppUrl } from "@/lib/utils/contact";
 import { LOYALTY_PROGRAM, PROMOTIONS, GENERAL_TERMS } from "@/data/promotions";
 import PlanPokesHero from "@/components/promotions/PlanPokesHero";
+import FirstOrderCTA from "@/components/promotions/FirstOrderCTA";
 
 export const metadata = generatePageMetadata({
   title: "Promociones y Descuentos",
@@ -87,7 +88,9 @@ export default function PromocionesPage() {
                   </ul>
                 )}
 
-                {promo.cta.href ? (
+                {promo.id === "primera-compra" && <FirstOrderCTA />}
+
+                {promo.cta && (promo.cta.href ? (
                   <Link
                     href={promo.cta.href}
                     className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#9CB973] text-white rounded-full font-semibold text-sm hover:bg-[#8aab5f] transition-all hover:shadow-lg group/btn"
@@ -108,7 +111,7 @@ export default function PromocionesPage() {
                     {promo.cta.text}
                     <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-0.5" />
                   </a>
-                )}
+                ))}
               </div>
             </div>
           </section>
@@ -172,13 +175,13 @@ export default function PromocionesPage() {
               ))}
             </div>
 
-            <Link
+            { /*<Link
               href="/menu"
               className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#5D4E37] text-white rounded-full font-semibold text-sm hover:bg-[#4A3E2C] transition-all hover:shadow-lg group/link"
             >
               Empezar a acumular
               <ArrowRight className="w-4 h-4 transition-transform group-hover/link:translate-x-0.5" />
-            </Link>
+            </Link> */ }
           </div>
         </div>
       </section>
