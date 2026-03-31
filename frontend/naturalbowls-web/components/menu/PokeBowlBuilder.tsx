@@ -44,12 +44,12 @@ export default function PokeBowlBuilder({ pokeOptions }: PokeBowlBuilderProps) {
         return { ...prev, [category]: current.filter((i) => i !== item) };
       }
 
-      const limit = limits[category];
+      const { max } = limits[category];
       const newState = { ...prev };
 
-      if (current.length < limit) {
+      if (current.length < max) {
         newState[category] = [...current, item];
-      } else if (limit === 1) {
+      } else if (max === 1) {
         newState[category] = [item];
       } else {
         return prev;
@@ -132,14 +132,17 @@ export default function PokeBowlBuilder({ pokeOptions }: PokeBowlBuilderProps) {
     const messages: string[] = [];
     if (!selectedItems.bases?.length) messages.push("Base");
     if (!selectedItems.proteinas?.length) messages.push("Proteína");
-    if ((selectedItems.toppings?.length || 0) < limits.toppings) {
-      messages.push(`${limits.toppings - (selectedItems.toppings?.length || 0)} topping${limits.toppings - (selectedItems.toppings?.length || 0) !== 1 ? "s" : ""}`);
+    if ((selectedItems.toppings?.length || 0) < limits.toppings.min) {
+      const missing = limits.toppings.min - (selectedItems.toppings?.length || 0);
+      messages.push(`${missing} topping${missing !== 1 ? "s" : ""}`);
     }
-    if ((selectedItems.agregados?.length || 0) < limits.agregados) {
-      messages.push(`${limits.agregados - (selectedItems.agregados?.length || 0)} agregado${limits.agregados - (selectedItems.agregados?.length || 0) !== 1 ? "s" : ""}`);
+    if ((selectedItems.agregados?.length || 0) < limits.agregados.min) {
+      const missing = limits.agregados.min - (selectedItems.agregados?.length || 0);
+      messages.push(`${missing} agregado${missing !== 1 ? "s" : ""}`);
     }
-    if (selectedItems.salsas?.length !== limits.salsas) {
-      messages.push(`${limits.salsas - (selectedItems.salsas?.length || 0)} salsa${limits.salsas - (selectedItems.salsas?.length || 0) !== 1 ? "s" : ""}`);
+    if ((selectedItems.salsas?.length || 0) < limits.salsas.min) {
+      const missing = limits.salsas.min - (selectedItems.salsas?.length || 0);
+      messages.push(`${missing} salsa${missing !== 1 ? "s" : ""}`);
     }
     return messages;
   };
@@ -222,11 +225,19 @@ export default function PokeBowlBuilder({ pokeOptions }: PokeBowlBuilderProps) {
                                 {label}
                               </span>
                               <span className="text-xs text-gray-500">
-                                {count}/{limits[key]}
-                                {isOptional && " (Opcional)"}
-                                {isOptional && !selectedItems.proteinas?.length && (
-                                  <span className="text-gray-400 ml-1">- Selecciona proteína</span>
-                                )}
+                                {(() => {
+                                  const { min, max } = limits[key];
+                                  if (isOptional) {
+                                    if (!selectedItems.proteinas?.length) {
+                                      return <span className="text-gray-400">Selecciona proteína primero</span>;
+                                    }
+                                    return `${count}/${max} (Opcional)`;
+                                  }
+                                  if (min === max) return `${count}/${max}`;
+                                  if (count < min) return `Elige mín. ${min - count} más · ${count}/${max}`;
+                                  if (count < max) return `${count}/${max} · Puedes agregar ${max - count} más`;
+                                  return `${count}/${max}`;
+                                })()}
                               </span>
                             </div>
                           </div>
@@ -330,7 +341,8 @@ export default function PokeBowlBuilder({ pokeOptions }: PokeBowlBuilderProps) {
 
             </div>
 
-            <div className="bg-[#9CB973]/10 border-2 border-[#9CB973] rounded-xl p-4 text-center">
+            {/* Cart action — desktop only (mobile version below nutrition panel) */}
+            <div className="hidden lg:block bg-[#9CB973]/10 border-2 border-[#9CB973] rounded-xl p-4 text-center">
               <p className="text-sm text-[#5D4E37] font-bold mb-2">
                 {totalSelected === 0
                   ? "✨ Comienza a construir tu bowl"
@@ -535,6 +547,41 @@ export default function PokeBowlBuilder({ pokeOptions }: PokeBowlBuilderProps) {
               <p className="text-xs text-gray-600">
                 Ingredientes frescos seleccionados con cuidado
               </p>
+            </div>
+          </div>
+
+          {/* Cart action — mobile only */}
+          <div className="lg:hidden p-8 border-t border-gray-200 bg-white">
+            <div className="bg-[#9CB973]/10 border-2 border-[#9CB973] rounded-xl p-4 text-center">
+              <p className="text-sm text-[#5D4E37] font-bold mb-2">
+                {totalSelected === 0
+                  ? "✨ Comienza a construir tu bowl"
+                  : `🎯 ${totalSelected} ingredientes seleccionados`}
+              </p>
+              {selectedItems.bases?.length &&
+                selectedItems.proteinas?.length &&
+                totalPrice > 0 && (
+                  <p className="text-lg font-bold text-[#6B8E4E] mb-3">
+                    S/ {totalPrice.toFixed(2)}
+                  </p>
+                )}
+              <div className="text-xs text-gray-600 mb-2 space-y-1">
+                {validationMessages.map((msg, idx) => (
+                  <p key={idx}>• Falta: {msg}</p>
+                ))}
+              </div>
+              <button
+                type="button"
+                onClick={handleAddToCart}
+                disabled={!isFormValid}
+                className={`w-full py-3 px-4 rounded-lg font-bold transition-all ${
+                  isFormValid
+                    ? "bg-[#9CB973] text-white hover:bg-[#6B8E4E] cursor-pointer"
+                    : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                }`}
+              >
+                🛒 Agregar al carrito
+              </button>
             </div>
           </div>
         </div>

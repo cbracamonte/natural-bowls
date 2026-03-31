@@ -20,6 +20,12 @@ export interface PromotionNotificationConfig {
   whatsAppMessage?: string; // Mensaje de WhatsApp — solo si no hay ctaLink
 }
 
+export interface PromotionCTA {
+  text: string;
+  href?: string; // Ruta interna — si no se define, se usa WhatsApp
+  whatsAppMessage?: string; // Mensaje de WhatsApp — solo si no hay href
+}
+
 export interface Promotion {
   id: string;
   title: string;
@@ -30,6 +36,7 @@ export interface Promotion {
   schedule?: string;
   terms: string[];
   highlighted?: boolean;
+  cta?: PromotionCTA;
   notification?: PromotionNotificationConfig;
 }
 
@@ -62,71 +69,47 @@ export const PROMOTIONS: Promotion[] = [
     id: "plan-pokes",
     title: "Plan Pokes",
     description:
-      "Arma tu plan de pokes semanal o quincenal y ahorra en cada pedido.",
+      "Optimiza tu alimentación sin complicarte. Elige tu plan mensual o quincenal y asegura tus pokes favoritos con ahorro garantizado en cada pedido.",
     image: "/images/promotions/poke-bowl-promotion.jpg",
     detailImage: "/images/promotions/plan-pokes.jpg",
     highlighted: true,
+    badge: "Ahorra más",
+    // cta: {
+    //   text: "Quiero mi plan",
+    //   whatsAppMessage: "Hola! Quiero activar mi Plan Pokes 🍣",
+    // },
     terms: [
+      "Válido solo para consumo en local.",
       "No incluye delivery.",
-      "Válido hasta en 45 días para ser usado (mensual o quincenal).",
+      "Válido hasta 45 días desde la compra.",
+      "Disponible en modalidad mensual o quincenal."
     ],
     notification: {
       icon: "🍣",
       bgColor: "from-emerald-50 to-teal-50",
       textColor: "text-emerald-900",
-      discount: "Ahorra más",
+      discount: "Ahorro inteligente",
       expiryDate: "2026-12-31",
       active: true,
       ctaText: "Quiero mi plan",
-      whatsAppMessage: "Hola! Me interesa el Plan Pokes 🍣",
-    },
-  },
-  {
-    id: "combo-universitario",
-    title: "Combo Universitario",
-    description:
-      "Wrap o ensalada + bebida por un precio especial. Perfecto para tu hora de almuerzo.",
-    image: "/images/promotions/combo-universitario.jpg",
-    schedule: "Lun - Vie, 12pm - 3pm",
-    terms: ["Válido de lunes a viernes de 12pm a 3pm."],
-    notification: {
-      icon: "🎓",
-      bgColor: "from-blue-50 to-cyan-50",
-      textColor: "text-blue-900",
-      expiryDate: "2026-12-31",
-      active: true,
-      ctaText: "Adquirir Combo",
-      whatsAppMessage: "Hola! Me interesa el Combo Universitario 🎓",
-    },
-  },
-  {
-    id: "happy-hour",
-    title: "Happy Hour",
-    description:
-      "2x1 en smoothies y jugos. Comparte con un amigo o guarda uno para después.",
-    image: "/images/promotions/happy-hour.jpg",
-    badge: "2x1",
-    schedule: "Lun - Jue, 4pm - 6pm",
-    terms: ["Válido de lunes a jueves de 4pm a 6pm."],
-    notification: {
-      icon: "🥤",
-      bgColor: "from-pink-50 to-rose-50",
-      textColor: "text-pink-900",
-      discount: "2x1",
-      expiryDate: "2026-12-31",
-      active: true,
-      ctaText: "Consultar",
-      whatsAppMessage: "Hola! Me interesa el Happy Hour 2x1 🥤",
+      whatsAppMessage: "Hola! Quiero activar mi Plan Pokes 🍣",
     },
   },
   {
     id: "primera-compra",
-    title: "Primera Compra",
+    title: "Bienvenido: 15% OFF en tu Primera Orden",
     description:
-      "¿Es tu primera vez en Natural Bowls? Obtén 15% de descuento en tu primer pedido.",
+      "Tu primera experiencia merece ser perfecta. Obtén 15% de descuento y descubre una nueva forma de comer saludable, personalizada y deliciosa.",
     image: "/images/promotions/primera-compra.jpg",
     badge: "15% OFF",
-    terms: ["Solo clientes nuevos."],
+    // cta: {
+    //   text: "Explorar menú",
+    //   href: "/menu",
+    // },
+    terms: [
+      "Válido solo para nuevos clientes.",
+      "Aplica en el primer pedido.",
+    ],
     notification: {
       icon: "🎉",
       bgColor: "from-purple-50 to-violet-50",
@@ -134,15 +117,70 @@ export const PROMOTIONS: Promotion[] = [
       discount: "15% OFF",
       expiryDate: "2026-12-31",
       active: true,
-      ctaText: "Ver menú",
+      ctaText: "Explorar menú",
       ctaLink: "/menu",
+    },
+  },
+  {
+    id: "combo-universitario",
+    title: "Combo Universitario",
+    description:
+      "Almuerza rápido, balanceado y a mejor precio. Elige entre wrap o ensalada + bebida, diseñado para mantener tu energía durante el día.",
+    image: "/images/promotions/combo-universitario.jpg",
+    schedule: "Lun - Vie, 12pm - 3pm",
+    badge: "Precio especial",
+    // cta: {
+    //   text: "Pedir combo",
+    //   whatsAppMessage: "Hola! Quiero el Combo Universitario 🎓",
+    // },
+    terms: [
+      "Válido solo para consumo en local.",
+      "Sujeto a disponibilidad."
+    ],
+    notification: {
+      icon: "🎓",
+      bgColor: "from-blue-50 to-cyan-50",
+      textColor: "text-blue-900",
+      discount: "Combo especial",
+      expiryDate: "2026-12-31",
+      active: true,
+      ctaText: "Pedir combo",
+      whatsAppMessage: "Hola! Quiero el Combo Universitario 🎓",
+    },
+  },
+  {
+    id: "20-discount-smoothie-bowls",
+    title: "Activa tu 20% OFF en Smoothie Bowls",
+    description:
+      "Empieza tu día con energía. Personaliza tu smoothie bowl y disfruta 20% de descuento mientras controlas tus macros en tiempo real.",
+    image: "/images/promotions/20-discount-smoothie.jpg",
+    badge: "20% OFF",
+    schedule: "Lun - Vie, 9:00am - 3:00pm",
+    // cta: {
+    //   text: "Pedir ahora",
+    //   whatsAppMessage: "Hola! Quiero aprovechar el 20% OFF en smoothie bowls 🥣",
+    // },
+    terms: [
+      "Válido solo para consumo en local.",
+      "Aplica para todos los smoothie bowls.",
+      "No acumulable con otras promociones."
+    ],
+    notification: {
+      icon: "🥣",
+      bgColor: "from-green-50 to-emerald-50",
+      textColor: "text-green-900",
+      discount: "20% OFF",
+      expiryDate: "2026-12-31",
+      active: true,
+      ctaText: "Pedir ahora",
+      whatsAppMessage:
+        "Hola! Quiero aprovechar el 20% OFF en smoothie bowls 🥣",
     },
   },
 ];
 
 export const GENERAL_TERMS = [
   "Las promociones no son acumulables entre sí.",
-  "Válido solo en compras presenciales en tienda.",
   "Los descuentos no aplican para delivery.",
   "Promociones sujetas a disponibilidad.",
   "Natural Bowls se reserva el derecho de modificar o cancelar promociones sin previo aviso.",
