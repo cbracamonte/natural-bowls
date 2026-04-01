@@ -39,7 +39,7 @@ export default function Home() {
       <HeroSmoothiebowl />
 
       {/* 6. Newsletter - Conversiones finales */}
-      {/*  <Newsletter />*/}
+      <Newsletter />
 
       {/* 7. Aliados */}
       <Sponsors />

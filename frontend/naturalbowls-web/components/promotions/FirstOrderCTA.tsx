@@ -26,7 +26,14 @@ export default function FirstOrderCTA() {
         <ArrowRight className="w-4 h-4 transition-transform group-hover/btn:translate-x-0.5" />
       </button>
 
-      {showModal && <FirstOrderModal onDone={() => setShowModal(false)} />}
+      {showModal && (
+        <FirstOrderModal
+          onDone={() => {
+            setShowModal(false);
+            setIsEligible(DiscountCodeService.getInitialState().isEligible);
+          }}
+        />
+      )}
     </>
   );
 }
