@@ -8,8 +8,9 @@ import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/lib/utils/utils";
 import Button from "@/components/ui/Button";
 import Input from "@/components/ui/Input";
-import { CheckoutService } from "@/lib/services";
+import { CheckoutService, DiscountCodeService } from "@/lib/services";
 import { CheckoutFormData } from "@/lib/schemas";
+import FirstOrderModal from "@/components/banners/FirstOrderModal";
 
 export default function CheckoutPage() {
   const { items, total, clearCart } = useCart();
@@ -35,6 +36,7 @@ export default function CheckoutPage() {
   const [discountCode, setDiscountCode] = useState("");
   const [discountValidated, setDiscountValidated] = useState(false);
   const [discountError, setDiscountError] = useState("");
+  const [showGenerateModal, setShowGenerateModal] = useState(false);
 
   const { discountAmount, finalTotal } = CheckoutService.calculateDiscount(
     total,
@@ -400,7 +402,20 @@ export default function CheckoutPage() {
                       />
                       {discountError && (
                         <p className="text-red-500 text-xs mt-1">
-                          {discountError}
+                          {discountError === "NO_CODE_GENERATED" ? (
+                            <>
+                              No has generado tu código.{" "}
+                              <button
+                                type="button"
+                                onClick={() => setShowGenerateModal(true)}
+                                className="font-semibold text-[#6B8E4E] underline underline-offset-2 hover:text-[#5D7A42] transition-colors cursor-pointer"
+                              >
+                                Genera aquí
+                              </button>
+                            </>
+                          ) : (
+                            discountError
+                          )}
                         </p>
                       )}
                     </div>
@@ -421,6 +436,7 @@ export default function CheckoutPage() {
                     </button>
                   </div>
                 </div>
+
               </div>
 
               {/* Resumen del pedido */}
@@ -555,6 +571,23 @@ export default function CheckoutPage() {
           </form>
         </div>
       </div>
+
+      {showGenerateModal && (
+        <FirstOrderModal
+          onDone={() => {
+            setShowGenerateModal(false);
+            const state = DiscountCodeService.getInitialState();
+            if (state.existingCode) {
+              setDiscountCode(state.existingCode);
+              setDiscountError("");
+            }
+            const phone = DiscountCodeService.getPhoneFromStorage();
+            if (phone) {
+              setFormData((prev) => ({ ...prev, phone }));
+            }
+          }}
+        />
+      )}
     </>
   );
 }

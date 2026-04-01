@@ -1,9 +1,13 @@
 import { Pool } from 'pg';
 import { getDbCredentials } from './postgres.secrets';
+import { getTenantContext } from './tenant-context';
+import { initPlatformPostgres } from './platform.connection';
 
-let pool: Pool | null = null;
+let defaultPool: Pool | null = null;
 
 export async function initPostgres(): Promise<void> {
+  await initPlatformPostgres();
+
   const connectionString = process.env.DATABASE_URL?.trim();
 
   const connectionConfig = connectionString
@@ -12,7 +16,7 @@ export async function initPostgres(): Promise<void> {
       }
     : await buildConnectionConfigFromSecret();
 
-  pool = new Pool({
+  defaultPool = new Pool({
     ...connectionConfig,
     ssl: {
       rejectUnauthorized: false,
@@ -22,14 +26,21 @@ export async function initPostgres(): Promise<void> {
     connectionTimeoutMillis: 10000,
   });
 
-  await pool.query('SELECT 1');
+  await defaultPool.query('SELECT 1');
 }
 
 export function getPgPool(): Pool {
-  if (!pool) {
+  const context = getTenantContext();
+
+  if (context?.pool) {
+    return context.pool;
+  }
+
+  if (!defaultPool) {
     throw new Error('Postgres pool not initialized');
   }
-  return pool;
+
+  return defaultPool;
 }
 
 async function buildConnectionConfigFromSecret() {
