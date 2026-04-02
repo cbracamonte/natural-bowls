@@ -218,3 +218,65 @@ export function FAQSchema({
     />
   );
 }
+
+/**
+ * Schema.org ItemList con SiteNavigationElement
+ * Ayuda a Google a identificar las secciones principales del sitio para generar sitelinks
+ */
+export function SiteNavigationSchema() {
+  const navigationItems = [
+    { name: "Menu", url: `${SITE_CONFIG.url}/menu`, description: "Menu completo: poke bowls, smoothie bowls, wraps, ensaladas, waffles fit, postres saludables, desayunos proteicos, jugos y cafe gourmet" },
+    { name: "Arma Tu Bowl", url: `${SITE_CONFIG.url}/bowls`, description: "Personaliza tu propio poke bowl o smoothie bowl con ingredientes frescos y organicos" },
+    { name: "Promociones", url: `${SITE_CONFIG.url}/promociones`, description: "Descuentos y ofertas especiales en comida saludable, fit y vegetariana" },
+    { name: "Catering", url: `${SITE_CONFIG.url}/catering`, description: "Servicio de catering saludable y fit para eventos corporativos, cumpleanos y reuniones" },
+  ];
+
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    itemListElement: navigationItems.map((item, index) => ({
+      "@type": "SiteNavigationElement",
+      position: index + 1,
+      name: item.name,
+      description: item.description,
+      url: item.url,
+    })),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      suppressHydrationWarning
+    />
+  );
+}
+
+/**
+ * Schema.org Organization
+ * Complementa Restaurant con info corporativa, logo y redes sociales
+ */
+export function OrganizationSchema() {
+  const schema = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: SITE_CONFIG.name,
+    url: SITE_CONFIG.url,
+    logo: `${SITE_CONFIG.url}/icons/nbicon.png`,
+    contactPoint: {
+      "@type": "ContactPoint",
+      telephone: SITE_CONFIG.phone,
+      contactType: "customer service",
+      availableLanguage: "Spanish",
+    },
+    sameAs: Object.values(SOCIAL_LINKS),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+      suppressHydrationWarning
+    />
+  );
+}

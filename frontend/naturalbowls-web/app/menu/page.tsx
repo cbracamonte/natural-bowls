@@ -1,20 +1,35 @@
-import { generatePageMetadata } from "@/lib/seo";
+import { generatePageMetadata, SITE_CONFIG } from "@/lib/seo";
 import { Suspense } from "react";
 import MenuContent from "@/components/menu/MenuContent";
 import MenuLoading from "@/components/menu/MenuLoading";
 import { PRODUCTS, PRODUCTS_CATEGORY } from "@/data";
+import { BreadcrumbSchema } from "@/components/seo/StructuredData";
 
 export const metadata = generatePageMetadata({
-  title: "Menú Completo",
+  title: "Menu Completo - Bowls, Wraps, Postres Fit, Desayunos y Mas",
   description:
-    "Explora nuestro menú: poke bowls, smoothie bowls, wraps, ensaladas, bebidas naturales y café gourmet. Todo fresco y personalizable.",
-  keywords: ["menú saludable", "poke bowls menú", "smoothie bowls menú", "menú Natural Bowls"],
+    "Menu completo de Natural Bowls: poke bowls, smoothie bowls, wraps, ensaladas, waffles fit, postres saludables, desayunos proteicos, jugos naturales y cafe gourmet. Comida saludable, vegetariana y proteica en Trujillo.",
+  keywords: [
+    "menu saludable Trujillo",
+    "menu fit Trujillo",
+    "menu vegetariano Trujillo",
+    "waffles fit",
+    "postres saludables",
+    "desayunos proteicos",
+    "jugos naturales",
+  ],
   path: "/menu",
 });
 
 export default function MenuPage() {
   return (
     <div className="min-h-screen bg-white">
+      <BreadcrumbSchema
+        items={[
+          { name: "Inicio", url: SITE_CONFIG.url },
+          { name: "Menu", url: `${SITE_CONFIG.url}/menu` },
+        ]}
+      />
       {/* Hero Section */}
       <div className="relative overflow-hidden scroll-mt-48">
         {/* Background Image */}
