@@ -1,6 +1,7 @@
 import Image from "next/image";
-import { generatePageMetadata } from "@/lib/seo";
+import { generatePageMetadata, SITE_CONFIG } from "@/lib/seo";
 import { buildWhatsAppUrl } from "@/lib/utils/contact";
+import { BreadcrumbSchema } from "@/components/seo/StructuredData";
 
 export const metadata = generatePageMetadata({
   title: "Catering & Eventos",
@@ -22,6 +23,12 @@ export default function CateringPage() {
 
   return (
     <div className="bg-white min-h-screen">
+      <BreadcrumbSchema
+        items={[
+          { name: "Inicio", url: SITE_CONFIG.url },
+          { name: "Catering", url: `${SITE_CONFIG.url}/catering` },
+        ]}
+      />
       {/* Hero Section */}
       <section className="relative h-[60vh] flex items-center justify-center text-center overflow-hidden">
         <div className="absolute inset-0 z-0">

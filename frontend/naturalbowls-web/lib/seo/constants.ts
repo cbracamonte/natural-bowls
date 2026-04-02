@@ -3,9 +3,9 @@
 
 export const SITE_CONFIG = {
   name: "Natural Bowls",
-  title: "Natural Bowls | Comida Saludable y Deliciosa",
+  title: "Natural Bowls | Restaurante Saludable en Trujillo - Bowls, Wraps, Postres Fit y Mas",
   description:
-    "Descubre Natural Bowls: poke bowls, smoothie bowls, bebidas naturales y café gourmet. Comida fresca, orgánica y personalizable entregada a domicilio.",
+    "Natural Bowls en Trujillo: restaurante de comida saludable para todo publico. Poke bowls, smoothie bowls, wraps, ensaladas, waffles fit, postres saludables, desayunos proteicos y cafe gourmet. Ingredientes frescos y organicos. Pedidos online y delivery. Av. America Sur 3875.",
   url: (process.env.NEXT_PUBLIC_SITE_URL || "https://naturalbowlscafe.com").replace(/\/+$/, ""),
   ogImage: "/og-image.jpg",
   ogImageSquare: "/og-image-square.jpg",
@@ -15,7 +15,7 @@ export const SITE_CONFIG = {
   phone: "+51 912 341 818",
   address: "Av. América Sur 3875, Trujillo - Perú",
   locale: "es_ES",
-  libroReclamacionesUrl: "#",
+  libroReclamacionesUrl: "https://docs.google.com/forms/d/e/1FAIpQLSe3KTh8ysfKVzpZIJ9kox60pgkXqW2wl5hZrSOYlqltaTBZ_Q/viewform?usp=publish-editor",
 } as const;
 
 export const BUSINESS_HOURS = {
@@ -26,33 +26,61 @@ export const BUSINESS_HOURS = {
 } as const;
 
 export const SEO_KEYWORDS = [
+  // Core — restaurante y ubicación
+  "restaurante saludable Trujillo",
+  "comida saludable Trujillo",
+  "comida saludable en Trujillo",
+  "restaurante fit Trujillo",
+  "comida sana Trujillo",
+  "Natural Bowls Trujillo",
+
+  // Productos principales
   "poke bowls",
+  "poke bowls Trujillo",
   "smoothie bowls",
-  "comida saludable",
-  "bowls orgánicos",
-  "comida sana",
-  "delivery saludable",
+  "smoothie bowls Trujillo",
+  "bowls personalizados",
+  "arma tu bowl",
+  "wraps saludables",
+  "ensaladas frescas",
+  "sandwiches saludables",
+
+  // Desayunos y postres fit
+  "desayunos saludables Trujillo",
+  "desayunos proteicos",
+  "waffles fit",
+  "waffles saludables",
+  "postres fit",
+  "postres saludables",
+  "tostones saludables",
+  "parfait saludable",
+
+  // Bebidas
+  "jugos naturales Trujillo",
+  "smoothies saludables",
   "café gourmet",
   "bebidas naturales",
-  "alimentación sana",
-  "comida fresca",
-  "comida saludable en Trujillo",
-  "delivery de comida saludable",
-  "comida orgánica",
+  "milkshakes saludables",
+  "infusiones naturales",
+
+  // Estilo de vida y público
+  "comida fitness",
+  "comida proteica",
   "alimentación saludable",
-  "fitness food",
-  "comida para llevar saludable",
-  "comida rápida saludable",
-  "comida personalizada",
-  "bowls personalizados",
-  "smoothies saludables",
-  "poke bowls a domicilio",
-  "comida saludable para llevar",
-  "comida saludable en Perú",
-  "comida saludable a domicilio",
+  "comida vegetariana Trujillo",
+  "comida orgánica",
+  "comida para deportistas",
+  "comida alta en proteína",
+  "comida baja en calorías",
   "comida con información nutricional",
-  "comida saludable para deportistas",
   "comida saludable para niños",
+
+  // Delivery y servicio
+  "delivery saludable Trujillo",
+  "comida saludable a domicilio",
+  "pedidos online comida saludable",
+  "comida saludable para llevar",
+  "catering saludable Trujillo",
 ] as const;
 
 export const SOCIAL_LINKS = {
@@ -71,7 +99,7 @@ export const BUSINESS_INFO = {
   postalCode: "13000",
   addressCountry: "PE",
   priceRange: "$$",
-  servesCuisine: ["Health Food", "Poke Bowl", "Smoothie Bowl", "Organic"],
+  servesCuisine: ["Health Food", "Poke Bowl", "Smoothie Bowl", "Organic", "Vegetarian", "High Protein", "Fitness Food", "Healthy Desserts", "Fresh Juices"],
   // Coordenadas de Av. América Sur 3875, Trujillo
   latitude: -8.1116,
   longitude: -79.0317,

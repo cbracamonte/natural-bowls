@@ -1,11 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Clock, CreditCard, ArrowRight, MessageCircle } from "lucide-react";
-import { generatePageMetadata } from "@/lib/seo";
+import { generatePageMetadata, SITE_CONFIG } from "@/lib/seo";
 import { buildWhatsAppUrl } from "@/lib/utils/contact";
 import { LOYALTY_PROGRAM, PROMOTIONS, GENERAL_TERMS } from "@/data/promotions";
 import PlanPokesHero from "@/components/promotions/PlanPokesHero";
 import FirstOrderCTA from "@/components/promotions/FirstOrderCTA";
+import { BreadcrumbSchema } from "@/components/seo/StructuredData";
 
 export const metadata = generatePageMetadata({
   title: "Promociones y Descuentos",
@@ -26,6 +27,12 @@ export default function PromocionesPage() {
 
   return (
     <div className="min-h-screen bg-[#F5F3EF]">
+      <BreadcrumbSchema
+        items={[
+          { name: "Inicio", url: SITE_CONFIG.url },
+          { name: "Promociones", url: `${SITE_CONFIG.url}/promociones` },
+        ]}
+      />
       {/* Plan Pokes — Hero + Modal */}
       {highlightedPromo && <PlanPokesHero promo={highlightedPromo} />}
 

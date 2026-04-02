@@ -93,10 +93,6 @@ export function generateRootMetadata(): Metadata {
     // URLs alternativas
     alternates: {
       canonical: SITE_CONFIG.url,
-      languages: {
-        "es-ES": `${SITE_CONFIG.url}/es`,
-        "es-MX": `${SITE_CONFIG.url}/es-mx`,
-      },
     },
 
     // Open Graph
@@ -199,24 +195,38 @@ export function generateProductMetadata(product: {
   reviews?: number;
 }): Metadata {
   const pageTitle = `${product.title} - ${SITE_CONFIG.name}`;
-  const keywords = [product.title, "bowl saludable", "comida orgánica"];
+  const productUrl = `${SITE_CONFIG.url}/producto/${product.id}`;
+  const imageUrl = product.image.startsWith("http")
+    ? product.image
+    : `${SITE_CONFIG.url}${product.image}`;
+  const keywords = [product.title, "bowl saludable", "comida organica", "Natural Bowls Trujillo"];
 
   return {
     title: { absolute: pageTitle },
     description: product.description,
     keywords: [...SEO_KEYWORDS, ...keywords],
+    alternates: {
+      canonical: productUrl,
+    },
     openGraph: {
       title: pageTitle,
       description: product.description,
+      type: "website",
+      url: productUrl,
       images: [
         {
-          url: `${SITE_CONFIG.url}${product.image}`,
+          url: imageUrl,
           width: 800,
           height: 600,
           alt: product.title,
         },
       ],
-      url: `${SITE_CONFIG.url}/producto/${product.id}`,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: pageTitle,
+      description: product.description,
+      images: [imageUrl],
     },
   };
 }

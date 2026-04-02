@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { generatePageMetadata } from "@/lib/seo";
+import { generatePageMetadata, SITE_CONFIG } from "@/lib/seo";
+import { BreadcrumbSchema } from "@/components/seo/StructuredData";
 
 export const metadata: Metadata = generatePageMetadata({
   title: "Arma Tu Bowl",
@@ -10,5 +11,15 @@ export const metadata: Metadata = generatePageMetadata({
 });
 
 export default function BowlsLayout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+  return (
+    <>
+      <BreadcrumbSchema
+        items={[
+          { name: "Inicio", url: SITE_CONFIG.url },
+          { name: "Arma Tu Bowl", url: `${SITE_CONFIG.url}/bowls` },
+        ]}
+      />
+      {children}
+    </>
+  );
 }
