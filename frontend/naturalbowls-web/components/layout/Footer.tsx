@@ -148,7 +148,7 @@ export default function Footer() {
           <p>
             <span className="text-[#C5E0A0] font-medium">Powered By </span>
             <a
-              href="https://wa.me/51914797228?text=Hola%20Braxions%2C%20me%20interesa%20obtener%20informaci%C3%B3n%20sobre%20sus%20servicios%20de%20creaci%C3%B3n%20de%20sitios%20web.%20%C2%BFPueden%20compartirme%20m%C3%A1s%20detalles%20y%20costos%3F"
+              href="https://wa.me/19259130182?text=Hola%20Braxions%2C%20me%20interesa%20obtener%20informaci%C3%B3n%20sobre%20sus%20servicios%20de%20creaci%C3%B3n%20de%20sitios%20web.%20%C2%BFPueden%20compartirme%20m%C3%A1s%20detalles%20y%20costos%3F"
               target="_blank"
               rel="noopener noreferrer external"
               className="text-[#C5E0A0] hover:text-white transition-colors font-medium"

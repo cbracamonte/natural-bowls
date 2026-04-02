@@ -55,8 +55,8 @@ export async function POST(request: NextRequest) {
     // Enviar email
 
     const result = await resend.emails.send({
-      from: 'onboarding@resend.dev',
-      to: 'carlosbracamonte23@gmail.com', // Modo testing - solo tu email
+      from: `Natural Bowls <${process.env.RESEND_FROM_EMAIL}>`,
+      to: email,
       subject: '¡Bienvenido a Natural Bowls! Estarás entre los primeros en recibir ofertas',
       html: `
         <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">

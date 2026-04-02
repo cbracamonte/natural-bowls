@@ -1,7 +1,9 @@
 'use client';
 
-import { createContext, useContext, useReducer, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useReducer, useEffect, useState, useCallback, ReactNode } from 'react';
+import { ShoppingBag, Check } from 'lucide-react';
 import { Product, CartItem } from '@/lib/schemas';
+import { formatPrice } from '@/lib/utils/utils';
 
 interface CartState {
   items: CartItem[];
@@ -103,6 +105,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
     : { items: [] };
 
   const [state, dispatch] = useReducer(cartReducer, initialState);
+  const [toast, setToast] = useState<{ name: string; price: number; quantity: number } | null>(null);
+  const [toastVisible, setToastVisible] = useState(false);
 
   // Guardar carrito en localStorage cuando cambia
   useEffect(() => {
@@ -111,9 +115,21 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [state]);
 
-  const addItem = (product: Product, quantity?: number) => {
+  // Auto-hide toast
+  useEffect(() => {
+    if (!toast) return;
+    setToastVisible(true);
+    const timer = setTimeout(() => {
+      setToastVisible(false);
+      setTimeout(() => setToast(null), 300);
+    }, 2500);
+    return () => clearTimeout(timer);
+  }, [toast]);
+
+  const addItem = useCallback((product: Product, quantity?: number) => {
     dispatch({ type: 'ADD_ITEM', product, quantity });
-  };
+    setToast({ name: product.name, price: product.price, quantity: quantity || 1 });
+  }, []);
 
   const removeItem = (productId: string) => {
     dispatch({ type: 'REMOVE_ITEM', productId });
@@ -147,6 +163,30 @@ export function CartProvider({ children }: { children: ReactNode }) {
       }}
     >
       {children}
+
+      {/* Toast de producto agregado */}
+      {toast && (
+        <div
+          className={`fixed bottom-6 left-1/2 -translate-x-1/2 z-[9999] transition-all duration-300 ${
+            toastVisible
+              ? 'opacity-100 translate-y-0'
+              : 'opacity-0 translate-y-4'
+          }`}
+        >
+          <div className="flex items-center gap-3 bg-[#5D4E37] text-white pl-3 pr-4 py-3 rounded-2xl shadow-2xl border border-[#6B8E4E]/30 max-w-sm">
+            <div className="bg-[#6B8E4E] rounded-full p-1.5 shrink-0">
+              <Check className="w-4 h-4 text-white" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold truncate">{toast.name}</p>
+              <p className="text-xs text-white/70">
+                {toast.quantity > 1 ? `x${toast.quantity} · ` : ''}{formatPrice(toast.price * toast.quantity)} agregado
+              </p>
+            </div>
+            <ShoppingBag className="w-5 h-5 text-[#9CB973] shrink-0" />
+          </div>
+        </div>
+      )}
     </CartContext.Provider>
   );
 }

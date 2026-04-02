@@ -9,12 +9,16 @@ import Newsletter from "@/components/home/Newsletter";
 import Sponsors from "@/components/home/Sponsors";
 
 export const metadata = generatePageMetadata({
-  title: "Poke Bowls & Smoothies en Trujillo",
+  title: "Restaurante Saludable en Trujillo - Bowls, Wraps, Postres Fit y Mas",
   description:
-    "Descubre Natural Bowls: poke bowls frescos, smoothie bowls, wraps y más. Comida saludable, personalizable y con delivery en Trujillo, Perú.",
+    "Natural Bowls: restaurante de comida saludable en Trujillo para todo publico. Poke bowls, smoothie bowls, wraps, ensaladas, waffles fit, postres saludables, desayunos proteicos y cafe gourmet. Comida vegetariana, proteica y organica con delivery a domicilio.",
   keywords: [
-    "poke bowls Trujillo",
-    "comida saludable Trujillo",
+    "restaurante saludable Trujillo",
+    "comida fit Trujillo",
+    "comida vegetariana Trujillo",
+    "postres fit Trujillo",
+    "waffles saludables Trujillo",
+    "desayunos proteicos Trujillo",
     "delivery saludable Trujillo",
   ],
   path: "/",
@@ -39,7 +43,7 @@ export default function Home() {
       <HeroSmoothiebowl />
 
       {/* 6. Newsletter - Conversiones finales */}
-      {/*  <Newsletter />*/}
+      <Newsletter />
 
       {/* 7. Aliados */}
       <Sponsors />

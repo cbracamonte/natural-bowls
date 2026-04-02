@@ -109,7 +109,7 @@ export class DiscountCodeService {
     const session = readSession();
 
     if (!session) {
-      return { isValid: false, error: 'No hay código disponible. Genera uno primero.' };
+      return { isValid: false, error: 'NO_CODE_GENERATED' };
     }
 
     const isIntact = await hmacVerify(buildSigData(session), session.sig);

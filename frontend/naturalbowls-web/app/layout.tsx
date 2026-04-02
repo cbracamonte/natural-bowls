@@ -1,5 +1,5 @@
 import { generateRootMetadata, generateViewportConfig } from "@/lib/seo";
-import { LocalBusinessSchema, WebSiteSchema, HeadScripts } from "@/components/seo";
+import { LocalBusinessSchema, WebSiteSchema, SiteNavigationSchema, OrganizationSchema, HeadScripts } from "@/components/seo";
 import OnboardingQueue from "@/components/ui/OnboardingQueue";
 import PromotionNotification from "@/components/banners/PromotionNotification";
 import "./globals.css";
@@ -22,6 +22,8 @@ export default function RootLayout({
         <HeadScripts />
         <LocalBusinessSchema />
         <WebSiteSchema />
+        <SiteNavigationSchema />
+        <OrganizationSchema />
       </head>
       <body className="antialiased">
         <SessionProvider>
