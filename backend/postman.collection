@@ -1590,6 +1590,31 @@
                     }
                 },
                 {
+                    "name": "Set Inventory",
+                    "request": {
+                        "method": "PUT",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "x-tenant-slug",
+                                "value": "{{tenantSlug}}"
+                            },
+                            {
+                                "key": "Authorization",
+                                "value": "Bearer {{adminToken}}"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"availableQuantity\": 10,\n  \"reservedQuantity\": 0\n}"
+                        },
+                        "url": "{{baseUrl}}/admin/inventory/{{productId}}"
+                    }
+                },
+                {
                     "name": "Adjust Inventory",
                     "request": {
                         "method": "PATCH",

@@ -1133,6 +1133,58 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Inventory'
+        '400':
+          description: Invalid quantity or inventory would become negative
+        '404':
+          description: Inventory not found
+
+  /admin/inventory/{productId}:
+    get:
+      tags: [Inventory]
+      summary: Get inventory by product id for backoffice
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Inventory'
+        '404':
+          description: Inventory not found
+    put:
+      tags: [Inventory]
+      summary: Create or replace the inventory row for a product
+      parameters:
+        - name: productId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetInventoryRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Inventory'
+        '400':
+          description: Invalid product or invalid quantity
 
   /admin/catalogs:
     get:
@@ -1684,6 +1736,17 @@ components:
           format: double
         catalogId:
           type: string
+
+    SetInventoryRequest:
+      type: object
+      required: [availableQuantity, reservedQuantity]
+      properties:
+        availableQuantity:
+          type: integer
+          minimum: 0
+        reservedQuantity:
+          type: integer
+          minimum: 0
 
     OnboardPlatformTenantRequest:
       type: object
