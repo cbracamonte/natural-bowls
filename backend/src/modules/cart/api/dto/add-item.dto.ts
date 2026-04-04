@@ -3,9 +3,9 @@ import { IsString, IsInt, Min } from 'class-validator';
 export class AddItemDto {
 
   @IsString()
-  productId: string;
+  productId!: string;
 
   @IsInt()
   @Min(1)
-  quantity: number;
+  quantity!: number;
 }
