@@ -1,8 +1,29 @@
 import { User } from "src/modules/auth/domain/entities/user.entity";
 import { Role } from "src/security/roles.enum";
 
+type UserRow = {
+  id: string;
+  tenant_id: string | null;
+  email: string | null;
+  name: string;
+  image_url?: string | null;
+  avatar_url?: string | null;
+  address?: string | null;
+  birth_date?: string | Date | null;
+  gender?: string | null;
+  email_verified: boolean;
+  email_verified_at?: string | Date | null;
+  marketing_opt_in: boolean;
+  marketing_consent_at?: string | Date | null;
+  terms_accepted_at?: string | Date | null;
+  privacy_accepted_at?: string | Date | null;
+  created_at: string | Date;
+  updated_at: string | Date;
+  role: Role;
+};
+
 export class UserMapper {
-  static toDomain(row: any): User {
+  static toDomain(row: UserRow): User {
     return new User(
       row.id,
       row.tenant_id ?? null,

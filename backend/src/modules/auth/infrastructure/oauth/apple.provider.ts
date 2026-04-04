@@ -25,15 +25,17 @@ export class AppleOAuthProvider implements OAuthProvider {
       throw new UnauthorizedException('Invalid Apple token');
     }
 
+    type AppleJwk = Record<string, unknown> & { kid?: string };
+
     const key = keysPayload.keys.find(
-      (currentKey: any) => currentKey.kid === decodedHeader.header!.kid,
+      (currentKey: AppleJwk) => currentKey.kid === decodedHeader.header!.kid,
     );
 
     if (!key) {
       throw new UnauthorizedException('Invalid Apple token');
     }
 
-    const publicKey = jwkToPem(key as any);
+    const publicKey = jwkToPem(key as Parameters<typeof jwkToPem>[0]);
     const payload = jwt.verify(idToken, publicKey) as jwt.JwtPayload;
 
     if (!payload.sub) {

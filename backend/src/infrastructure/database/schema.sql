@@ -157,7 +157,8 @@ CREATE TABLE carts (
   id UUID PRIMARY KEY,
   customer_id UUID,
   guest_id VARCHAR(255),
-  status VARCHAR(50) NOT NULL,
+  status VARCHAR(50) NOT NULL
+    CHECK (status IN ('ACTIVE', 'CHECKED_OUT')),
   CONSTRAINT chk_carts_owner
     CHECK (customer_id IS NOT NULL OR guest_id IS NOT NULL),
   CONSTRAINT fk_carts_customer
@@ -188,9 +189,10 @@ CREATE INDEX idx_cart_items_cart_id ON cart_items(cart_id);
 CREATE TABLE orders (
   id UUID PRIMARY KEY,
   customer_id UUID NOT NULL,
-  status VARCHAR(50) NOT NULL,
+  status VARCHAR(50) NOT NULL
+    CHECK (status IN ('PAID', 'PREPARING', 'READY', 'DELIVERED')),
   total NUMERIC(10,2) NOT NULL,
-  created_at TIMESTAMP NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   idempotency_key VARCHAR(255) UNIQUE,
   CONSTRAINT fk_orders_customer
     FOREIGN KEY (customer_id)

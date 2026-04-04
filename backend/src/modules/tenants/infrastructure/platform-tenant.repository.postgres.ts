@@ -1,10 +1,22 @@
 import * as crypto from 'crypto';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { getPlatformPool } from 'src/infrastructure/database/platform.connection';
 import { PlatformTenant } from '../domain/platform-tenant.entity';
 
+type PlatformTenantRow = {
+  id: string;
+  slug: string;
+  name: string;
+  db_connection_url: string;
+  active: boolean;
+  created_at: string | Date;
+  updated_at: string | Date;
+};
+
 @Injectable()
 export class PlatformTenantRepository {
+  private readonly logger = new Logger(PlatformTenantRepository.name);
+
   async findAll(): Promise<PlatformTenant[]> {
     const { rows } = await getPlatformPool().query(
       `
@@ -18,6 +30,7 @@ export class PlatformTenantRepository {
   }
 
   async findById(id: string): Promise<PlatformTenant | null> {
+    this.logger.debug(`Looking up platform tenant by id "${id}"`);
     const { rows } = await getPlatformPool().query(
       `
       SELECT id, slug, name, db_connection_url, active, created_at, updated_at
@@ -32,6 +45,7 @@ export class PlatformTenantRepository {
   }
 
   async findBySlug(slug: string): Promise<PlatformTenant | null> {
+    this.logger.debug(`Looking up platform tenant by slug "${slug}"`);
     const { rows } = await getPlatformPool().query(
       `
       SELECT id, slug, name, db_connection_url, active, created_at, updated_at
@@ -42,7 +56,11 @@ export class PlatformTenantRepository {
       [slug],
     );
 
-    return rows[0] ? this.mapRow(rows[0]) : null;
+    const tenant = rows[0] ? this.mapRow(rows[0]) : null;
+    this.logger.debug(
+      `Platform tenant by slug "${slug}" ${tenant ? 'found' : 'not found'}`,
+    );
+    return tenant;
   }
 
   async create(data: {
@@ -112,7 +130,7 @@ export class PlatformTenantRepository {
     );
   }
 
-  private mapRow(row: any): PlatformTenant {
+  private mapRow(row: PlatformTenantRow): PlatformTenant {
     return new PlatformTenant(
       row.id,
       row.slug,

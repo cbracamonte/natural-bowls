@@ -1,9 +1,22 @@
 import { Cart } from '../../modules/cart/domain/cart.entity';
 import { CartItem } from '../../modules/cart/domain/cart-item.entity';
 
+type CartRow = {
+  id: string;
+  customer_id: string | null;
+  guest_id: string | null;
+  status: 'ACTIVE' | 'CHECKED_OUT';
+};
+
+type CartItemRow = {
+  product_id: string;
+  quantity: number;
+  unit_price: number;
+};
+
 export class CartMapper {
 
-  static toDomain(cartRow: any, itemRows: any[]): Cart {
+  static toDomain(cartRow: CartRow, itemRows: CartItemRow[]): Cart {
 
     const items: CartItem[] = [];
 

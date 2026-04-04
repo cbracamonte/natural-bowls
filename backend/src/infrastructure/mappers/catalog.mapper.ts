@@ -1,8 +1,14 @@
 import { Catalog } from '../../modules/catalog/domain/catalog.entity';
 
+type CatalogRow = {
+  id: string;
+  name: string;
+  active: boolean;
+};
+
 export class CatalogMapper {
 
-  static toDomain(row: any): Catalog {
+  static toDomain(row: CatalogRow): Catalog {
     return new Catalog(
       row.id,
       row.name,

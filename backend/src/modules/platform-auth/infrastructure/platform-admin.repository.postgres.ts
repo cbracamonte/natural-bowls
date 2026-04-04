@@ -2,6 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { getPlatformPool } from 'src/infrastructure/database/platform.connection';
 import { PlatformAdmin } from '../domain/platform-admin.entity';
 
+type PlatformAdminRow = {
+  id: string;
+  email: string;
+  name: string;
+  password_hash: string;
+  active: boolean;
+  created_at: string | Date;
+  updated_at: string | Date;
+};
+
 @Injectable()
 export class PlatformAdminRepository {
   async findAll(): Promise<PlatformAdmin[]> {
@@ -102,7 +112,7 @@ export class PlatformAdminRepository {
     );
   }
 
-  private mapRow(row: any): PlatformAdmin {
+  private mapRow(row: PlatformAdminRow): PlatformAdmin {
     return new PlatformAdmin(
       row.id,
       row.email,

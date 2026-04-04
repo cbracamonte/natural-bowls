@@ -3,6 +3,16 @@ import { Injectable } from "@nestjs/common";
 import { SessionRepository } from "../../domain/repositories/auth-session.repository";
 import { AuthSession } from "../../domain/entities/auth-session.identity";
 
+type AuthSessionRow = {
+  id: string;
+  user_id: string;
+  refresh_token: string;
+  user_agent: string | null;
+  ip_address: string | null;
+  expires_at: string | Date;
+  created_at: string | Date;
+};
+
 @Injectable()
 export class PostgresSessionRepository implements SessionRepository {
   async create(data: {
@@ -99,7 +109,7 @@ export class PostgresSessionRepository implements SessionRepository {
     );
   }
 
-  private mapRow(row: any): AuthSession {
+  private mapRow(row: AuthSessionRow): AuthSession {
     return new AuthSession(
       row.id,
       row.user_id,

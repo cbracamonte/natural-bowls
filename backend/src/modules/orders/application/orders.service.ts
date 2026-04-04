@@ -46,8 +46,15 @@ export class OrdersService {
         throw new BadRequestException('No active cart');
       }
 
+      if (!cart.getItems().length) {
+        throw new BadRequestException('Cart is empty');
+      }
+
       if (!idempotencyKey) {
         throw new BadRequestException('Idempotency-Key required');
+      }
+      if (!Number.isInteger(pointsToUse) || pointsToUse < 0) {
+        throw new BadRequestException('pointsToUse must be a non-negative integer');
       }
       const existing =
         await this.orderRepository.findByIdempotencyKey(idempotencyKey);
@@ -66,10 +73,20 @@ export class OrdersService {
         0
       );
 
+      const loyaltyAccount = await this.loyaltyRepository.findByCustomer(
+        customerId,
+        client
+      );
+
+      if (pointsToUse > loyaltyAccount.getPoints()) {
+        throw new BadRequestException('Insufficient loyalty points');
+      }
+
       // 4. Calcular pricing (SOLO precio)
 
       const pricingResult: PricingResult =
         this.pricingService.calculate(baseTotal, pointsToUse);
+      const redeemedPoints = Math.min(pointsToUse, Math.floor(baseTotal));
 
       // 5. Reservar inventario (concurrency-safe)
       for (const item of items) {
@@ -103,6 +120,11 @@ export class OrdersService {
 
       await this.orderRepository.save(order, client);
 
+      if (redeemedPoints > 0) {
+        loyaltyAccount.subtractPoints(redeemedPoints);
+        await this.loyaltyRepository.save(loyaltyAccount, client);
+      }
+
       // 7. Cerrar carrito
       cart.checkout();
       await this.cartRepository.save(cart, client);
@@ -132,6 +154,13 @@ export class OrdersService {
       }
 
       if (order.getStatus() === 'DELIVERED') {
+        for (const item of order.items) {
+          await this.inventoryRepository.completeReservation(
+            item.productId,
+            item.quantity,
+            client,
+          );
+        }
 
         const pointsEarned =
           this.loyaltyService.calculatePointsEarned(order.total);

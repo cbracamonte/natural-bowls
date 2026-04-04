@@ -14,6 +14,7 @@ import { User } from './domain/entities/user.entity';
 import { Role } from 'src/security/roles.enum';
 import { AuthIdentity } from './domain/entities/auth-identity.entity';
 import { AuthProvider } from './domain/authProviders';
+import { OAuthUserProfile } from './domain/oauth/oauth-provider.interface';
 import { AuthSession } from './domain/entities/auth-session.identity';
 import { EmailVerificationToken } from './domain/entities/email-verification.token.entity';
 import { PasswordResetToken } from './domain/entities/password-reset.token.entity';
@@ -340,7 +341,7 @@ class FakeOAuthProviderFactory {
     return {
       provider,
       async validateToken(token: string) {
-        const profiles: Record<string, any> = {
+        const profiles: Record<string, OAuthUserProfile> = {
           'google-login-token': {
             provider,
             providerUserId: 'google-login-user',
