@@ -6,7 +6,7 @@ import "./globals.css";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { CartProvider } from "@/context/CartContext";
-import SessionProvider from "@/components/providers/SessionProvider";
+
 
 export const metadata = generateRootMetadata();
 export const viewport = generateViewportConfig();
@@ -26,19 +26,17 @@ export default function RootLayout({
         <OrganizationSchema />
       </head>
       <body className="antialiased">
-        <SessionProvider>
-          <CartProvider>
-            <OnboardingQueue />
-            <PromotionNotification />
-            <div className="min-h-screen flex flex-col">
-              <Header />
-              <main id="main-content" className="flex-1" role="main">
-                {children}
-              </main>
-              <Footer />
-            </div>
-          </CartProvider>
-        </SessionProvider>
+        <CartProvider>
+          <OnboardingQueue />
+          <PromotionNotification />
+          <div className="min-h-screen flex flex-col">
+            <Header />
+            <main id="main-content" className="flex-1" role="main">
+              {children}
+            </main>
+            <Footer />
+          </div>
+        </CartProvider>
       </body>
     </html>
   );
