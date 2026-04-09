@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import { getProductById, getProductsByCategory } from "@/data/products";
+import { getProductById, getProductsByCategory, PRODUCTS } from "@/data/products";
 import { generateProductMetadata } from "@/lib/seo";
 import { ProductSchema, BreadcrumbSchema } from "@/components/seo/StructuredData";
 import { SITE_CONFIG } from "@/lib/seo";
@@ -9,6 +9,12 @@ import ProductDetailClient from "./ProductDetailClient";
 type Props = {
   params: Promise<{ id: string }>;
 };
+
+export function generateStaticParams() {
+  return PRODUCTS.map((product) => ({
+    id: product.id,
+  }));
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;

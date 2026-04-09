@@ -1,5 +1,5 @@
 import { formatPrice } from '@/lib/utils/utils';
-import { SITE_CONFIG, DISCOUNTS_CODES } from '@/lib/seo/constants';
+import { DISCOUNTS_CODES } from '@/lib/seo/constants';
 import {
   BowlOrder,
   CheckoutFormData,
@@ -121,10 +121,6 @@ export class CheckoutService {
       .join('\n');
   }
 
-  static buildWhatsAppUrl(message: string): string {
-    const whatsappNumber = SITE_CONFIG.phone.replace(/\D/g, '');
-    return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-  }
 
   static markDiscountAsUsed(): Promise<void> {
     return DiscountCodeService.markAsUsed();

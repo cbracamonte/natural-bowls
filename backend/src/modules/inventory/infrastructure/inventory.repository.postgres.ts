@@ -18,10 +18,27 @@ export class PostgresInventoryRepository implements InventoryRepository {
     return InventoryMapper.toDomain(rows[0]);
   }
 
+  async save(inventory: InventoryMapper extends never ? never : import('../domain/inventory.entity').Inventory, client?: PoolClient): Promise<void> {
+    const executor = client ?? getPgPool();
+    const data = InventoryMapper.toPersistence(inventory);
+
+    await executor.query(
+      `
+      INSERT INTO inventory (product_id, available_quantity, reserved_quantity)
+      VALUES ($1, $2, $3)
+      ON CONFLICT (product_id)
+      DO UPDATE SET
+        available_quantity = $2,
+        reserved_quantity = $3
+      `,
+      [data.product_id, data.available_quantity, data.reserved_quantity],
+    );
+  }
+
   async reserve(productId: string, quantity: number, client: PoolClient): Promise<void> {
     const result = await client.query(
       `
-      SELECT available_quantity
+      SELECT available_quantity, reserved_quantity
       FROM inventory
       WHERE product_id=$1
       FOR UPDATE
@@ -40,10 +57,42 @@ export class PostgresInventoryRepository implements InventoryRepository {
     await client.query(
       `
       UPDATE inventory
-      SET available_quantity = available_quantity - $1
+      SET available_quantity = available_quantity - $1,
+          reserved_quantity = reserved_quantity + $1
       WHERE product_id=$2
       `,
       [quantity, productId]
+    );
+  }
+
+  async completeReservation(productId: string, quantity: number, client: PoolClient): Promise<void> {
+    const result = await client.query(
+      `
+      SELECT reserved_quantity
+      FROM inventory
+      WHERE product_id = $1
+      FOR UPDATE
+      `,
+      [productId],
+    );
+
+    if (!result.rows.length) {
+      throw new Error('Inventory not found');
+    }
+
+    const reserved = result.rows[0].reserved_quantity;
+
+    if (reserved < quantity) {
+      throw new Error('Reserved stock is inconsistent');
+    }
+
+    await client.query(
+      `
+      UPDATE inventory
+      SET reserved_quantity = reserved_quantity - $1
+      WHERE product_id = $2
+      `,
+      [quantity, productId],
     );
   }
 

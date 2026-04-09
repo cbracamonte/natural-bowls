@@ -19,7 +19,7 @@ CREATE TABLE users (
   birth_date DATE,
   gender VARCHAR(50),
   role VARCHAR(50) NOT NULL DEFAULT 'CUSTOMER'
-    CHECK (role IN ('CUSTOMER', 'TENANT_STAFF', 'TENANT_ADMIN', 'PLATFORM_ADMIN')),
+    CHECK (role IN ('CUSTOMER', 'TENANT_STAFF', 'TENANT_ADMIN')),
   email_verified BOOLEAN NOT NULL DEFAULT FALSE,
   email_verified_at TIMESTAMP,
   marketing_opt_in BOOLEAN NOT NULL DEFAULT FALSE,
@@ -144,7 +144,7 @@ CREATE TABLE customers (
   id UUID PRIMARY KEY,
   user_id UUID NOT NULL UNIQUE,
   role VARCHAR(50) NOT NULL DEFAULT 'CUSTOMER'
-    CHECK (role IN ('CUSTOMER', 'TENANT_STAFF', 'TENANT_ADMIN', 'PLATFORM_ADMIN')),
+    CHECK (role IN ('CUSTOMER')),
   CONSTRAINT fk_customers_user
     FOREIGN KEY (user_id)
     REFERENCES users(id)
@@ -155,14 +155,19 @@ CREATE INDEX idx_customers_user_id ON customers(user_id);
 
 CREATE TABLE carts (
   id UUID PRIMARY KEY,
-  customer_id UUID NOT NULL,
-  status VARCHAR(50) NOT NULL,
+  customer_id UUID,
+  guest_id VARCHAR(255),
+  status VARCHAR(50) NOT NULL
+    CHECK (status IN ('ACTIVE', 'CHECKED_OUT')),
+  CONSTRAINT chk_carts_owner
+    CHECK (customer_id IS NOT NULL OR guest_id IS NOT NULL),
   CONSTRAINT fk_carts_customer
     FOREIGN KEY (customer_id)
     REFERENCES customers(id)
 );
 
 CREATE INDEX idx_carts_customer_id ON carts(customer_id);
+CREATE INDEX idx_carts_guest_id ON carts(guest_id);
 
 CREATE TABLE cart_items (
   id UUID PRIMARY KEY,
@@ -184,9 +189,11 @@ CREATE INDEX idx_cart_items_cart_id ON cart_items(cart_id);
 CREATE TABLE orders (
   id UUID PRIMARY KEY,
   customer_id UUID NOT NULL,
-  status VARCHAR(50) NOT NULL,
+  status VARCHAR(50) NOT NULL
+    CHECK (status IN ('PAID', 'PREPARING', 'READY', 'DELIVERED')),
   total NUMERIC(10,2) NOT NULL,
-  created_at TIMESTAMP NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  idempotency_key VARCHAR(255) UNIQUE,
   CONSTRAINT fk_orders_customer
     FOREIGN KEY (customer_id)
     REFERENCES customers(id)

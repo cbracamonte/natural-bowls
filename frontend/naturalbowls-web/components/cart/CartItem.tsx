@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Minus, Plus, Trash2 } from "lucide-react";
 import { CartItem as CartItemType } from "@/lib/schemas";
+import { BOWL_ARRAY_KEYS, BowlArrayKey } from "@/lib/schemas/cart";
 import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/lib/utils/utils";
 
@@ -73,12 +74,12 @@ export default function CartItem({ item }: CartItemProps) {
             {customizations.proteina && (
               <div>Proteína: {customizations.proteina}</div>
             )}
-            {['toppings', 'agregados', 'salsas'].map((k) =>
+            {BOWL_ARRAY_KEYS.map((k: BowlArrayKey) =>
               customizations[k] && customizations[k].length > 0 ? (
                 <div key={k}>
                   {k.charAt(0).toUpperCase() + k.slice(1)}:{' '}
                   <span className="flex flex-wrap gap-1 mt-1">
-                    {customizations[k].map((ing: string) => (
+                    {customizations[k]!.map((ing: string) => (
                       <span
                         key={ing}
                         className="border border-[#9CB973]/50 text-[#5D4E37] px-1.5 py-0.5 rounded text-xs"

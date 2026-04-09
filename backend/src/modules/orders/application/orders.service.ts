@@ -6,7 +6,7 @@ import { LoyaltyService } from "src/modules/loyalty/application/loyalty.service"
 import { PricingService } from "src/modules/pricing/application/pricing.service";
 import { Order } from "../domain/orders.entity";
 import { OrderItem } from "../domain/order-item.entity";
-import { BadRequestException, Inject, Injectable, Logger } from "@nestjs/common";
+import { BadRequestException, Inject, Injectable, Logger, NotFoundException } from "@nestjs/common";
 import { UnitOfWork } from "src/infrastructure/database/unit-of-work";
 import { PricingResult } from "src/modules/pricing/domain/pricing-result";
 import { PaginatedResponse } from "src/common/dto/paginated-response.dto";
@@ -46,8 +46,15 @@ export class OrdersService {
         throw new BadRequestException('No active cart');
       }
 
+      if (!cart.getItems().length) {
+        throw new BadRequestException('Cart is empty');
+      }
+
       if (!idempotencyKey) {
         throw new BadRequestException('Idempotency-Key required');
+      }
+      if (!Number.isInteger(pointsToUse) || pointsToUse < 0) {
+        throw new BadRequestException('pointsToUse must be a non-negative integer');
       }
       const existing =
         await this.orderRepository.findByIdempotencyKey(idempotencyKey);
@@ -66,18 +73,38 @@ export class OrdersService {
         0
       );
 
+      const loyaltyAccount = await this.loyaltyRepository.findByCustomer(
+        customerId,
+        client
+      );
+
+      if (pointsToUse > loyaltyAccount.getPoints()) {
+        throw new BadRequestException('Insufficient loyalty points');
+      }
+
       // 4. Calcular pricing (SOLO precio)
 
       const pricingResult: PricingResult =
         this.pricingService.calculate(baseTotal, pointsToUse);
+      const redeemedPoints = Math.min(pointsToUse, Math.floor(baseTotal));
 
       // 5. Reservar inventario (concurrency-safe)
       for (const item of items) {
-        await this.inventoryRepository.reserve(
-          item.productId,
-          item.quantity,
-          client
-        );
+        try {
+          await this.inventoryRepository.reserve(
+            item.productId,
+            item.quantity,
+            client
+          );
+        } catch (error: unknown) {
+          if (error instanceof Error && error.message === 'Inventory not found') {
+            throw new BadRequestException(`Inventory not found for product ${item.productId}`);
+          }
+          if (error instanceof Error && error.message === 'Insufficient stock') {
+            throw new BadRequestException(`Insufficient stock for product ${item.productId}`);
+          }
+          throw error;
+        }
       }
 
       // 6. Crear orden (precio final ya calculado)
@@ -92,6 +119,11 @@ export class OrdersService {
       );
 
       await this.orderRepository.save(order, client);
+
+      if (redeemedPoints > 0) {
+        loyaltyAccount.subtractPoints(redeemedPoints);
+        await this.loyaltyRepository.save(loyaltyAccount, client);
+      }
 
       // 7. Cerrar carrito
       cart.checkout();
@@ -109,12 +141,26 @@ export class OrdersService {
 
       const order = await this.orderRepository.findById(orderId, client);
       if (!order) {
-        throw new BadRequestException('Order not found');
+        throw new NotFoundException('Order not found');
       }
 
-      order.advanceStatus();
+      try {
+        order.advanceStatus();
+      } catch (error: unknown) {
+        if (error instanceof Error && error.message === 'Invalid status transition') {
+          throw new BadRequestException('Invalid status transition');
+        }
+        throw error;
+      }
 
       if (order.getStatus() === 'DELIVERED') {
+        for (const item of order.items) {
+          await this.inventoryRepository.completeReservation(
+            item.productId,
+            item.quantity,
+            client,
+          );
+        }
 
         const pointsEarned =
           this.loyaltyService.calculatePointsEarned(order.total);

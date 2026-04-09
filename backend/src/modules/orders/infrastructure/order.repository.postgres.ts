@@ -4,12 +4,44 @@ import { OrderMapper } from '../../../infrastructure/mappers/order.mapper';
 import type { OrderRepository } from '../domain/orders.repository';
 import { Order } from '../domain/orders.entity';
 
+type OrderSummaryRow = { id: string };
+type OrderItemRow = {
+  order_id: string;
+  product_id: string;
+  quantity: number;
+  unit_price: number;
+};
+
 export class PostgresOrderRepository implements OrderRepository {
 
   async save(order: Order, client?: PoolClient): Promise<void> {
 
     const executor = client ?? getPgPool();
     const data = OrderMapper.toPersistence(order);
+    const existing = await executor.query(
+      `
+      SELECT id
+      FROM orders
+      WHERE id = $1
+      LIMIT 1
+      `,
+      [order.id],
+    );
+
+    if (existing.rows.length) {
+      await executor.query(
+        `
+        UPDATE orders
+        SET status = $2,
+            total = $3,
+            idempotency_key = $4
+        WHERE id = $1
+        `,
+        [data.id, data.status, data.total, data.idempotency_key],
+      );
+
+      return;
+    }
 
     await executor.query(
       `
@@ -127,7 +159,7 @@ export class PostgresOrderRepository implements OrderRepository {
       [orderIds]
     );
 
-    const itemsByOrder: Record<string, any[]> = {};
+    const itemsByOrder: Record<string, OrderItemRow[]> = {};
 
     for (const row of itemsResult.rows) {
       if (!itemsByOrder[row.order_id]) {

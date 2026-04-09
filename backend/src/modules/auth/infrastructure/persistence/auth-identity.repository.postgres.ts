@@ -5,6 +5,17 @@ import { AuthProvider } from '../../domain/authProviders';
 import { AuthIdentity } from '../../domain/entities/auth-identity.entity';
 import { AuthIdentityRepository } from '../../domain/repositories/auth-identity.repository';
 
+type AuthIdentityRow = {
+  id: string;
+  user_id: string;
+  provider: AuthProvider;
+  provider_user_id: string | null;
+  email: string | null;
+  password_hash: string | null;
+  created_at: string | Date;
+  updated_at: string | Date;
+};
+
 @Injectable()
 export class PostgresAuthIdentityRepository implements AuthIdentityRepository {
   async findByUserId(userId: string): Promise<AuthIdentity[]> {
@@ -132,7 +143,7 @@ export class PostgresAuthIdentityRepository implements AuthIdentityRepository {
     );
   }
 
-  private mapRow(row: any): AuthIdentity {
+  private mapRow(row: AuthIdentityRow): AuthIdentity {
     return new AuthIdentity(
       row.id,
       row.user_id,

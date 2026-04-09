@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { OrdersController } from './api/orders.controller';
+import { AdminOrdersController } from './admin/admin-orders.controller';
 import { OrdersService } from './application/orders.service';
 import { InventoryModule } from '../inventory/inventory.module';
 import { PostgresOrderRepository } from './infrastructure/order.repository.postgres';
@@ -14,7 +15,7 @@ import { PricingModule } from '../pricing/pricing.module';
     InventoryModule,
     PricingModule
   ],
-  controllers: [OrdersController],
+  controllers: [OrdersController, AdminOrdersController],
   providers: [
     OrdersService,
     UnitOfWork,
