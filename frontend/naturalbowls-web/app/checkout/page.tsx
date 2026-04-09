@@ -11,6 +11,8 @@ import Input from "@/components/ui/Input";
 import { CheckoutService, DiscountCodeService } from "@/lib/services";
 import { CheckoutFormData } from "@/lib/schemas";
 import FirstOrderModal from "@/components/banners/FirstOrderModal";
+import CustomizationsSummary from "@/components/cart/CustomizationsSummary";
+import { buildWhatsAppUrl } from "@/lib/utils/contact";
 
 export default function CheckoutPage() {
   const { items, total, clearCart } = useCart();
@@ -112,7 +114,7 @@ export default function CheckoutPage() {
     setPendingMessage("");
 
     window.open(
-      CheckoutService.buildWhatsAppUrl(pendingMessage),
+      buildWhatsAppUrl(pendingMessage),
       "_blank",
       "noopener,noreferrer",
     );
@@ -164,81 +166,7 @@ export default function CheckoutPage() {
 
             <div className="overflow-y-auto flex-1 min-h-0 mb-6">
               <div className="bg-gray-50 rounded-xl p-4 mb-6 border border-gray-200">
-              {items.map((item, idx) => {
-                const cust = item.customizations || {};
-                const hasCust = cust && Object.keys(cust).length > 0;
-                return (
-                  <div key={item.productId}>
-                    {hasCust && (
-                      <>
-                        <div className="flex justify-between items-start gap-3 text-sm font-semibold">
-                          <span>{item.name}</span>
-                          <span className="shrink-0">
-                            x{item.quantity} {formatPrice(item.price * item.quantity)}
-                          </span>
-                        </div>
-                        {cust.tamaño && (
-                          <div className="flex justify-between text-xs">
-                            <span className="text-gray-600">Tamaño:</span>
-                            <span className="font-medium capitalize">
-                              {cust.tamaño}
-                            </span>
-                          </div>
-                        )}
-                        {cust.base && (
-                          <div className="flex justify-between text-xs">
-                            <span className="text-gray-600">Base:</span>
-                            <span className="font-medium">
-                              {cust.base}
-                            </span>
-                          </div>
-                        )}
-                        {cust.proteina && (
-                          <div className="flex justify-between text-xs">
-                            <span className="text-gray-600">Proteína:</span>
-                            <span className="font-medium">
-                              {cust.proteina}
-                            </span>
-                          </div>
-                        )}
-                        {['toppings', 'agregados', 'salsas'].map(
-                          (key) =>
-                            cust[key] && cust[key].length > 0 && (
-                              <div key={key} className="text-xs">
-                                <span className="text-gray-600 capitalize">
-                                  {key}:
-                                </span>
-                                <div className="flex flex-wrap gap-1 mt-1">
-                                  {cust[key].map((ing: string) => (
-                                    <span
-                                      key={ing}
-                                      className="border border-[#9CB973]/50 text-[#5D4E37] px-1.5 py-0.5 rounded text-xs"
-                                    >
-                                      {ing}
-                                    </span>
-                                  ))}
-                                </div>
-                              </div>
-                            ),
-                        )}
-                      </>
-                    )}
-                    {!hasCust && (
-                      <div className="flex justify-between text-sm mt-1">
-                        <span className="font-medium">
-                          {item.name} x{item.quantity}
-                        </span>
-                        <span className="font-medium">
-                          {formatPrice(item.price * item.quantity)}
-                        </span>
-                      </div>
-                    )}
-                    {idx < items.length - 1 && (
-                      <hr className="border-gray-200 my-2" />
-                    )}
-                  </div>
-                );
-              })}
+              <CustomizationsSummary items={items} />
             </div>
             </div>
 
@@ -446,88 +374,8 @@ export default function CheckoutPage() {
                     Resumen del Pedido
                   </h2>
 
-                          <div className="space-y-3 mb-4">
-                    {items.map((item, idx) => {
-                      const cust = item.customizations || {};
-                      const hasCust =
-                        cust && Object.keys(cust).length > 0;
-
-                      return (
-                        <div key={item.productId}>
-                          {hasCust && (
-                            <>
-                              <div className="flex justify-between items-start gap-3 text-sm font-semibold">
-                                <span>{item.name}</span>
-                                <span className="shrink-0">
-                                  x{item.quantity} {formatPrice(item.price * item.quantity)}
-                                </span>
-                              </div>
-                              {cust.tamaño && (
-                                <div className="flex justify-between text-xs">
-                                  <span className="text-gray-600">Tamaño:</span>
-                                  <span className="font-medium capitalize">
-                                    {cust.tamaño}
-                                  </span>
-                                </div>
-                              )}
-                              {cust.base && (
-                                <div className="flex justify-between text-xs">
-                                  <span className="text-gray-600">Base:</span>
-                                  <span className="font-medium">
-                                    {cust.base}
-                                  </span>
-                                </div>
-                              )}
-                              {cust.proteina && (
-                                <div className="flex justify-between text-xs">
-                                  <span className="text-gray-600">
-                                    Proteína:
-                                  </span>
-                                  <span className="font-medium">
-                                    {cust.proteina}
-                                  </span>
-                                </div>
-                              )}
-                              {['toppings', 'agregados', 'salsas'].map(
-                                (key) =>
-                                  cust[key] && cust[key].length > 0 && (
-                                    <div key={key} className="text-xs">
-                                      <span className="text-gray-600 capitalize">
-                                        {key}:
-                                      </span>
-                                      <div className="flex flex-wrap gap-1 mt-1">
-                                        {cust[key].map((ing: string) => (
-                                          <span
-                                            key={ing}
-                                            className="border border-[#9CB973]/50 text-[#5D4E37] px-1.5 py-0.5 rounded text-xs"
-                                          >
-                                            {ing}
-                                          </span>
-                                        ))}
-                                      </div>
-                                    </div>
-                                  ),
-                              )}
-                            </>
-                          )}
-
-                          {!hasCust && (
-                            <div className="flex justify-between text-sm mt-1">
-                              <span className="text-gray-600">
-                                {item.name} x{item.quantity}
-                              </span>
-                              <span className="font-medium">
-                                {formatPrice(item.price * item.quantity)}
-                              </span>
-                            </div>
-                          )}
-
-                          {idx < items.length - 1 && (
-                            <hr className="border-gray-200 my-2" />
-                          )}
-                        </div>
-                      );
-                    })}
+                  <div className="mb-4">
+                    <CustomizationsSummary items={items} />
                   </div>
 
                   <div className="border-t mt-4 pt-4 space-y-2">

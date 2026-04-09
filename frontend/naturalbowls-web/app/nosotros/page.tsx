@@ -1,5 +1,6 @@
 import Image from "next/image";
-import { generatePageMetadata } from "@/lib/seo";
+import { generatePageMetadata, SITE_CONFIG } from "@/lib/seo";
+import { BreadcrumbSchema } from "@/components/seo/StructuredData";
 
 export const metadata = generatePageMetadata({
   title: "Nosotros",
@@ -29,6 +30,12 @@ function SectionDivider() {
 export default function NosotrosPage() {
   return (
     <div className="bg-white min-h-screen">
+      <BreadcrumbSchema
+        items={[
+          { name: "Inicio", url: SITE_CONFIG.url },
+          { name: "Nosotros", url: `${SITE_CONFIG.url}/nosotros` },
+        ]}
+      />
       {/* Hero Section */}
       <section className="relative h-[60vh] flex items-center justify-center text-center overflow-hidden">
         <div className="absolute inset-0 z-0">

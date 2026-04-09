@@ -7,17 +7,21 @@ export interface CartItem {
   price: number;
   quantity: number;
   image?: string;
-  customizations?: {
-    tipo?: string;
-    tamaño?: string;
-    base?: string;
-    proteina?: string;
-    toppings?: string[];
-    agregados?: string[];
-    salsas?: string[];
-    [key: string]: any;
-  };
+  customizations?: BowlCustomizations;
 }
+
+export interface BowlCustomizations {
+  tipo?: string;
+  tamaño?: string;
+  base?: string;
+  proteina?: string;
+  toppings?: string[];
+  agregados?: string[];
+  salsas?: string[];
+}
+
+export const BOWL_ARRAY_KEYS = ["toppings", "agregados", "salsas"] as const;
+export type BowlArrayKey = (typeof BOWL_ARRAY_KEYS)[number];
 
 export interface CartState {
   items: CartItem[];

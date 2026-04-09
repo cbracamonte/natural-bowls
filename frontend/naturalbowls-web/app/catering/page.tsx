@@ -190,7 +190,7 @@ export default function CateringPage() {
                 <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
                   <a
                     href={buildWhatsAppUrl(
-                      "Hola Natural Bowls, quiero cotizar la opción de Poke Partyocione para mi evento.",
+                      "Hola Natural Bowls, quiero cotizar la opción de Poke Party para mi evento.",
                     )}
                     target="_blank"
                     rel="noopener noreferrer"
