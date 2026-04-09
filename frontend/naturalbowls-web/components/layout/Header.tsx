@@ -6,8 +6,6 @@ import { useState, useRef, useEffect } from "react";
 import { ShoppingBag, Menu, X, ChevronDown } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import ReservationModal from "@/components/reservation/ReservationModal";
-import UserMenu from "@/components/layout/UserMenu";
-import MobileUserAuth from "@/components/layout/MobileUserAuth";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -172,11 +170,6 @@ export default function Header() {
 
             {/* Right Actions */}
             <div className="flex items-center gap-1 md:gap-2">
-              {/* Auth (Desktop) */}
-              <div className="hidden lg:block">
-                <UserMenu />
-              </div>
-
               {/* Cart */}
               <Link
                 href="/carrito"
@@ -288,9 +281,6 @@ export default function Header() {
                     ))}
                   </ul>
                 </div>
-
-                {/* Auth */}
-                <MobileUserAuth onNavigate={() => setIsMenuOpen(false)} />
 
                 {/* CTA Buttons */}
                 <div className="mt-4 space-y-3 px-4">
