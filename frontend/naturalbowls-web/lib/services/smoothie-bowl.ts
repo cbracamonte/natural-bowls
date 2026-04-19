@@ -1,5 +1,6 @@
 import { SMOOTHIE_BOWL_NUTRITION_DATA } from "@/data/smoothie-bowl-nutrition-data";
 import { Product } from "@/lib/schemas";
+import { BowlCustomizations } from "@/lib/schemas/cart";
 import {
   SmoothieBowlNutritionInfo,
   SmoothieBowlOrderData,
@@ -150,7 +151,7 @@ export class SmoothieBowlService {
   static createBowlProduct(
     selectedSmoothie: Product,
     selectedToppings: string[]
-  ): Product {
+  ): Product & { customizations: BowlCustomizations } {
     const totalPrice = this.calculateTotalPrice(
       selectedSmoothie,
       selectedToppings
@@ -167,6 +168,10 @@ export class SmoothieBowlService {
       image: selectedSmoothie.image,
       categoryId: "smoothie-bowl",
       ingredients: [...selectedSmoothie.ingredients, ...selectedToppings],
+      customizations: {
+        tipo: "smoothiebowl",
+        toppings: selectedToppings,
+      },
     };
   }
 

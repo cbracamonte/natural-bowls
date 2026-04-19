@@ -86,6 +86,7 @@ export class DiscountCodeService {
     const clean = phone.replace(/\D/g, '');
     if (!clean) return { isValid: false, error: 'Por favor ingresa un número de WhatsApp' };
     if (clean.length !== 9) return { isValid: false, error: 'El número debe tener 9 dígitos' };
+    if (!clean.startsWith('9')) return { isValid: false, error: 'El número debe empezar con 9 (celular peruano)' };
     return { isValid: true };
   }
 
@@ -147,14 +148,9 @@ export class DiscountCodeService {
     return { isValid: true };
   }
 
-  /** Marca el código como usado regenerando el blob firmado con used: true */
+  /** Elimina el código de descuento por completo del storage */
   static async markAsUsed(): Promise<void> {
-    const session = readSession();
-    if (!session) return;
-    const usedAt = new Date().toISOString();
-    const updated = { ...session, used: true, usedAt };
-    const sig = await hmacSign(buildSigData(updated));
-    localStorage.setItem(STORAGE_KEYS.session, JSON.stringify({ ...updated, sig }));
+    localStorage.removeItem(STORAGE_KEYS.session);
   }
 
   static clearOrderStorage(): void {

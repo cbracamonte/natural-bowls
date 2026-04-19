@@ -1,9 +1,9 @@
 "use client";
 
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Check, X, AlertCircle } from "lucide-react";
+import { ArrowLeft, Check } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/lib/utils/utils";
 import Button from "@/components/ui/Button";
@@ -18,8 +18,6 @@ export default function CheckoutPage() {
   const { items, total, clearCart } = useCart();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [pendingMessage, setPendingMessage] = useState("");
 
   
 
@@ -35,7 +33,9 @@ export default function CheckoutPage() {
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [discountCode, setDiscountCode] = useState("");
+  const [discountCode, setDiscountCode] = useState(
+    () => DiscountCodeService.getInitialState().existingCode,
+  );
   const [discountValidated, setDiscountValidated] = useState(false);
   const [discountError, setDiscountError] = useState("");
   const [showGenerateModal, setShowGenerateModal] = useState(false);
@@ -63,6 +63,13 @@ export default function CheckoutPage() {
     }
   };
 
+  useEffect(() => {
+    if (discountCode && !discountValidated) {
+      handleValidateCode();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleCodeChange = (code: string) => {
     setDiscountCode(code);
     if (discountValidated) setDiscountValidated(false);
@@ -89,8 +96,6 @@ export default function CheckoutPage() {
 
     const message = CheckoutService.buildWhatsAppMessage({
       formData,
-      
-
       cartItems: items,
       total,
       discountValidated,
@@ -99,22 +104,13 @@ export default function CheckoutPage() {
       finalTotal,
     });
 
-    setPendingMessage(message);
-    setShowConfirmModal(true);
-    setIsSubmitting(false);
-  };
-
-  const handleConfirmOrder = async () => {
     if (discountValidated) await CheckoutService.markDiscountAsUsed();
 
     clearCart();
     CheckoutService.clearOrderStorage();
 
-    setShowConfirmModal(false);
-    setPendingMessage("");
-
     window.open(
-      buildWhatsAppUrl(pendingMessage),
+      buildWhatsAppUrl(message),
       "_blank",
       "noopener,noreferrer",
     );
@@ -139,73 +135,6 @@ export default function CheckoutPage() {
 
   return (
     <>
-      {/* Modal de confirmación */}
-      {showConfirmModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-9999 p-4 animate-in fade-in flex items-start md:items-center justify-center pt-16 md:pt-0 overflow-y-auto">
-          <div className="bg-white rounded-3xl w-full max-w-2xl max-h-[85vh] p-6 md:p-8 relative shadow-2xl border border-gray-200 animate-in zoom-in-95 flex flex-col my-auto">
-            <button
-              onClick={() => setShowConfirmModal(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors z-10"
-            >
-              <X className="w-5 h-5" />
-            </button>
-
-            <div className="text-center mb-6 shrink-0">
-              <div className="flex justify-center items-center mb-3">
-                <div className="bg-blue-100 rounded-full p-3 w-14 h-14 flex items-center justify-center">
-                  <AlertCircle className="w-8 h-8 text-blue-600" />
-                </div>
-              </div>
-              <h2 className="text-2xl font-bold text-gray-900 mb-1">
-                Confirmar Pedido
-              </h2>
-              <p className="text-gray-600 text-sm">
-                Revisa los detalles de tu pedido antes de enviar
-              </p>
-            </div>
-
-            <div className="overflow-y-auto flex-1 min-h-0 mb-6">
-              <div className="bg-gray-50 rounded-xl p-4 mb-6 border border-gray-200">
-              <CustomizationsSummary items={items} />
-            </div>
-            </div>
-
-            {discountValidated && (
-              <div className="bg-green-50 rounded-xl p-4 mb-4 border border-green-200 space-y-2 shrink-0">
-                <div className="flex items-start gap-2">
-                  <Check className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />
-                  <div className="text-sm">
-                    <p className="font-semibold text-green-900 mb-1">
-                      ✓ Código NB15 aplicado (15% descuento)
-                    </p>
-                    <p className="text-green-800 text-xs">
-                      Este código es de una sola vez. No podrá ser utilizado en
-                      próximos pedidos.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            <div className="flex gap-3 shrink-0 pt-4 border-t border-gray-200">
-              <button
-                onClick={() => setShowConfirmModal(false)}
-                className="flex-1 px-4 py-3 border-2 border-gray-300 text-gray-900 rounded-xl font-semibold hover:bg-gray-50 transition-all"
-              >
-                Cancelar
-              </button>
-              <button
-                onClick={handleConfirmOrder}
-                className="flex-1 px-4 py-3 bg-[#6B8E4E] text-white rounded-xl font-semibold hover:bg-[#5D7A42] transition-all flex items-center justify-center gap-2"
-              >
-                <Check className="w-4 h-4" />
-                Confirmar y Enviar
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       <div className="min-h-screen bg-monstera-cream scroll-mt-48">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <Link
@@ -240,16 +169,21 @@ export default function CheckoutPage() {
                         placeholder="Tu nombre"
                       />
                     </div>
-                    <Input
-                      label="Telefono"
-                      name="phone"
-                      type="tel"
-                      value={formData.phone}
-                      onChange={handleInputChange}
-                      error={errors.phone}
-                      placeholder="912 341 818"
-                      className="md:col-span-2"
-                    />
+                    <div>
+                      <Input
+                        label="Teléfono (WhatsApp)"
+                        name="phone"
+                        type="tel"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        error={errors.phone}
+                        placeholder="912 341 818"
+                      />
+                      <p className="text-xs text-gray-500 mt-1">
+                        Necesitamos un número con WhatsApp para
+                        confirmar tu pedido y coordinar la entrega.
+                      </p>
+                    </div>
                   </div>
                 </div>
 

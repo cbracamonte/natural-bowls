@@ -1,6 +1,13 @@
 import { formatPrice } from "@/lib/utils/utils";
 import { CartItem, BOWL_ARRAY_KEYS, BowlArrayKey } from "@/lib/schemas/cart";
 
+const ARRAY_KEY_LABELS: Record<BowlArrayKey, string> = {
+  toppings: "Toppings",
+  agregados: "Agregados",
+  salsas: "Salsas",
+  extraProteinas: "Proteína Extra",
+};
+
 interface CustomizationsSummaryProps {
   items: CartItem[];
 }
@@ -18,7 +25,7 @@ export default function CustomizationsSummary({
           <div key={item.productId}>
             {hasCust && (
               <>
-                <div className="flex justify-between items-start gap-3 text-sm font-semibold">
+                <div className="flex justify-between items-start gap-3 text-sm font-semibold pb-2">
                   <span>{item.name}</span>
                   <span className="shrink-0">
                     x{item.quantity} {formatPrice(item.price * item.quantity)}
@@ -26,7 +33,7 @@ export default function CustomizationsSummary({
                 </div>
                 {cust.tamaño && (
                   <div className="flex justify-between text-xs">
-                    <span className="text-gray-600">Tamaño:</span>
+                    <span className="text-gray-600 font-bold">Tamaño:</span>
                     <span className="font-medium capitalize">
                       {cust.tamaño}
                     </span>
@@ -34,13 +41,13 @@ export default function CustomizationsSummary({
                 )}
                 {cust.base && (
                   <div className="flex justify-between text-xs">
-                    <span className="text-gray-600">Base:</span>
+                    <span className="text-gray-600 font-bold">Base:</span>
                     <span className="font-medium">{cust.base}</span>
                   </div>
                 )}
                 {cust.proteina && (
                   <div className="flex justify-between text-xs">
-                    <span className="text-gray-600">Proteína:</span>
+                    <span className="text-gray-600 font-bold">Proteína:</span>
                     <span className="font-medium">{cust.proteina}</span>
                   </div>
                 )}
@@ -48,15 +55,15 @@ export default function CustomizationsSummary({
                   (key: BowlArrayKey) =>
                     cust[key] &&
                     cust[key].length > 0 && (
-                      <div key={key} className="text-xs">
-                        <span className="text-gray-600 capitalize">
-                          {key}:
+                      <div key={key} className="text-xs py-1">
+                        <span className="text-gray-600 font-bold">
+                          {ARRAY_KEY_LABELS[key]}:
                         </span>
                         <div className="flex flex-wrap gap-1 mt-1">
                           {cust[key]!.map((ing: string) => (
                             <span
                               key={ing}
-                              className="border border-[#9CB973]/50 text-[#5D4E37] px-1.5 py-0.5 rounded text-xs"
+                              className="bg-[#9CB973]/10 text-[#5D4E37] px-1.5 py-0.5 rounded text-xs"
                             >
                               {ing}
                             </span>

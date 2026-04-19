@@ -27,8 +27,8 @@ export class CheckoutService {
     if (!formData.name.trim()) errors.name = 'El nombre es requerido';
     if (!formData.phone.trim()) {
       errors.phone = 'El teléfono es requerido';
-    } else if (!/^\d{9}$/.test(formData.phone.replace(/\D/g, ''))) {
-      errors.phone = 'Teléfono inválido (9 dígitos)';
+    } else if (!/^9\d{8}$/.test(formData.phone.replace(/\D/g, ''))) {
+      errors.phone = 'Ingresa un celular peruano válido (9 dígitos, empieza con 9)';
     }
     if (!formData.address.trim()) errors.address = 'La dirección es requerida';
     if (!formData.city.trim()) errors.city = 'La ciudad es requerida';
@@ -70,6 +70,8 @@ export class CheckoutService {
                 lines.push(`Agregados: ${cust.agregados.join(', ')}`);
               if (cust.salsas && cust.salsas.length)
                 lines.push(`Salsas: ${cust.salsas.join(', ')}`);
+              if (cust.extraProteinas && cust.extraProteinas.length)
+                lines.push(`Proteína Extra: ${cust.extraProteinas.join(', ')}`);
               if (lines.length) {
                 details = '\n' + lines.map(l => `   ${l}`).join('\n');
               }

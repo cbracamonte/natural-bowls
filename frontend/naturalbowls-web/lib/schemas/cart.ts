@@ -18,9 +18,10 @@ export interface BowlCustomizations {
   toppings?: string[];
   agregados?: string[];
   salsas?: string[];
+  extraProteinas?: string[];
 }
 
-export const BOWL_ARRAY_KEYS = ["toppings", "agregados", "salsas"] as const;
+export const BOWL_ARRAY_KEYS = ["toppings", "agregados", "salsas", "extraProteinas"] as const;
 export type BowlArrayKey = (typeof BOWL_ARRAY_KEYS)[number];
 
 export interface CartState {

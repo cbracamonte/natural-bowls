@@ -25,12 +25,23 @@ export default function SmoothieBowlBuilder({
   }, [smoothieOptions.preselectedSmoothieId, smoothieOptions.smoothies]);
 
   const getInitialBuilderState = () => {
-    if (typeof window === "undefined") {
+    // When a query param preselects a smoothie, it always wins over localStorage
+    // (the user explicitly chose this smoothie from /menu)
+    if (preselectedSmoothie) {
       return {
         selectedSmoothie: preselectedSmoothie,
         selectedToppings: [] as string[],
-        expandedSmoothies: !preselectedSmoothie,
-        expandedToppings: !!preselectedSmoothie,
+        expandedSmoothies: false,
+        expandedToppings: true,
+      };
+    }
+
+    if (typeof window === "undefined") {
+      return {
+        selectedSmoothie: null as Product | null,
+        selectedToppings: [] as string[],
+        expandedSmoothies: true,
+        expandedToppings: false,
       };
     }
 
@@ -38,10 +49,10 @@ export default function SmoothieBowlBuilder({
       const raw = localStorage.getItem(SMOOTHIE_BUILDER_STORAGE_KEY);
       if (!raw) {
         return {
-          selectedSmoothie: preselectedSmoothie,
+          selectedSmoothie: null as Product | null,
           selectedToppings: [] as string[],
-          expandedSmoothies: !preselectedSmoothie,
-          expandedToppings: !!preselectedSmoothie,
+          expandedSmoothies: true,
+          expandedToppings: false,
         };
       }
 
@@ -57,7 +68,7 @@ export default function SmoothieBowlBuilder({
         : null;
 
       return {
-        selectedSmoothie: persistedSmoothie ?? preselectedSmoothie,
+        selectedSmoothie: persistedSmoothie,
         selectedToppings: parsed.selectedToppings ?? [],
         expandedSmoothies:
           typeof parsed.expandedSmoothies === "boolean"
@@ -70,10 +81,10 @@ export default function SmoothieBowlBuilder({
       };
     } catch {
       return {
-        selectedSmoothie: preselectedSmoothie,
+        selectedSmoothie: null as Product | null,
         selectedToppings: [] as string[],
-        expandedSmoothies: !preselectedSmoothie,
-        expandedToppings: !!preselectedSmoothie,
+        expandedSmoothies: true,
+        expandedToppings: false,
       };
     }
   };
@@ -162,15 +173,21 @@ export default function SmoothieBowlBuilder({
     setAddedToCart(true);
   };
 
-  const handleAddAnother = () => {
+  const resetBuilder = () => {
     setSelectedSmoothie(preselectedSmoothie);
     setSelectedToppings([]);
     setExpandedSmoothies(!preselectedSmoothie);
     setExpandedToppings(!!preselectedSmoothie);
+    localStorage.removeItem(SMOOTHIE_BUILDER_STORAGE_KEY);
+  };
+
+  const handleAddAnother = () => {
+    resetBuilder();
     setAddedToCart(false);
   };
 
   const handleGoToCheckout = () => {
+    resetBuilder();
     setAddedToCart(false);
     router.push("/checkout");
   };

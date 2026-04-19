@@ -52,6 +52,8 @@ export default function FirstOrderModal({ onDone }: FirstOrderModalProps = {}) {
     setError("");
   };
 
+  const isValidPeruPhone = phone.length === 9 && phone.startsWith("9");
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -150,24 +152,36 @@ export default function FirstOrderModal({ onDone }: FirstOrderModalProps = {}) {
                       onChange={(e) => handlePhoneChange(e.target.value)}
                       placeholder="912 341 818"
                       maxLength={9}
-                      className="w-full px-3 md:px-4 py-2.5 md:py-3 border-2 border-gray-300 rounded-xl focus:outline-none focus:border-[#6B8E4E] focus:ring-2 focus:ring-[#6B8E4E]/10 transition-all bg-white text-sm"
+                      className={`w-full px-3 md:px-4 py-2.5 md:py-3 border-2 rounded-xl focus:outline-none focus:ring-2 transition-all bg-white text-sm ${
+                        isValidPeruPhone
+                          ? "border-green-400 focus:border-green-500 focus:ring-green-500/10"
+                          : phone.length > 0 && !phone.startsWith("9")
+                            ? "border-red-300 focus:border-red-400 focus:ring-red-400/10"
+                            : "border-gray-300 focus:border-[#6B8E4E] focus:ring-[#6B8E4E]/10"
+                      }`}
                     />
                     <div className="absolute right-3 top-2.5 md:top-3.5 flex items-center gap-2">
-                      {phone.length === 9 && <Check className="w-4 h-4 text-green-500" />}
+                      {isValidPeruPhone && <Check className="w-4 h-4 text-green-500" />}
                       <Lock className="w-4 h-4 text-gray-400" />
                     </div>
                   </div>
                   {error && (
                     <p className="text-red-500 text-xs mt-1.5 font-medium">{error}</p>
                   )}
+                  {phone.length > 0 && !phone.startsWith("9") && !error && (
+                    <p className="text-red-500 text-xs mt-1.5 font-medium">
+                      Los celulares peruanos empiezan con 9
+                    </p>
+                  )}
                   <p className="text-gray-500 text-xs mt-1.5">
-                    Validamos tu número para identificarte como cliente
+                    Necesitamos un número con WhatsApp para
+                    confirmar tu pedido y coordinar la entrega.
                   </p>
                 </div>
 
                 <Button
                   type="submit"
-                  disabled={phone.length !== 9}
+                  disabled={!isValidPeruPhone}
                   className="w-full py-2.5 md:py-3 font-semibold text-sm md:text-base"
                 >
                   Generar Código
