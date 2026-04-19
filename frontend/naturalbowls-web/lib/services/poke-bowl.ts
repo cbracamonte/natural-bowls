@@ -1,5 +1,6 @@
 import { POKEBOWL_POKE_BOWL_NUTRITION_DATA } from "@/data/poke-bowl-nutrition-data";
 import { Product } from "@/lib/schemas";
+import { BowlCustomizations } from "@/lib/schemas/cart";
 import {
   PokeBowlNutritionResult,
   PokeBowlCategoryType,
@@ -225,7 +226,7 @@ export class PokeBowlService {
   static createBowlProduct(
     selectedItems: SelectedBowlItems,
     tamaño: "regular" | "grande",
-  ): Product {
+  ): Product & { customizations: BowlCustomizations } {
     const base = selectedItems.bases[0];
     const proteina = selectedItems.proteinas[0];
     const toppings = selectedItems.toppings || [];
@@ -238,6 +239,8 @@ export class PokeBowlService {
         : ""
     }, Toppings: ${toppings.join(", ") || "Ninguno"}`;
 
+    const salsas = selectedItems.salsas || [];
+
     return {
       id: `poke-bowl-${Date.now()}`,
       // include emoji so summaries display it
@@ -247,6 +250,16 @@ export class PokeBowlService {
       image: "/images/poke-bowl-2.jpg",
       categoryId: "poke-bowl",
       ingredients: [...toppings, ...agregados, ...(selectedItems.extraProteinas || [])],
+      customizations: {
+        tipo: "pokebowl",
+        tamaño,
+        base,
+        proteina,
+        toppings,
+        agregados,
+        salsas,
+        extraProteinas: selectedItems.extraProteinas || [],
+      },
     };
   }
 

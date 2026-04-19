@@ -8,6 +8,13 @@ import { BOWL_ARRAY_KEYS, BowlArrayKey } from "@/lib/schemas/cart";
 import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/lib/utils/utils";
 
+const ARRAY_KEY_LABELS: Record<BowlArrayKey, string> = {
+  toppings: "Toppings",
+  agregados: "Agregados",
+  salsas: "Salsas",
+  extraProteinas: "Proteína Extra",
+};
+
 interface CartItemProps {
   item: CartItemType;
 }
@@ -66,23 +73,23 @@ export default function CartItem({ item }: CartItemProps) {
         {customizations && Object.keys(customizations).length > 0 && (
           <div className="mt-1 text-xs text-gray-600 space-y-1">
             {customizations.tamaño && (
-              <div>Tamaño: {customizations.tamaño}</div>
+              <div className="capitalize"><span className="font-bold">Tamaño:</span> {customizations.tamaño}</div>
             )}
             {customizations.base && (
-              <div>Base: {customizations.base}</div>
+              <div><span className="font-bold">Base:</span> {customizations.base}</div>
             )}
             {customizations.proteina && (
-              <div>Proteína: {customizations.proteina}</div>
+              <div><span className="font-bold">Proteína:</span> {customizations.proteina}</div>
             )}
             {BOWL_ARRAY_KEYS.map((k: BowlArrayKey) =>
               customizations[k] && customizations[k].length > 0 ? (
                 <div key={k}>
-                  {k.charAt(0).toUpperCase() + k.slice(1)}:{' '}
+                  <span className="font-bold">{ARRAY_KEY_LABELS[k]}:{' '}</span>
                   <span className="flex flex-wrap gap-1 mt-1">
                     {customizations[k]!.map((ing: string) => (
                       <span
                         key={ing}
-                        className="border border-[#9CB973]/50 text-[#5D4E37] px-1.5 py-0.5 rounded text-xs"
+                        className="bg-[#9CB973]/10 text-[#5D4E37] px-1.5 py-0.5 rounded text-xs"
                       >
                         {ing}
                       </span>
@@ -94,8 +101,9 @@ export default function CartItem({ item }: CartItemProps) {
           </div>
         )}
 
-        {/* always show ingredients array when available */}
-        {ingredients && ingredients.length > 0 && (
+        {/* show ingredients only for non-customized items */}
+        {(!customizations || Object.keys(customizations).length === 0) &&
+          ingredients && ingredients.length > 0 && (
           <div className="flex flex-wrap gap-1 mt-1">
             {ingredients.map((ing) => (
               <span

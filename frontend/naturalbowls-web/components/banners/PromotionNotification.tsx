@@ -10,13 +10,11 @@ import {
 import { buildWhatsAppUrl } from "@/lib/utils/contact";
 
 // Flags de localStorage que deben estar activos antes de mostrar promociones
-const NB_FLAG_COOKIES = "nb-cookie-consent";
 const NB_FLAG_DISCOUNT = "nb-discount-interacted";
 const NB_FLAG_INSTALL = "nb-install-interacted";
 
 function allModalsInteracted(): boolean {
   return (
-    localStorage.getItem(NB_FLAG_COOKIES) === "true" &&
     localStorage.getItem(NB_FLAG_DISCOUNT) === "true" &&
     localStorage.getItem(NB_FLAG_INSTALL) === "true"
   );
