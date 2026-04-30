@@ -104,7 +104,7 @@ export default function PokeBowlBuilder({ pokeOptions }: PokeBowlBuilderProps) {
     }
 
     const bowlProduct = PokeBowlService.createBowlProduct(selectedItems, tamaño);
-    addItem(bowlProduct, 1);
+    addItem(bowlProduct, 1, { silent: true });
     setAddedToCart(true);
   };
 

@@ -8,10 +8,32 @@ import {
 } from '@/lib/schemas';
 import { DiscountCodeService } from './discount-code';
 
+const ADDRESS_STORAGE_KEY = 'nb:checkout:address';
+
 export class CheckoutService {
 
   static getPhoneFromStorage(): string {
     return DiscountCodeService.getPhoneFromStorage();
+  }
+
+  static getAddressFromStorage(): string {
+    if (typeof window === 'undefined') return '';
+    try {
+      return localStorage.getItem(ADDRESS_STORAGE_KEY) ?? '';
+    } catch {
+      return '';
+    }
+  }
+
+  static saveAddressToStorage(address: string): void {
+    if (typeof window === 'undefined') return;
+    const trimmed = address.trim();
+    if (!trimmed) return;
+    try {
+      localStorage.setItem(ADDRESS_STORAGE_KEY, trimmed);
+    } catch {
+      // ignore quota / privacy mode errors
+    }
   }
 
   static validateDiscountCode(
@@ -31,7 +53,6 @@ export class CheckoutService {
       errors.phone = 'Ingresa un celular peruano válido (9 dígitos, empieza con 9)';
     }
     if (!formData.address.trim()) errors.address = 'La dirección es requerida';
-    if (!formData.city.trim()) errors.city = 'La ciudad es requerida';
 
     return errors;
   }
@@ -106,7 +127,7 @@ export class CheckoutService {
       'Nuevo pedido - Natural Bowls',
       `Nombre: ${formData.name}`,
       `Telefono: ${formData.phone}`,
-      `Direccion: ${formData.address}, ${formData.city}`,
+      `Direccion: ${formData.address}`,
       '',
       bowlText,
       cartItems.length > 0 ? 'Productos:' : '',

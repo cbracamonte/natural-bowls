@@ -25,7 +25,7 @@ export const wraps: Product[] = [
     description:
       "Tortilla de maíz, pollo empanizado, lechuga, tomate, zanahoria y queso edam. Incluye camotes crocantes.",
     price: 17.5,
-    image: "/images/wraps/wrap-crispy.jpg",
+    image: "/icons/nb-logotipo.svg", //aqui si hay imagen, falta verlo en wsp
     categoryId: "wraps",
     ingredients: [
       "Tortilla de maíz",
@@ -62,7 +62,7 @@ export const wraps: Product[] = [
     description:
       "Tortilla de maíz, pollo empanizado, lechuga, col morada, repollo y salsa thai. Incluye camotes crocantes.",
     price: 17.5,
-    image: "/icons/nb-logotipo.svg", // falta imagen
+    image: "/images/wraps/wrap-thai.jpg",
     categoryId: "wraps",
     ingredients: [
       "Tortilla de maíz",

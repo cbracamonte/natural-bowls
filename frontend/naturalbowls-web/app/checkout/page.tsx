@@ -25,8 +25,7 @@ export default function CheckoutPage() {
     const initial: CheckoutFormData = {
       name: "",
       phone: CheckoutService.getPhoneFromStorage(),
-      address: "",
-      city: "",
+      address: CheckoutService.getAddressFromStorage(),
       notes: "",
     };
     return initial;
@@ -106,6 +105,7 @@ export default function CheckoutPage() {
 
     if (discountValidated) await CheckoutService.markDiscountAsUsed();
 
+    CheckoutService.saveAddressToStorage(formData.address);
     clearCart();
     CheckoutService.clearOrderStorage();
 
@@ -200,14 +200,6 @@ export default function CheckoutPage() {
                       onChange={handleInputChange}
                       error={errors.address}
                       placeholder="Calle, número, colonia"
-                    />
-                    <Input
-                      label="Ciudad"
-                      name="city"
-                      value={formData.city}
-                      onChange={handleInputChange}
-                      error={errors.city}
-                      placeholder="Ciudad"
                     />
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">

@@ -14,7 +14,6 @@ export interface Order {
   };
   delivery: {
     address: string;
-    city: string;
     postalCode?: string;
     notes?: string;
   };

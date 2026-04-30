@@ -138,7 +138,7 @@ export default function ConfirmationPage() {
             </p>
             <p>
               <span className="font-medium text-gray-900">Dirección:</span>{' '}
-              {order.delivery.address}, {order.delivery.city}
+              {order.delivery.address}
             </p>
             <p>
               <span className="font-medium text-gray-900">Estado:</span>{' '}

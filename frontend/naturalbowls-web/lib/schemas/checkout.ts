@@ -3,7 +3,6 @@ export interface CheckoutForm {
   email: string;
   phone: string;
   address: string;
-  city: string;
   notes?: string;
   paymentMethod: 'card' | 'cash' | 'yape';
 }
@@ -12,7 +11,6 @@ export interface CheckoutFormData {
   name: string;
   phone: string;
   address: string;
-  city: string;
   notes: string;
 }
 

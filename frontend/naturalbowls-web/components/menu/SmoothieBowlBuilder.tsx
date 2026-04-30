@@ -169,7 +169,7 @@ export default function SmoothieBowlBuilder({
       selectedToppings,
     );
 
-    addItem(bowlProduct, 1);
+    addItem(bowlProduct, 1, { silent: true });
     setAddedToCart(true);
   };
 

@@ -79,7 +79,6 @@ export const PROMOTIONS: Promotion[] = [
     //   whatsAppMessage: "Hola! Quiero activar mi Plan Pokes 🍣",
     // },
     terms: [
-      "Válido solo para consumo en local.",
       "No incluye delivery.",
       "Válido hasta 45 días desde la compra.",
       "Disponible en modalidad mensual o quincenal."
