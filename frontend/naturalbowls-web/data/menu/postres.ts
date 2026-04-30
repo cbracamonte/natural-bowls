@@ -32,7 +32,7 @@ export const postres: Product[] = [
     id: "cheesecake-pistacho",
     name: "Cheesecake de Pistacho",
     description: "Cheesecake de Pistacho con yogurt griego y stevia.",
-    price: 13.0,
+    price: 15.0,
     image: "/images/postres/cheesecake-pistacho.jpg",
     categoryId: "postres",
     ingredients: ["Yogurt griego", "Stevia", "Pistacho"],

@@ -15,9 +15,13 @@ type CartAction =
   | { type: 'UPDATE_QUANTITY'; productId: string; quantity: number }
   | { type: 'CLEAR_CART' };
 
+interface AddItemOptions {
+  silent?: boolean;
+}
+
 interface CartContextType {
   items: CartItem[];
-  addItem: (product: Product, quantity?: number) => void;
+  addItem: (product: Product, quantity?: number, options?: AddItemOptions) => void;
   removeItem: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
   clearCart: () => void;
@@ -126,9 +130,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
     return () => clearTimeout(timer);
   }, [toast]);
 
-  const addItem = useCallback((product: Product, quantity?: number) => {
+  const addItem = useCallback((product: Product, quantity?: number, options?: AddItemOptions) => {
     dispatch({ type: 'ADD_ITEM', product, quantity });
-    setToast({ name: product.name, price: product.price, quantity: quantity || 1 });
+    if (!options?.silent) {
+      setToast({ name: product.name, price: product.price, quantity: quantity || 1 });
+    }
   }, []);
 
   const removeItem = (productId: string) => {
