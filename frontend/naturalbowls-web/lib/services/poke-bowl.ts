@@ -31,8 +31,8 @@ export interface BowlOrderData {
 }
 
 const BASE_PRICES: Record<"regular" | "grande", number> = {
-  regular: 22,
-  grande: 27,
+  regular: 23,
+  grande: 28,
 };
 
 export class PokeBowlService {
