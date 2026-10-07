@@ -6,7 +6,7 @@ export const pokeBowls: Product[] = [
     name: "Poke Regular",
     description:
       "Arma tu poke: elige base, proteína, 5 toppings, 4 agregados y 2 salsas.",
-    price: 22.0,
+    price: 23.0,
     image: "/images/poke-bowl/poke-regular.jpg",
     categoryId: "poke-bowl",
     ingredients: [
@@ -23,7 +23,7 @@ export const pokeBowls: Product[] = [
     name: "Poke Grande",
     description:
       "Arma tu poke tamaño grande: elige base, proteína, 5 toppings, 4 agregados y 3 salsas.",
-    price: 27.0,
+    price: 28.0,
     image: "/images/poke-bowl/poke-grande.jpg",
     categoryId: "poke-bowl",
     ingredients: [

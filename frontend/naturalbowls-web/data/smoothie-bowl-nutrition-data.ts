@@ -12,6 +12,7 @@ export const SMOOTHIE_BOWL_NUTRITION_DATA: SmoothieBowlNutritionDataset = {
     "Butterfly Bowl": { kcal: 360, proteina: 12, carbos: 52, fibra: 8 },
     "Blue Sky": { kcal: 390, proteina: 20, carbos: 45, fibra: 9 },
   },
+
   toppings: {
     Fresa: { kcal: 16, proteina: 0.3, carbos: 3.8, fibra: 1 },
     Plátano: { kcal: 45, proteina: 0.5, carbos: 11.5, fibra: 1.3 },
